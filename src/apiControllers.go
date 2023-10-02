@@ -83,7 +83,7 @@ func (_controllerStatus *APIControllerImp) SaveState(c *gin.Context) {
 	_controllerStatus.DataStore = depResource
 
 	data, _ := json.Marshal(_controllerStatus.DataStore)
-	os.WriteFile("./Database", data, 0644)
+	os.WriteFile("./.localStore/Database", data, 0644)
 
 	//Log(DEBUG, depResource)
 	c.JSON(200, gin.H{"message": "Done"})
@@ -95,9 +95,13 @@ func (_controllerStatus *APIControllerImp) GetState(c *gin.Context) {
 	if _controllerStatus.DataStore != nil {
 		c.JSON(200, _controllerStatus.DataStore)
 		return
+	} else {
+		data, _ := os.ReadFile("./.localStore/Database")
+		json.Unmarshal(data, &_controllerStatus.DataStore)
+		Log(DEBUG, _controllerStatus.DataStore)
 	}
 
-	c.JSON(403, gin.H{"Error": "State Not Found"})
+	c.JSON(200, gin.H{"Error": "State Not Found"})
 }
 
 func PulumiStackUp(resName string) error {

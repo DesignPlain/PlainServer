@@ -3,6 +3,7 @@ package main
 type Any interface{}
 
 type DeploymentResource struct {
+	TypeName       string       `json:"name"`
 	Name           string       `json:"title"`
 	ResourceType   ResourceType `json:"resourceType"`
 	ProviderType   ProviderType `json:"platformType"`

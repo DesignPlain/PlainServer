@@ -1,9 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"os"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,9 +13,6 @@ func main() {
 		CurrentStack: nil,
 		Count:        0,
 	}
-
-	data, _ := os.ReadFile("./Database")
-	json.Unmarshal(data, &_apiController.DataStore)
 
 	// Middleware
 	r.Use(_apiController.AddCORSHeader)
