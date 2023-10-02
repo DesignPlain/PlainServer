@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
+LOCALSTORE="./.localStore"
 # Create the local data store
-mkdir ./.localStore
+[ ! -d $LOCALSTORE ] && mkdir $LOCALSTORE
