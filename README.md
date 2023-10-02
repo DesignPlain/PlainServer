@@ -1,9 +1,9 @@
 # DesignSphere_Backend
-`go` server for DesignSphere
+`go` backend web server for DesignSphere
 
 ## Build
 
-Run the following the script to build the project.
+Run the following script to build the project.
 
 ```
 ./build.sh
