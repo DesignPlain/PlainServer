@@ -34,33 +34,46 @@ func (_controllerStatus *APIControllerImp) AddCORSHeader(c *gin.Context) {
 
 func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 	_controllerStatus.Count += 1
+	//var ma = make(map[uuid.UUID]([]ResourceOutput))
+	var resOutputs []ResourceOutput
+	var err error = nil
+
 	if _controllerStatus.DataStore != nil {
-		for _, data := range _controllerStatus.DataStore {
+		//	for _, data := range _controllerStatus.DataStore {
+		for i := 0; i < len(_controllerStatus.DataStore); i++ {
+			data := &_controllerStatus.DataStore[i]
 			switch data.ResourceType {
 			case Simple_Storage_Service:
 				if !slices.Contains(_controllerStatus.CurrentStack, data.Name+"_ST") {
-					err := PulumiStackUp(data.Name + "_ST")
-					if err != nil {
+					resOutputs, err = PulumiStackUp(data.Name + "_ST")
+					if err == nil {
 						_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Name+"_ST")
 						Log(DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
+					} else {
+						Log(DEBUG, "Stack Up failed")
+						Log(DEBUG, err)
 					}
+					data.Outputs = resOutputs
 				} else {
 					Log(DEBUG, "Stack already contains the data")
 				}
 			}
 		}
-
-		c.JSON(403, "_controllerStatus.DataStore")
-		return
 	}
 
-	Log(DEBUG, "Deploying stack")
+	// for i := 0; i < len(_controllerStatus.DataStore); i++ {
+	// 	_controllerStatus.DataStore[i].Outputs = ma[_controllerStatus.DataStore[i].Id]
+	// 	Log(DEBUG, ma[_controllerStatus.DataStore[i].Id])
+	// }
 
-	c.JSON(200, gin.H{"message": "Bucket Address"})
+	Log(DEBUG, _controllerStatus.DataStore)
+	Log(DEBUG, "Deploying stack")
+	c.JSON(200, _controllerStatus.DataStore)
 }
 
 func (_controllerStatus *APIControllerImp) DestroyStack(c *gin.Context) {
 	Log(DEBUG, "Destroying stack")
+	Log(DEBUG, _controllerStatus.CurrentStack)
 	for i := 0; i < len(_controllerStatus.CurrentStack); i++ {
 		Log(DEBUG, _controllerStatus.CurrentStack)
 		PulumiStackDestroy(_controllerStatus.CurrentStack[i])
@@ -85,32 +98,33 @@ func (_controllerStatus *APIControllerImp) SaveState(c *gin.Context) {
 	data, _ := json.Marshal(_controllerStatus.DataStore)
 	os.WriteFile("./.localStore/Database", data, 0644)
 
-	//Log(DEBUG, depResource)
+	Log(DEBUG, depResource)
 	c.JSON(200, gin.H{"message": "Done"})
 }
 
 func (_controllerStatus *APIControllerImp) GetState(c *gin.Context) {
 	Log(DEBUG, "Returning Stored state")
 	_controllerStatus.Count += 1
-	if _controllerStatus.DataStore != nil {
-		c.JSON(200, _controllerStatus.DataStore)
-		return
-	} else {
-		data, _ := os.ReadFile("./.localStore/Database")
-		json.Unmarshal(data, &_controllerStatus.DataStore)
-		Log(DEBUG, _controllerStatus.DataStore)
+	if _controllerStatus.DataStore == nil {
+		data, err := os.ReadFile("./.localStore/Database")
+		if err != nil {
+			_controllerStatus.DataStore = []DeploymentResource{}
+		} else {
+			json.Unmarshal(data, &_controllerStatus.DataStore)
+		}
 	}
 
-	c.JSON(200, gin.H{"Error": "State Not Found"})
+	Log(DEBUG, _controllerStatus.DataStore)
+	c.JSON(200, _controllerStatus.DataStore)
 }
 
-func PulumiStackUp(resName string) error {
+func PulumiStackUp(resName string) ([]ResourceOutput, error) {
 	ctx := context.Background()
 	workDir := filepath.Join("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/gcp")
 	data, err := os.ReadFile("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/main-form-398518-44df76f5c489.json")
 	if err != nil {
 		Log(ERROR, err)
-		return err
+		return nil, err
 	}
 	envvars := auto.EnvVars(map[string]string{
 		"PULUMI_CONFIG_PASSPHRASE": "test",
@@ -127,7 +141,7 @@ func PulumiStackUp(resName string) error {
 
 	if err != nil {
 		Log(ERROR, err)
-		return err
+		return nil, err
 	}
 
 	// aa, err := stack.Info(ctx)
@@ -150,11 +164,19 @@ func PulumiStackUp(resName string) error {
 	Log(DEBUG, "Creating Stack "+stackName)
 	if err != nil {
 		Log(ERROR, err)
-		return err
+		return nil, err
 	}
-	Log(DEBUG, stackUpResult)
-
-	return nil
+	//Log(DEBUG, stackUpResult)
+	var resOuts []ResourceOutput
+	for key, element := range stackUpResult.Outputs {
+		//fmt.Println("Key:", key, "=>", "Element:", element.Value)
+		a := ResourceOutput{
+			Name:  key,
+			Value: element.Value,
+		}
+		resOuts = append(resOuts, a)
+	}
+	return resOuts, nil
 }
 
 func PulumiStackDestroy(resName string) {

@@ -1,15 +1,24 @@
 package main
 
+import "github.com/google/uuid"
+
 type Any interface{}
 
 type DeploymentResource struct {
-	TypeName       string       `json:"name"`
-	Name           string       `json:"title"`
-	ResourceType   ResourceType `json:"resourceType"`
-	ProviderType   ProviderType `json:"platformType"`
-	Shape          UIShape      `json:"shape"`
-	Position       UIPosition   `json:"position"`
-	ResourceConfig any          `json:"resourceConfig"`
+	Id             uuid.UUID        `json:"id"`
+	TypeName       string           `json:"name"`
+	Name           string           `json:"title"`
+	ResourceType   ResourceType     `json:"resourceType"`
+	ProviderType   ProviderType     `json:"platformType"`
+	Shape          UIShape          `json:"shape"`
+	Position       UIPosition       `json:"position"`
+	ResourceConfig any              `json:"resourceConfig"`
+	Outputs        []ResourceOutput `json:"resOutputs"`
+}
+
+type ResourceOutput struct {
+	Name  string `json:"name"`
+	Value Any    `json:"value"`
 }
 
 type UIPosition struct {

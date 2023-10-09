@@ -21,8 +21,8 @@ func main() {
 	r.POST("/deploy", _apiController.DeployStack)
 	r.POST("/state", _apiController.SaveState)
 	r.GET("/state", _apiController.GetState)
-	// r.POST("/preview", DeploymentHandler)
 	r.GET("/stack", _apiController.DestroyStack)
+	// r.POST("/preview", DeploymentHandler)
 
 	// listen and serve on 0.0.0.0:8080
 	r.Run()
