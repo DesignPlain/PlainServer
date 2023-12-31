@@ -1,6 +1,7 @@
 package main
 
 import (
+	gcp "DesignSphere_Server/src/resource/GCP"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -45,7 +46,14 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 			switch data.ResourceType {
 			case Simple_Storage_Service:
 				if !slices.Contains(_controllerStatus.CurrentStack, data.Name+"_ST") {
-					resOutputs, err = PulumiStackUp(data.Name + "_ST")
+					yamlConfig := gcp.CreateBucketModel(
+						data.Id.String(),
+						data.Name,
+						[]string{data.ResourceConfig["Members"].(string)},
+						fmt.Sprintf(`"%s"`, data.ResourceConfig["Role"].(string)),
+						data.ResourceConfig["Location"].(string))
+
+					resOutputs, err = PulumiStackUp(data.Id.String(), data.Name+"_ST", yamlConfig)
 					if err == nil {
 						_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Name+"_ST")
 						Log(DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
@@ -54,6 +62,7 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 						Log(DEBUG, err)
 					}
 					data.Outputs = resOutputs
+
 				} else {
 					Log(DEBUG, "Stack already contains the data")
 				}
@@ -118,9 +127,15 @@ func (_controllerStatus *APIControllerImp) GetState(c *gin.Context) {
 	c.JSON(200, _controllerStatus.DataStore)
 }
 
-func PulumiStackUp(resName string) ([]ResourceOutput, error) {
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func PulumiStackUp(stackId string, resName string, yamlconfig string) ([]ResourceOutput, error) {
 	ctx := context.Background()
-	workDir := filepath.Join("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/gcp")
+	workDir := filepath.Join("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/gcp/" + stackId)
 	data, err := os.ReadFile("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/main-form-398518-44df76f5c489.json")
 	if err != nil {
 		Log(ERROR, err)
@@ -135,7 +150,36 @@ func PulumiStackUp(resName string) ([]ResourceOutput, error) {
 		"gcp:project": {Value: "main-form-398518"},
 	}
 
-	stackName := auto.FullyQualifiedStackName("organization", "Stack", resName)
+	Log(DEBUG, workDir)
+
+	_, err = os.Stat(workDir + "/Pulumi.yaml")
+	if err != nil {
+		if os.IsNotExist(err) {
+			// File or directory does not exist
+			_, err = os.Stat(workDir)
+			if err != nil {
+				if os.IsNotExist(err) {
+					if err := os.Mkdir(workDir, os.ModePerm); err != nil {
+						panic(err)
+					}
+				}
+			}
+
+			f, err := os.Create(workDir + "/Pulumi.yaml")
+			check(err)
+
+			defer f.Close()
+
+			_, err = f.WriteString(yamlconfig)
+			check(err)
+
+			f.Sync()
+		} else {
+			// Some other error. The file may or may not exist
+		}
+	}
+
+	stackName := auto.FullyQualifiedStackName("organization", stackId, resName)
 	stack, err := auto.UpsertStackLocalSource(ctx, stackName, workDir, envvars)
 	stack.SetAllConfig(ctx, cfg)
 
@@ -176,6 +220,8 @@ func PulumiStackUp(resName string) ([]ResourceOutput, error) {
 		}
 		resOuts = append(resOuts, a)
 	}
+
+	Log(DEBUG, resOuts)
 	return resOuts, nil
 }
 

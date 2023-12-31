@@ -1,19 +1,27 @@
 package main
 
-import "github.com/google/uuid"
+import (
+	gcp "DesignSphere_Server/src/resource/GCP"
+
+	"github.com/google/uuid"
+)
 
 type Any interface{}
 
 type DeploymentResource struct {
-	Id             uuid.UUID        `json:"id"`
-	TypeName       string           `json:"name"`
-	Name           string           `json:"title"`
-	ResourceType   ResourceType     `json:"resourceType"`
-	ProviderType   ProviderType     `json:"platformType"`
-	Shape          UIShape          `json:"shape"`
-	Position       UIPosition       `json:"position"`
-	ResourceConfig any              `json:"resourceConfig"`
-	Outputs        []ResourceOutput `json:"resOutputs"`
+	Id              uuid.UUID        `json:"id"`
+	TypeName        string           `json:"name"`
+	Name            string           `json:"title"`
+	ResourceType    ResourceType     `json:"resourceType"`
+	ProviderType    ProviderType     `json:"platformType"`
+	Shape           UIShape          `json:"shape"`
+	Position        UIPosition       `json:"position"`
+	Inlets          []string         `json:"inlets"`
+	Outlets         []string         `json:"outlets"`
+	InletMapString  string           `json:"inletMapString"`
+	OutletMapString string           `json:"outletMapString"`
+	ResourceConfig  map[string]any   `json:"resourceConfig"`
+	Outputs         []ResourceOutput `json:"resOutputs"`
 }
 
 type ResourceOutput struct {
@@ -31,11 +39,8 @@ type UIShape struct {
 	Height float32 `json:"height"`
 }
 
-type GCPBucket struct {
-	Location                 string `json:"location"`
-	UniformBucketLevelAccess bool   `json:"uniformBucketLevelAccess"`
-	Role                     string `json:"role"`
-	Members                  string `json:"members"`
+type test2 struct {
+	GCP_Bucket gcp.ResourceModel
 }
 
 type ResourceType int64
