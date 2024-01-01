@@ -18,16 +18,9 @@ type Model_GCP_Bucket_Properties struct {
 	UniformBucketLevelAccess bool              `yaml:"uniformBucketLevelAccess,omitempty"`
 }
 
-type ResourceModel struct {
-	Name        string                             `yaml:"name"`
-	Runtime     string                             `yaml:"runtime"`
-	Description string                             `yaml:"description"`
-	Outputs     map[string]string                  `yaml:"outputs"`
-	Resources   map[string]baseModel.Yaml_Resource `yaml:"resources"`
-}
-
 func CreateBucketModel(stackName string, bucketName string, members []string, role string, location string) string {
-	c := ResourceModel{
+	// TODO: make this model creation logic completely dynamic, will have to refer pulumi documentation
+	c := baseModel.ResourceModel{
 		Name:        stackName,
 		Runtime:     "yaml",
 		Description: "GCP cloud storage bucket pulumi config",

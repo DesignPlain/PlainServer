@@ -4,25 +4,34 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+const ROOTDIR = "/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/"
 
+func main() {
 	r := gin.Default()
 
-	_apiController := &APIControllerImp{
-		DataStore:    nil,
-		CurrentStack: nil,
-		Count:        0,
+	var apiController APIController
+	_apiControllerState := &APIControllerImp{
+		DataStore:     nil,
+		CurrentStack:  nil,
+		Count:         0,
+		ProjectConfig: make(map[string]ProjectData),
 	}
 
+	apiController = _apiControllerState
+
+	r.MaxMultipartMemory = 8 << 20 // 8 MiB
+
 	// Middleware
-	r.Use(_apiController.AddCORSHeader)
+	r.Use(apiController.AddCORSHeader)
 
 	// Route Handlers
-	r.POST("/deploy", _apiController.DeployStack)
-	r.POST("/state", _apiController.SaveState)
-	r.GET("/state", _apiController.GetState)
-	r.GET("/stack", _apiController.DestroyStack)
+	r.POST("/deploy", apiController.DeployStack)
+	r.POST("/state", apiController.SaveState)
+	r.GET("/state", apiController.GetState)
+	r.GET("/stack", apiController.DestroyStack)
 	// r.POST("/preview", DeploymentHandler)
+
+	r.POST("/uploadProjectConfig", apiController.UploadProjectConfig)
 
 	// listen and serve on 0.0.0.0:8080
 	r.Run()

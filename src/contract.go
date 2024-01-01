@@ -1,8 +1,6 @@
 package main
 
 import (
-	gcp "DesignSphere_Server/src/resource/GCP"
-
 	"github.com/google/uuid"
 )
 
@@ -37,10 +35,6 @@ type UIPosition struct {
 type UIShape struct {
 	Width  float32 `json:"width"`
 	Height float32 `json:"height"`
-}
-
-type test2 struct {
-	GCP_Bucket gcp.ResourceModel
 }
 
 type ResourceType int64
