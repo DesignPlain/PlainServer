@@ -5,6 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,12 +23,23 @@ type APIController interface {
 	DestroyStack(c *gin.Context)
 	SaveState(c *gin.Context)
 	GetState(c *gin.Context)
+	UploadProjectConfig(c *gin.Context)
 }
 
 type APIControllerImp struct {
-	DataStore    []DeploymentResource
-	CurrentStack []string
-	Count        int64
+	DataStore     []DeploymentResource
+	CurrentStack  []string
+	ProjectConfig map[string]ProjectData
+	Count         int64
+}
+
+func (_controllerStatus *APIControllerImp) ValidateState() bool {
+	return len(_controllerStatus.ProjectConfig) > 0
+}
+
+type ProjectData struct {
+	ProjectName    string
+	APIKeyFileName string
 }
 
 func (_controllerStatus *APIControllerImp) AddCORSHeader(c *gin.Context) {
@@ -34,6 +48,9 @@ func (_controllerStatus *APIControllerImp) AddCORSHeader(c *gin.Context) {
 }
 
 func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
+	if !_controllerStatus.ValidateState() {
+		c.String(http.StatusForbidden, fmt.Sprintf("Please configure the cloud project"))
+	}
 	_controllerStatus.Count += 1
 	//var ma = make(map[uuid.UUID]([]ResourceOutput))
 	var resOutputs []ResourceOutput
@@ -53,7 +70,7 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 						fmt.Sprintf(`"%s"`, data.ResourceConfig["Role"].(string)),
 						data.ResourceConfig["Location"].(string))
 
-					resOutputs, err = PulumiStackUp(data.Id.String(), data.Name+"_ST", yamlConfig)
+					resOutputs, err = PulumiStackUp(data.Id.String(), data.Name+"_ST", yamlConfig, _controllerStatus.ProjectConfig["GCP"])
 					if err == nil {
 						_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Name+"_ST")
 						Log(DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
@@ -80,7 +97,28 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 	c.JSON(200, _controllerStatus.DataStore)
 }
 
+func (_controllerStatus *APIControllerImp) UploadProjectConfig(c *gin.Context) {
+	// single file
+	file, _ := c.FormFile("file")
+
+	projectName := c.Request.Form["projectName"][0]
+	log.Println(url.PathEscape(projectName))
+	filename := url.PathEscape(strings.Replace(projectName, ".", "", -1)) + ".json"
+	// Upload the file to specific dst.
+	c.SaveUploadedFile(file, ROOTDIR+filename)
+
+	_controllerStatus.ProjectConfig["GCP"] = ProjectData{
+		ProjectName:    projectName,
+		APIKeyFileName: filename,
+	}
+
+	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+}
+
 func (_controllerStatus *APIControllerImp) DestroyStack(c *gin.Context) {
+	if !_controllerStatus.ValidateState() {
+		c.String(http.StatusForbidden, fmt.Sprintf("Please configure the cloud project"))
+	}
 	Log(DEBUG, "Destroying stack")
 	Log(DEBUG, _controllerStatus.CurrentStack)
 	for i := 0; i < len(_controllerStatus.CurrentStack); i++ {
@@ -133,10 +171,10 @@ func check(e error) {
 	}
 }
 
-func PulumiStackUp(stackId string, resName string, yamlconfig string) ([]ResourceOutput, error) {
+func PulumiStackUp(stackId string, resName string, yamlconfig string, projectConfig ProjectData) ([]ResourceOutput, error) {
 	ctx := context.Background()
-	workDir := filepath.Join("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/gcp/" + stackId)
-	data, err := os.ReadFile("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/main-form-398518-44df76f5c489.json")
+	workDir := filepath.Join(ROOTDIR + "gcp/" + stackId)
+	data, err := os.ReadFile(ROOTDIR + projectConfig.APIKeyFileName)
 	if err != nil {
 		Log(ERROR, err)
 		return nil, err
@@ -147,7 +185,7 @@ func PulumiStackUp(stackId string, resName string, yamlconfig string) ([]Resourc
 	})
 
 	cfg := auto.ConfigMap{
-		"gcp:project": {Value: "main-form-398518"},
+		"gcp:project": {Value: projectConfig.ProjectName},
 	}
 
 	Log(DEBUG, workDir)
@@ -227,8 +265,8 @@ func PulumiStackUp(stackId string, resName string, yamlconfig string) ([]Resourc
 
 func PulumiStackDestroy(resName string) {
 	ctx := context.Background()
-	workDir := filepath.Join("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/gcp")
-	data, err := os.ReadFile("/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/main-form-398518-44df76f5c489.json")
+	workDir := filepath.Join(ROOTDIR + "gcp")
+	data, err := os.ReadFile(ROOTDIR + "main-form-398518-44df76f5c489.json")
 	if err != nil {
 		Log(ERROR, err)
 		return
