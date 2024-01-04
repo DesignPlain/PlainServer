@@ -2,10 +2,10 @@ package gcp
 
 import (
 	baseModel "DesignSphere_Server/src/resource"
-	"fmt"
 )
 
 type Model_GCP_VPC_Properties struct {
+	Name                        string `yaml:"name,omitempty"`
 	AutoCreateSubNetworks       bool   `yaml:"autoCreateSubnetworks,omitempty"`
 	MTU                         int    `yaml:"mtu,omitempty"`
 	RoutingMode                 string `yaml:"routingMode,omitempty"`
@@ -19,12 +19,13 @@ func CreateVPCModel(projectName string, networkName string, mtu int, routingMode
 		Runtime:     "yaml",
 		Description: "GCP cloud VPC network pulumi config",
 		Outputs: map[string]string{
-			"networkIpv4": fmt.Sprintf("${%s.gatewayIpv4}", networkName),
+			"networkIpv4": "${VPCNetworkResource.gatewayIpv4}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			networkName: {
+			"VPCNetworkResource": {
 				Type: "gcp:compute:Network",
 				Properties: Model_GCP_VPC_Properties{
+					Name:                        networkName,
 					AutoCreateSubNetworks:       true, //autoCreateSubnetworks,
 					MTU:                         mtu,
 					RoutingMode:                 routingMode,

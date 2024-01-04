@@ -6,6 +6,7 @@ import (
 )
 
 type Model_GCP_Bucket_Properties struct {
+	Name                     string            `yaml:"name,omitempty"`
 	Bucket                   string            `yaml:"bucket,omitempty"`
 	Source                   map[string]string `yaml:"source,omitempty"`
 	Role                     string            `yaml:"role,omitempty"`
@@ -22,12 +23,13 @@ func CreateBucketModel(projectName string, bucketName string, members []string, 
 		Runtime:     "yaml",
 		Description: "GCP cloud storage bucket pulumi config",
 		Outputs: map[string]string{
-			"bucketURL": fmt.Sprintf("${%s.url}", bucketName),
+			"bucketURL": "${StorageBucketResource.url}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			bucketName: {
+			"StorageBucketResource": {
 				Type: "gcp:storage:Bucket",
 				Properties: Model_GCP_Bucket_Properties{
+					Name:     bucketName,
 					Location: location,
 					/* Website: map[string]string{
 						"mainPageSuffix": "index.html",

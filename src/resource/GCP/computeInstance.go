@@ -6,6 +6,7 @@ import (
 )
 
 type Model_GCP_ComputeInstance_Properties struct {
+	Name                  string           `yaml:"name,omitempty"`
 	MachineType           string           `yaml:"machineType,omitempty"`
 	Zone                  string           `yaml:"zone,omitempty"`
 	MetadataStartupScript string           `yaml:"metadataStartupScript,omitempty"`
@@ -21,13 +22,14 @@ func CreateComputeInstanceModel(projectName string, instanceName string, network
 		Runtime:     "yaml",
 		Description: "GCP cloud VPC network pulumi config",
 		Outputs: map[string]string{
-			"InstanceId":  fmt.Sprintf("${%s.instanceId}", instanceName),
-			"cpuPlatform": fmt.Sprintf("${%s.cpuPlatform}", instanceName),
+			"InstanceId":  "${ComputeInstanceResource.instanceId}",
+			"cpuPlatform": "${ComputeInstanceResource.cpuPlatform}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			instanceName: {
+			"ComputeInstanceResource": {
 				Type: "gcp:compute:Instance",
 				Properties: Model_GCP_ComputeInstance_Properties{
+					Name:        instanceName,
 					MachineType: "e2-micro", //autoCreateSubnetworks,
 					Zone:        "us-central1-c",
 					BootDiskImage: map[string]any{
@@ -47,7 +49,7 @@ func CreateComputeInstanceModel(projectName string, instanceName string, network
 			account: {
 				Type: "gcp:serviceAccount:Account",
 				Properties: map[string]any{
-					"accountId": "dsuser-" + account,
+					"accountId": "designsphere-managed-" + account,
 				},
 			},
 		},

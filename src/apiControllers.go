@@ -3,6 +3,7 @@ package main
 import (
 	baseModel "DesignSphere_Server/src/resource"
 	gcp "DesignSphere_Server/src/resource/GCP"
+	"container/list"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -52,15 +53,29 @@ func (_controllerStatus *APIControllerImp) AddCORSHeader(c *gin.Context) {
 
 func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 	if !_controllerStatus.ValidateState() {
-		c.String(http.StatusForbidden, fmt.Sprintf("Please configure the cloud project"))
+		c.String(http.StatusForbidden, "Please configure the cloud project")
 		return
 	}
+
 	_controllerStatus.Count += 1
 	var resourceOutputs []ResourceOutput
 
+	// TODO: update the logic and datastructure to respect the resource dependency
+	//       eg: VPCs should be created before the subnet and compute instances
+	//       will have to add a DAG.
 	if _controllerStatus.DataStore != nil {
-		for i := 0; i < len(_controllerStatus.DataStore); i++ {
-			data := &_controllerStatus.DataStore[i]
+		doDeploy := true
+		var nextResourceIndex int
+		pendingIndexQueue := getNextResourceIndexToDeploy(_controllerStatus.DataStore)
+		for doDeploy {
+			if pendingIndexQueue.Len() > 0 {
+				front := pendingIndexQueue.Front()
+				nextResourceIndex = front.Value.(int)
+				pendingIndexQueue.Remove(front)
+			} else {
+				doDeploy = false
+			}
+			data := &_controllerStatus.DataStore[nextResourceIndex]
 			switch data.ProviderType {
 			case GCP:
 				{
@@ -124,7 +139,7 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 							log.Fatal(err)
 						}
 
-						resourceOutputs, err = PulumiStackUp(data.Id.String(), string(serializedResourceConfigYaml), projectConfig)
+						resourceOutputs, err = PulumiStackUp(data.Id.String(), string(serializedResourceConfigYaml), &projectConfig)
 
 						if err == nil {
 							_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Id.String())
@@ -155,6 +170,32 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 	c.JSON(200, _controllerStatus.DataStore)
 }
 
+func getNextResourceIndexToDeploy(dataStore []DeploymentResource) *list.List {
+	var first *list.Element
+	var pendingIndexQueue *list.List = list.New()
+
+	for i := 0; i < len(dataStore); i++ {
+		if dataStore[i].ResourceType == Virtual_Private_Cloud {
+			if first == nil {
+				first = pendingIndexQueue.PushFront(i)
+			} else {
+				pendingIndexQueue.PushFront(i)
+			}
+		} else if dataStore[i].ResourceType == Subnet {
+			if first == nil {
+				pendingIndexQueue.PushBack(i)
+			} else {
+				pendingIndexQueue.InsertBefore(i, first)
+			}
+		} else {
+			pendingIndexQueue.PushBack(i)
+		}
+	}
+	Log(DEBUG, "Deployment Plan is:")
+	fmt.Println(pendingIndexQueue)
+	return pendingIndexQueue
+}
+
 func (_controllerStatus *APIControllerImp) UploadProjectConfig(c *gin.Context) {
 	// single file
 	file, _ := c.FormFile("file")
@@ -175,7 +216,7 @@ func (_controllerStatus *APIControllerImp) UploadProjectConfig(c *gin.Context) {
 
 func (_controllerStatus *APIControllerImp) DestroyStack(c *gin.Context) {
 	if !_controllerStatus.ValidateState() {
-		c.String(http.StatusForbidden, fmt.Sprintf("Please configure the cloud project"))
+		c.String(http.StatusForbidden, "Please configure the cloud project")
 		return
 	}
 
@@ -184,7 +225,7 @@ func (_controllerStatus *APIControllerImp) DestroyStack(c *gin.Context) {
 	Log(DEBUG, _controllerStatus.CurrentStack)
 	for i := 0; i < len(_controllerStatus.CurrentStack); i++ {
 		Log(DEBUG, _controllerStatus.CurrentStack)
-		PulumiStackDestroy(_controllerStatus.CurrentStack[i], projectConfig)
+		PulumiStackDestroy(_controllerStatus.CurrentStack[i], &projectConfig)
 	}
 
 	// TODO: Check if any of the stack destroy logic failed
@@ -235,7 +276,7 @@ func check(e error) {
 	}
 }
 
-func PulumiStackUp(stackId string, yamlConfigModel string, projectConfig ProjectData) ([]ResourceOutput, error) {
+func PulumiStackUp(stackId string, yamlConfigModel string, projectConfig *ProjectData) ([]ResourceOutput, error) {
 	ctx := context.Background()
 	// TODO: Make directory for different providers
 	workDir := filepath.Join(ROOTDIR + "gcp/" + stackId)
@@ -314,6 +355,7 @@ func PulumiStackUp(stackId string, yamlConfigModel string, projectConfig Project
 	Log(DEBUG, "Creating Stack "+stackName)
 	if err != nil {
 		Log(ERROR, err)
+		Log(DEBUG, stackUpResult)
 		return nil, err
 	}
 	Log(DEBUG, stackUpResult)
@@ -331,7 +373,7 @@ func PulumiStackUp(stackId string, yamlConfigModel string, projectConfig Project
 	return resOuts, nil
 }
 
-func PulumiStackDestroy(stackId string, projectConfig ProjectData) {
+func PulumiStackDestroy(stackId string, projectConfig *ProjectData) {
 	ctx := context.Background()
 	workDir := filepath.Join(ROOTDIR + "gcp/" + stackId)
 	data, err := os.ReadFile(ROOTDIR + projectConfig.APIKeyFileName)
