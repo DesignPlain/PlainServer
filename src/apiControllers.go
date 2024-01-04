@@ -1,7 +1,9 @@
 package main
 
 import (
+	baseModel "DesignSphere_Server/src/resource"
 	gcp "DesignSphere_Server/src/resource/GCP"
+	"container/list"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,11 +12,13 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 	"golang.org/x/exp/slices"
+	"gopkg.in/yaml.v3"
 )
 
 type APIController interface {
@@ -49,52 +53,147 @@ func (_controllerStatus *APIControllerImp) AddCORSHeader(c *gin.Context) {
 
 func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 	if !_controllerStatus.ValidateState() {
-		c.String(http.StatusForbidden, fmt.Sprintf("Please configure the cloud project"))
+		c.String(http.StatusForbidden, "Please configure the cloud project")
+		return
 	}
+
 	_controllerStatus.Count += 1
-	//var ma = make(map[uuid.UUID]([]ResourceOutput))
-	var resOutputs []ResourceOutput
-	var err error = nil
+	var resourceOutputs []ResourceOutput
 
+	// TODO: update the logic and datastructure to respect the resource dependency
+	//       eg: VPCs should be created before the subnet and compute instances
+	//       will have to add a DAG.
 	if _controllerStatus.DataStore != nil {
-		//	for _, data := range _controllerStatus.DataStore {
-		for i := 0; i < len(_controllerStatus.DataStore); i++ {
-			data := &_controllerStatus.DataStore[i]
-			switch data.ResourceType {
-			case Simple_Storage_Service:
-				if !slices.Contains(_controllerStatus.CurrentStack, data.Name+"_ST") {
-					yamlConfig := gcp.CreateBucketModel(
-						data.Id.String(),
-						data.Name,
-						[]string{data.ResourceConfig["Members"].(string)},
-						fmt.Sprintf(`"%s"`, data.ResourceConfig["Role"].(string)),
-						data.ResourceConfig["Location"].(string))
+		doDeploy := true
+		var nextResourceIndex int
+		pendingIndexQueue := getNextResourceIndexToDeploy(_controllerStatus.DataStore)
+		for doDeploy {
+			if pendingIndexQueue.Len() > 0 {
+				front := pendingIndexQueue.Front()
+				nextResourceIndex = front.Value.(int)
+				pendingIndexQueue.Remove(front)
+			} else {
+				doDeploy = false
+			}
+			data := &_controllerStatus.DataStore[nextResourceIndex]
+			switch data.ProviderType {
+			case GCP:
+				{
+					projectConfig := _controllerStatus.ProjectConfig["GCP"]
+					var resourceConfigModel baseModel.ResourceModel
 
-					resOutputs, err = PulumiStackUp(data.Id.String(), data.Name+"_ST", yamlConfig, _controllerStatus.ProjectConfig["GCP"])
-					if err == nil {
-						_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Name+"_ST")
-						Log(DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
+					if !slices.Contains(_controllerStatus.CurrentStack, data.Id.String()) {
+						switch data.ResourceType {
+						case Simple_Storage_Service:
+							{
+								resourceConfigModel = gcp.CreateBucketModel(
+									projectConfig.ProjectName,
+									data.Name,
+									[]string{data.ResourceConfig["Members"].(string)},
+									fmt.Sprintf(`"%s"`, data.ResourceConfig["Role"].(string)),
+									data.ResourceConfig["Location"].(string))
+
+								break
+							}
+						case EC2:
+							{
+								resourceConfigModel = gcp.CreateComputeInstanceModel(
+									projectConfig.ProjectName,
+									data.Name,
+									data.ResourceConfig["Network"].(string),
+									data.ResourceConfig["ServiceAccountEmail"].(string),
+								)
+
+								break
+							}
+						case Virtual_Private_Cloud:
+							{
+								// autoSubnet := data.ResourceConfig["AutoCreateSubNetwork"]
+								mtu, _ := strconv.Atoi(data.ResourceConfig["MTU"].(string))
+								resourceConfigModel = gcp.CreateVPCModel(
+									projectConfig.ProjectName,
+									data.Name,
+									mtu,
+									data.ResourceConfig["RoutingMode"].(string))
+
+								break
+							}
+						case Subnet:
+							{
+								break
+							}
+						default:
+							{
+								c.String(http.StatusForbidden, "Please provide a valid GCP Cloud resource")
+								break
+							}
+						}
 					} else {
-						Log(DEBUG, "Stack Up failed")
-						Log(DEBUG, err)
+						Log(DEBUG, "Stack already contains the data")
 					}
-					data.Outputs = resOutputs
 
-				} else {
-					Log(DEBUG, "Stack already contains the data")
+					if resourceConfigModel.Name != "" {
+						serializedResourceConfigYaml, err := yaml.Marshal(resourceConfigModel)
+						Log(DEBUG, string(serializedResourceConfigYaml))
+						if err != nil {
+							log.Fatal(err)
+						}
+
+						resourceOutputs, err = PulumiStackUp(data.Id.String(), string(serializedResourceConfigYaml), &projectConfig)
+
+						if err == nil {
+							_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Id.String())
+							Log(DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
+						} else {
+							Log(DEBUG, "Stack Up failed with error: ")
+							Log(DEBUG, err)
+						}
+						data.Outputs = resourceOutputs
+					}
+
+					break
 				}
+			case AWS:
+				{
+				}
+			case AZURE:
+				{
+				}
+			default:
+				c.String(http.StatusForbidden, "Please provide a valid Cloud provider")
 			}
 		}
 	}
 
-	// for i := 0; i < len(_controllerStatus.DataStore); i++ {
-	// 	_controllerStatus.DataStore[i].Outputs = ma[_controllerStatus.DataStore[i].Id]
-	// 	Log(DEBUG, ma[_controllerStatus.DataStore[i].Id])
-	// }
-
 	Log(DEBUG, _controllerStatus.DataStore)
 	Log(DEBUG, "Deploying stack")
 	c.JSON(200, _controllerStatus.DataStore)
+}
+
+func getNextResourceIndexToDeploy(dataStore []DeploymentResource) *list.List {
+	var first *list.Element
+	var pendingIndexQueue *list.List = list.New()
+
+	for i := 0; i < len(dataStore); i++ {
+		if dataStore[i].ResourceType == Virtual_Private_Cloud {
+			if first == nil {
+				first = pendingIndexQueue.PushFront(i)
+			} else {
+				pendingIndexQueue.PushFront(i)
+			}
+		} else if dataStore[i].ResourceType == Subnet {
+			if first == nil {
+				pendingIndexQueue.PushBack(i)
+			} else {
+				pendingIndexQueue.InsertBefore(i, first)
+			}
+		} else {
+			pendingIndexQueue.PushBack(i)
+		}
+	}
+	Log(DEBUG, "Deployment Plan is:")
+	fmt.Println(pendingIndexQueue)
+	return pendingIndexQueue
 }
 
 func (_controllerStatus *APIControllerImp) UploadProjectConfig(c *gin.Context) {
@@ -117,15 +216,21 @@ func (_controllerStatus *APIControllerImp) UploadProjectConfig(c *gin.Context) {
 
 func (_controllerStatus *APIControllerImp) DestroyStack(c *gin.Context) {
 	if !_controllerStatus.ValidateState() {
-		c.String(http.StatusForbidden, fmt.Sprintf("Please configure the cloud project"))
+		c.String(http.StatusForbidden, "Please configure the cloud project")
+		return
 	}
+
+	projectConfig := _controllerStatus.ProjectConfig["GCP"]
 	Log(DEBUG, "Destroying stack")
 	Log(DEBUG, _controllerStatus.CurrentStack)
 	for i := 0; i < len(_controllerStatus.CurrentStack); i++ {
 		Log(DEBUG, _controllerStatus.CurrentStack)
-		PulumiStackDestroy(_controllerStatus.CurrentStack[i])
-		_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack[:i], _controllerStatus.CurrentStack[i+1:]...)
+		PulumiStackDestroy(_controllerStatus.CurrentStack[i], &projectConfig)
 	}
+
+	// TODO: Check if any of the stack destroy logic failed
+	_controllerStatus.CurrentStack = nil
+
 	c.JSON(200, "_controllerStatus.DataStore")
 }
 
@@ -171,10 +276,12 @@ func check(e error) {
 	}
 }
 
-func PulumiStackUp(stackId string, resName string, yamlconfig string, projectConfig ProjectData) ([]ResourceOutput, error) {
+func PulumiStackUp(stackId string, yamlConfigModel string, projectConfig *ProjectData) ([]ResourceOutput, error) {
 	ctx := context.Background()
+	// TODO: Make directory for different providers
 	workDir := filepath.Join(ROOTDIR + "gcp/" + stackId)
 	data, err := os.ReadFile(ROOTDIR + projectConfig.APIKeyFileName)
+
 	if err != nil {
 		Log(ERROR, err)
 		return nil, err
@@ -184,12 +291,14 @@ func PulumiStackUp(stackId string, resName string, yamlconfig string, projectCon
 		"GOOGLE_CREDENTIALS":       string(data[:]),
 	})
 
+	// TODO: handle case for different providers
 	cfg := auto.ConfigMap{
 		"gcp:project": {Value: projectConfig.ProjectName},
 	}
 
 	Log(DEBUG, workDir)
 
+	// TODO: if value updated, rewrite the yaml
 	_, err = os.Stat(workDir + "/Pulumi.yaml")
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -208,16 +317,16 @@ func PulumiStackUp(stackId string, resName string, yamlconfig string, projectCon
 
 			defer f.Close()
 
-			_, err = f.WriteString(yamlconfig)
+			_, err = f.WriteString(yamlConfigModel)
 			check(err)
 
 			f.Sync()
 		} else {
-			// Some other error. The file may or may not exist
+			return nil, err
 		}
 	}
 
-	stackName := auto.FullyQualifiedStackName("organization", stackId, resName)
+	stackName := auto.FullyQualifiedStackName("organization", projectConfig.ProjectName, stackId)
 	stack, err := auto.UpsertStackLocalSource(ctx, stackName, workDir, envvars)
 	stack.SetAllConfig(ctx, cfg)
 
@@ -246,9 +355,10 @@ func PulumiStackUp(stackId string, resName string, yamlconfig string, projectCon
 	Log(DEBUG, "Creating Stack "+stackName)
 	if err != nil {
 		Log(ERROR, err)
+		Log(DEBUG, stackUpResult)
 		return nil, err
 	}
-	//Log(DEBUG, stackUpResult)
+	Log(DEBUG, stackUpResult)
 	var resOuts []ResourceOutput
 	for key, element := range stackUpResult.Outputs {
 		//fmt.Println("Key:", key, "=>", "Element:", element.Value)
@@ -263,10 +373,10 @@ func PulumiStackUp(stackId string, resName string, yamlconfig string, projectCon
 	return resOuts, nil
 }
 
-func PulumiStackDestroy(resName string) {
+func PulumiStackDestroy(stackId string, projectConfig *ProjectData) {
 	ctx := context.Background()
-	workDir := filepath.Join(ROOTDIR + "gcp")
-	data, err := os.ReadFile(ROOTDIR + "main-form-398518-44df76f5c489.json")
+	workDir := filepath.Join(ROOTDIR + "gcp/" + stackId)
+	data, err := os.ReadFile(ROOTDIR + projectConfig.APIKeyFileName)
 	if err != nil {
 		Log(ERROR, err)
 		return
@@ -277,10 +387,10 @@ func PulumiStackDestroy(resName string) {
 	})
 
 	cfg := auto.ConfigMap{
-		"gcp:project": {Value: "main-form-398518"},
+		"gcp:project": {Value: projectConfig.ProjectName},
 	}
 
-	stackName := auto.FullyQualifiedStackName("organization", "Stack", resName)
+	stackName := auto.FullyQualifiedStackName("organization", projectConfig.ProjectName, stackId)
 	stack, err := auto.UpsertStackLocalSource(ctx, stackName, workDir, envvars)
 	stack.SetAllConfig(ctx, cfg)
 

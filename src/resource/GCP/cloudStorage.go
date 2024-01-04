@@ -3,12 +3,10 @@ package gcp
 import (
 	baseModel "DesignSphere_Server/src/resource"
 	"fmt"
-	"log"
-
-	"gopkg.in/yaml.v3"
 )
 
 type Model_GCP_Bucket_Properties struct {
+	Name                     string            `yaml:"name,omitempty"`
 	Bucket                   string            `yaml:"bucket,omitempty"`
 	Source                   map[string]string `yaml:"source,omitempty"`
 	Role                     string            `yaml:"role,omitempty"`
@@ -18,19 +16,20 @@ type Model_GCP_Bucket_Properties struct {
 	UniformBucketLevelAccess bool              `yaml:"uniformBucketLevelAccess,omitempty"`
 }
 
-func CreateBucketModel(stackName string, bucketName string, members []string, role string, location string) string {
+func CreateBucketModel(projectName string, bucketName string, members []string, role string, location string) baseModel.ResourceModel {
 	// TODO: make this model creation logic completely dynamic, will have to refer pulumi documentation
-	c := baseModel.ResourceModel{
-		Name:        stackName,
+	resourceModel := baseModel.ResourceModel{
+		Name:        projectName,
 		Runtime:     "yaml",
 		Description: "GCP cloud storage bucket pulumi config",
 		Outputs: map[string]string{
-			"bucketURL": fmt.Sprintf("${%s.url}", bucketName),
+			"bucketURL": "${StorageBucketResource.url}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			bucketName: {
+			"StorageBucketResource": {
 				Type: "gcp:storage:Bucket",
 				Properties: Model_GCP_Bucket_Properties{
+					Name:     bucketName,
 					Location: location,
 					/* Website: map[string]string{
 						"mainPageSuffix": "index.html",
@@ -38,7 +37,7 @@ func CreateBucketModel(stackName string, bucketName string, members []string, ro
 					UniformBucketLevelAccess: true,
 				},
 			},
-			/* bucketName + "index-html": {
+			/* bucketName + "object": {
 				Type: "gcp:storage:BucketObject",
 				Properties: Model_GCP_Bucket_Properties{
 					Bucket: fmt.Sprintf("${%s}", bucketName),
@@ -58,12 +57,5 @@ func CreateBucketModel(stackName string, bucketName string, members []string, ro
 		},
 	}
 
-	out, err := yaml.Marshal(c)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(string(out))
-
-	return string(out)
+	return resourceModel
 }
