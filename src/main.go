@@ -1,12 +1,26 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/gin-gonic/gin"
 )
 
 const ROOTDIR = "/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/"
 
 func main() {
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		sig := <-sigs
+		fmt.Println("Received signal:", sig)
+		signal.Reset(syscall.SIGINT)
+	}()
+
 	r := gin.Default()
 
 	var apiController APIController
@@ -16,6 +30,8 @@ func main() {
 		Count:         0,
 		ProjectConfig: make(map[string]ProjectData),
 	}
+
+	_apiControllerState.InitServer()
 
 	apiController = _apiControllerState
 

@@ -19,10 +19,10 @@ func CreateVPCModel(projectName string, networkName string, mtu int, routingMode
 		Runtime:     "yaml",
 		Description: "GCP cloud VPC network pulumi config",
 		Outputs: map[string]string{
-			"networkIpv4": "${VPCNetworkResource.gatewayIpv4}",
+			"networkIpv4": "${VPCNetworkResource" + networkName + ".gatewayIpv4}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			"VPCNetworkResource": {
+			"VPCNetworkResource" + networkName: {
 				Type: "gcp:compute:Network",
 				Properties: Model_GCP_VPC_Properties{
 					Name:                        networkName,
