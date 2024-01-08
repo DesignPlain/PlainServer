@@ -22,11 +22,11 @@ func CreateComputeInstanceModel(projectName string, instanceName string, network
 		Runtime:     "yaml",
 		Description: "GCP cloud VPC network pulumi config",
 		Outputs: map[string]string{
-			"InstanceId":  "${ComputeInstanceResource.instanceId}",
-			"cpuPlatform": "${ComputeInstanceResource.cpuPlatform}",
+			"InstanceId":  "${ComputeInstanceResource" + instanceName + ".instanceId}",
+			"cpuPlatform": "${ComputeInstanceResource" + instanceName + ".cpuPlatform}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			"ComputeInstanceResource": {
+			"ComputeInstanceResource" + instanceName: {
 				Type: "gcp:compute:Instance",
 				Properties: Model_GCP_ComputeInstance_Properties{
 					Name:        instanceName,

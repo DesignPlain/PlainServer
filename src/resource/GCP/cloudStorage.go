@@ -2,7 +2,6 @@ package gcp
 
 import (
 	baseModel "DesignSphere_Server/src/resource"
-	"fmt"
 )
 
 type Model_GCP_Bucket_Properties struct {
@@ -23,10 +22,10 @@ func CreateBucketModel(projectName string, bucketName string, members []string, 
 		Runtime:     "yaml",
 		Description: "GCP cloud storage bucket pulumi config",
 		Outputs: map[string]string{
-			"bucketURL": "${StorageBucketResource.url}",
+			"bucketURL": "${StorageBucketResource" + bucketName + ".url}",
 		},
 		Resources: map[string]baseModel.Yaml_Resource{
-			"StorageBucketResource": {
+			"StorageBucketResource" + bucketName: {
 				Type: "gcp:storage:Bucket",
 				Properties: Model_GCP_Bucket_Properties{
 					Name:     bucketName,
@@ -49,7 +48,7 @@ func CreateBucketModel(projectName string, bucketName string, members []string, 
 			bucketName + "IAMbinding": {
 				Type: "gcp:storage:BucketIAMBinding",
 				Properties: Model_GCP_Bucket_Properties{
-					Bucket:  fmt.Sprintf("${%s.name}", bucketName),
+					Bucket:  "${StorageBucketResource" + bucketName + ".name}",
 					Role:    "roles/storage.objectViewer",
 					Members: members,
 				},

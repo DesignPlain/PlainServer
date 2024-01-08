@@ -51,6 +51,25 @@ func (_controllerStatus *APIControllerImp) AddCORSHeader(c *gin.Context) {
 	c.Header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
 }
 
+var backendGlobalContext = make(map[string]any)
+
+func (_controllerStatus *APIControllerImp) InitServer() {
+	Log(INFO, "Initialializing the server.")
+	data, err := os.ReadFile("./.localStore/ServerState")
+	if err == nil {
+		json.Unmarshal(data, &backendGlobalContext)
+		_controllerStatus.ProjectConfig["GCP"] = ProjectData{
+			ProjectName:    backendGlobalContext["GCP_ProjectName"].(string),
+			APIKeyFileName: backendGlobalContext["GCP_APIFileName"].(string),
+		}
+	}
+}
+
+func SaveServeState() {
+	data, _ := json.Marshal(backendGlobalContext)
+	os.WriteFile("./.localStore/ServerState", data, 0644)
+}
+
 func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 	if !_controllerStatus.ValidateState() {
 		c.String(http.StatusForbidden, "Please configure the cloud project")
@@ -67,6 +86,15 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 		doDeploy := true
 		var nextResourceIndex int
 		pendingIndexQueue := getNextResourceIndexToDeploy(_controllerStatus.DataStore)
+
+		var serarray []int
+		for i := pendingIndexQueue.Front(); i != nil; i = i.Next() {
+			serarray = append(serarray, i.Value.(int))
+		}
+
+		backendGlobalContext["stackOrder"] = serarray
+
+		SaveServeState()
 		for doDeploy {
 			if pendingIndexQueue.Len() > 0 {
 				front := pendingIndexQueue.Front()
@@ -143,6 +171,8 @@ func (_controllerStatus *APIControllerImp) DeployStack(c *gin.Context) {
 
 						if err == nil {
 							_controllerStatus.CurrentStack = append(_controllerStatus.CurrentStack, data.Id.String())
+							backendGlobalContext["CurrentStack"] = _controllerStatus.CurrentStack
+							SaveServeState()
 							Log(DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
 						} else {
 							Log(DEBUG, "Stack Up failed with error: ")
@@ -211,6 +241,10 @@ func (_controllerStatus *APIControllerImp) UploadProjectConfig(c *gin.Context) {
 		APIKeyFileName: filename,
 	}
 
+	backendGlobalContext["GCP_ProjectName"] = projectName
+	backendGlobalContext["GCP_APIFileName"] = filename
+
+	SaveServeState()
 	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 }
 
@@ -223,9 +257,29 @@ func (_controllerStatus *APIControllerImp) DestroyStack(c *gin.Context) {
 	projectConfig := _controllerStatus.ProjectConfig["GCP"]
 	Log(DEBUG, "Destroying stack")
 	Log(DEBUG, _controllerStatus.CurrentStack)
-	for i := 0; i < len(_controllerStatus.CurrentStack); i++ {
+	doDestroy := true
+	pendingIndexQueuear := backendGlobalContext["stackOrder"].([]int)
+	nextResourceIndex := 0
+	var pendingIndexQueue *list.List = list.New()
+
+	_controllerStatus.CurrentStack = backendGlobalContext["CurrentStack"].([]string)
+
+	for i := 0; i < len(pendingIndexQueuear); i++ {
+		pendingIndexQueue.PushBack(i)
+	}
+
+	for doDestroy {
+		if pendingIndexQueue.Len() > 0 {
+			back := pendingIndexQueue.Back()
+			nextResourceIndex = back.Value.(int)
+			Log(DEBUG, "Destroy index: "+string(nextResourceIndex))
+			pendingIndexQueue.Remove(back)
+		} else {
+			doDestroy = false
+		}
+
 		Log(DEBUG, _controllerStatus.CurrentStack)
-		PulumiStackDestroy(_controllerStatus.CurrentStack[i], &projectConfig)
+		PulumiStackDestroy(_controllerStatus.CurrentStack[nextResourceIndex], &projectConfig)
 	}
 
 	// TODO: Check if any of the stack destroy logic failed
@@ -312,15 +366,7 @@ func PulumiStackUp(stackId string, yamlConfigModel string, projectConfig *Projec
 				}
 			}
 
-			f, err := os.Create(workDir + "/Pulumi.yaml")
-			check(err)
-
-			defer f.Close()
-
-			_, err = f.WriteString(yamlConfigModel)
-			check(err)
-
-			f.Sync()
+			os.WriteFile(workDir+"/Pulumi.yaml", []byte(yamlConfigModel), 0644)
 		} else {
 			return nil, err
 		}
