@@ -1,0 +1,3 @@
+package types
+
+type Dataplex_DatascanDataQualitySpecRuleUniquenessExpectation struct{}

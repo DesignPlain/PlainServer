@@ -1,0 +1,3 @@
+package types
+
+type Essentialcontacts_DocumentAiWarehouseDocumentSchemaPropertyDefinitionIntegerTypeOptions struct{}
