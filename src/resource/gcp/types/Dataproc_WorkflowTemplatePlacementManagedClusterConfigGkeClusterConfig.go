@@ -1,0 +1,6 @@
+package types
+
+type Dataproc_WorkflowTemplatePlacementManagedClusterConfigGkeClusterConfig struct {
+	// A target for the deployment.
+	NamespacedGkeDeploymentTarget Dataproc_WorkflowTemplatePlacementManagedClusterConfigGkeClusterConfigNamespacedGkeDeploymentTarget `json:"namespacedGkeDeploymentTarget,omitempty" yaml:"namespacedGkeDeploymentTarget,omitempty"`
+}

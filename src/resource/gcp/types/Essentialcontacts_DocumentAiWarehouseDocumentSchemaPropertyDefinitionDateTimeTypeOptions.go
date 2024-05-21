@@ -1,0 +1,3 @@
+package types
+
+type Essentialcontacts_DocumentAiWarehouseDocumentSchemaPropertyDefinitionDateTimeTypeOptions struct{}

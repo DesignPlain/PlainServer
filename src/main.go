@@ -23,17 +23,14 @@ func main() {
 
 	r := gin.Default()
 
-	var apiController APIController
-	_apiControllerState := &APIControllerImp{
+	apiController := &APIController{
 		DataStore:     nil,
 		CurrentStack:  nil,
 		Count:         0,
 		ProjectConfig: make(map[string]ProjectData),
 	}
 
-	_apiControllerState.InitServer()
-
-	apiController = _apiControllerState
+	apiController.InitServer()
 
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
 

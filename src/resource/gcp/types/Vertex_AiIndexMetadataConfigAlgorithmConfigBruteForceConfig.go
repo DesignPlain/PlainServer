@@ -1,0 +1,3 @@
+package types
+
+type Vertex_AiIndexMetadataConfigAlgorithmConfigBruteForceConfig struct{}
