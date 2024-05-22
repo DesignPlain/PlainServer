@@ -45,6 +45,7 @@ func main() {
 	// r.POST("/preview", DeploymentHandler)
 
 	r.POST("/uploadProjectConfig", apiController.UploadProjectConfig)
+	r.GET("/getProjectConfig", apiController.GetProjectConfig)
 
 	// listen and serve on 0.0.0.0:8080
 	r.Run()
