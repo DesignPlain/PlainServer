@@ -29,9 +29,10 @@ func (s LogLevel) String() string {
 }
 
 func Log(logLevel LogLevel, data any) {
+
 	fmt.Printf(
-		"[DesignSphere-%s] [%+v] Request JSON: %+v\n",
+		"[DesignSphere-%s] [%+v]: %+v\n",
 		logLevel,
-		time.Now().Format("Jan 02, 2006 3:04 PM"),
+		time.Now().Format("Jan 02, 2006 03:04:05"),
 		data)
 }

@@ -52,11 +52,15 @@ func (_controllerStatus *APIController) InitServer() {
 	data, err := os.ReadFile("./.localStore/ServerState")
 	if err == nil {
 		json.Unmarshal(data, &backendGlobalContext)
+
 		_controllerStatus.ProjectConfig["GCP"] = ProjectData{
-			ProjectName:         backendGlobalContext["GCP_ProjectName"].(string),
-			GCP_APIKeyFileName:  backendGlobalContext["GCP_APIFileName"].(string),
+			ProjectName:        backendGlobalContext["GCP_ProjectName"].(string),
+			GCP_APIKeyFileName: backendGlobalContext["GCP_APIFileName"].(string),
+		}
+
+		_controllerStatus.ProjectConfig["AWS"] = ProjectData{
 			AWS_AccessKeyId:     backendGlobalContext["AWS_AccessKeyId"].(string),
-			AWS_SecretAccessKey: backendGlobalContext["AWS_AccessKey"].(string),
+			AWS_SecretAccessKey: backendGlobalContext["AWS_SecretKey"].(string),
 		}
 		utils.Log(utils.DEBUG, _controllerStatus.ProjectConfig)
 	}
@@ -131,7 +135,9 @@ func (_controllerStatus *APIController) DeployStack(c *gin.Context) {
 							SaveServeState()
 							utils.Log(utils.DEBUG, "Adding new data to stack "+strings.Join(_controllerStatus.CurrentStack, " "))
 						} else {
-							utils.Log(utils.DEBUG, "Stack Up failed with error: "+err.Error())
+							utils.Log(utils.ERROR, "Stack Up failed with error: "+err.Error())
+							c.JSON(403, err.Error())
+							return
 						}
 						data.Outputs = resourceOutputs
 					}
@@ -193,13 +199,13 @@ func getNextResourceIndexToDeploy(dataStore []DeploymentResource) *list.List {
 	var pendingIndexQueue *list.List = list.New()
 
 	for i := 0; i < len(dataStore); i++ {
-		if dataStore[i].ResourceType == Virtual_Private_Cloud {
+		if dataStore[i].ResourceType == COMPUTE_NETWORK || dataStore[i].ResourceType == EC2_VPC {
 			if first == nil {
 				first = pendingIndexQueue.PushFront(i)
 			} else {
 				pendingIndexQueue.PushFront(i)
 			}
-		} else if dataStore[i].ResourceType == Subnet {
+		} else if dataStore[i].ResourceType == COMPUTE_SUBNETWORK || dataStore[i].ResourceType == EC2_SUBNET {
 			if first == nil {
 				pendingIndexQueue.PushBack(i)
 			} else {
@@ -215,25 +221,77 @@ func getNextResourceIndexToDeploy(dataStore []DeploymentResource) *list.List {
 }
 
 func (_controllerStatus *APIController) UploadProjectConfig(c *gin.Context) {
-	// single file
 	file, _ := c.FormFile("file")
+	projectName := c.Request.Form.Get("projectName")
 
-	projectName := c.Request.Form["projectName"][0]
-	log.Println(url.PathEscape(projectName))
-	filename := url.PathEscape(strings.Replace(projectName, ".", "", -1)) + ".json"
-	// Upload the file to specific dst.
-	c.SaveUploadedFile(file, ROOTDIR+filename)
+	awsKeyid := c.Request.Form.Get("awsKeyid")
+	awsSecretKey := c.Request.Form.Get("awsSecretKey")
 
-	_controllerStatus.ProjectConfig["GCP"] = ProjectData{
-		ProjectName:        projectName,
-		GCP_APIKeyFileName: filename,
+	if file != nil {
+		filename := url.PathEscape(strings.Replace(projectName, ".", "", -1)) + ".json"
+		if filename != "" {
+			c.SaveUploadedFile(file, ROOTDIR+filename)
+			backendGlobalContext["GCP_APIFileName"] = filename
+		}
 	}
 
-	backendGlobalContext["GCP_ProjectName"] = projectName
-	backendGlobalContext["GCP_APIFileName"] = filename
+	if projectName != "" {
+		backendGlobalContext["GCP_ProjectName"] = projectName
+	}
+
+	_, c1 := backendGlobalContext["GCP_ProjectName"]
+	_, c2 := backendGlobalContext["GCP_APIFileName"]
+
+	if c1 || c2 {
+		_controllerStatus.ProjectConfig["GCP"] = ProjectData{
+			ProjectName:        backendGlobalContext["GCP_ProjectName"].(string),
+			GCP_APIKeyFileName: backendGlobalContext["GCP_APIFileName"].(string),
+		}
+	}
+
+	if awsKeyid != "" {
+		backendGlobalContext["AWS_AccessKeyId"] = awsKeyid
+	}
+	if awsSecretKey != "" {
+		backendGlobalContext["AWS_SecretKey"] = awsSecretKey
+	}
+
+	_, c1 = backendGlobalContext["AWS_AccessKeyId"]
+	_, c2 = backendGlobalContext["AWS_SecretKey"]
+
+	if c1 || c2 {
+		_controllerStatus.ProjectConfig["AWS"] = ProjectData{
+			ProjectName:        backendGlobalContext["AWS_AccessKeyId"].(string),
+			GCP_APIKeyFileName: backendGlobalContext["AWS_SecretKey"].(string),
+		}
+	}
 
 	SaveServeState()
-	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+	c.String(http.StatusOK, "Done")
+}
+
+func (_controllerStatus *APIController) GetProjectConfig(c *gin.Context) {
+	var projectConfig = ProjectData{}
+
+	if _, p := backendGlobalContext["AWS_AccessKeyId"]; p {
+		projectConfig.AWS_AccessKeyId = backendGlobalContext["AWS_AccessKeyId"].(string)
+	}
+
+	if _, p := backendGlobalContext["AWS_SecretKey"]; p {
+		//projectConfig.AWS_SecretAccessKey = backendGlobalContext["AWS_SecretKey"].(string)
+		projectConfig.AWS_SecretAccessKey = "****************"
+
+	}
+
+	if _, p := backendGlobalContext["GCP_ProjectName"]; p {
+		projectConfig.ProjectName = backendGlobalContext["GCP_ProjectName"].(string)
+	}
+
+	if _, p := backendGlobalContext["GCP_APIFileName"]; p {
+		projectConfig.GCP_APIKeyFileName = backendGlobalContext["GCP_APIFileName"].(string)
+	}
+
+	c.JSON(http.StatusOK, projectConfig)
 }
 
 func (_controllerStatus *APIController) DestroyStack(c *gin.Context) {
@@ -278,20 +336,21 @@ func (_controllerStatus *APIController) DestroyStack(c *gin.Context) {
 
 func (_controllerStatus *APIController) SaveState(c *gin.Context) {
 	var depResource []DeploymentResource
-
 	var jsonData []byte
-	if c.Request.Body != nil {
-		jsonData, _ = io.ReadAll(c.Request.Body)
+
+	if c.Request.Body == nil {
+		c.JSON(401, gin.H{"message": "Empty body"})
 	}
 
+	jsonData, _ = io.ReadAll(c.Request.Body)
 	if err := json.Unmarshal(jsonData, &depResource); err != nil {
-		fmt.Println(err)
+		utils.Log(utils.ERROR, err)
 		return
 	}
 
 	utils.Log(utils.DEBUG, "Saving state")
-	_controllerStatus.Count += 1
 
+	_controllerStatus.Count += 1
 	_controllerStatus.DataStore = depResource
 
 	data, _ := json.Marshal(_controllerStatus.DataStore)
@@ -393,21 +452,20 @@ func PulumiStackUp(provider ProviderType, stackId string, yamlConfigModel string
 
 	// utils.Log(utils.DEBUG, aa)
 
-	// previewResult, err := stack.Preview(ctx)
-	// if err != nil {
-	// 	utils.Log(utils.ERROR, err)
-	// 	return
-	// }
+	previewResult, err := stack.Preview(ctx)
+	if err != nil {
+		utils.Log(utils.ERROR, err)
+		// 	return
+	}
 
-	// utils.Log(utils.DEBUG, previewResult)
+	utils.Log(utils.DEBUG, previewResult)
 
 	stackUpResult, err := stack.Up(ctx)
 	utils.Log(utils.DEBUG, "Creating Stack "+stackName)
 	if err != nil {
-		utils.Log(utils.ERROR, err)
-		utils.Log(utils.DEBUG, stackUpResult)
 		return nil, err
 	}
+
 	utils.Log(utils.DEBUG, stackUpResult)
 	var resOuts []ResourceOutput
 	for key, element := range stackUpResult.Outputs {

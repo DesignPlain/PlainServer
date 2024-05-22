@@ -23,7 +23,7 @@ func CreateResourceModel(project_name string, description string, resource_type 
 		// 	"cpuPlatform": "${ComputeInstanceResource" + instanceName + ".cpuPlatform}",
 		// },
 		Resources: map[string]Yaml_Resource{
-			resource_type.String() + "_" + resource_instance_name: {
+			"resource_type.String()" + "_" + resource_instance_name: {
 				Type:       "gcp:compute:Instance",
 				Properties: resource_instance,
 			},

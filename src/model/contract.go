@@ -2,6 +2,8 @@ package model
 
 import (
 	gcp "DesignSphere_Server/src/resource/gcp/compute"
+
+	storage "DesignSphere_Server/src/resource/gcp/storage"
 	utils "DesignSphere_Server/src/utils"
 	"encoding/json"
 
@@ -48,7 +50,7 @@ type DeploymentResource struct {
 
 /*
 Custom JSON deserializer for the `DeploymentResource` type.
-This method will deserialize `ResourceConfig` to it's respective concrete type based on the  `ProviderType` and `Resourcetype`
+This method will deserialize `ResourceConfig` to it's respective concrete type based on the `ProviderType` and `Resourcetype`
 */
 func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 	type DeploymentResourceAlias DeploymentResource
@@ -67,7 +69,6 @@ func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 	}
 
 	utils.Log(utils.DEBUG, tmpResource)
-
 	utils.Log(utils.DEBUG, string(rawResConfig))
 
 	resConfig, err := GetResourceConfigInstance(c.ProviderType, c.ResourceType, rawResConfig)
@@ -80,13 +81,45 @@ func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func GetResourceConfigInstance(provider_type ProviderType, resource_type ResourceType, rawResConfig json.RawMessage) (Any, error) {
+var resourceTypeMap = map[ResourceType]func() Any{
+	COMPUTE_INSTANCE: func() Any {
+		return &gcp.Instance{}
+	},
+	COMPUTE_NETWORK: func() Any {
+		return &gcp.Network{}
+	},
+	STORAGE_BUCKET: func() Any {
+		return &storage.Bucket{}
+	},
+}
 
-	var resConfig gcp.Instance
+func GetResourceConfigInstance(provider_type ProviderType, resource_type ResourceType, rawResConfig json.RawMessage) (Any, error) {
+	resConfig := resourceTypeMap[resource_type]()
 	if err := json.Unmarshal(rawResConfig, &resConfig); err != nil {
-		return nil, err
+		return nil, ResourceUnMarshalFailed
 	}
+
+	// TODO: Validate the resource instance
+
 	return resConfig, nil
+}
+
+/*
+Server Error Type enum
+*/
+type ServerError int64
+
+const (
+	ResourceUnMarshalFailed ServerError = iota
+)
+
+func (err ServerError) Error() string {
+	switch err {
+	case ResourceUnMarshalFailed:
+		return "Unmarshalling resource type failed"
+	}
+
+	return "unknown"
 }
 
 type ResourceOutput struct {
@@ -111,46 +144,24 @@ type UIShape struct {
 }
 
 /*
-Resource Type Enum for a cloud provider resource
-*/
-type ResourceType int64
-
-const (
-	Lambda ResourceType = iota
-	Database
-	EC2
-	Simple_Storage_Service
-	SQS
-	Elastic_Load_Balancer
-	APIGateway
-	Virtual_Private_Cloud
-	Subnet
-	DynamoDB
-)
-
-func (s ResourceType) String() string {
-	switch s {
-	case Lambda:
-		return "Lambda"
-	case EC2:
-		return "EC2"
-	case Database:
-		return "Database"
-	case Virtual_Private_Cloud:
-		return "Virtual_Private_Cloud"
-	case Simple_Storage_Service:
-		return "Simple_Storage_Service"
-	}
-	return "unknown"
-}
-
-/*
 Provider Type Enum for a cloud resource
 */
 type ProviderType int64
 
 const (
-	GCP ProviderType = iota
-	AZURE
+	UNKNOWN ProviderType = iota
+	GCP
 	AWS
+	// AZURE
 )
+
+func (s ProviderType) String() string {
+	switch s {
+	case GCP:
+		return "gcp"
+	case AWS:
+		return "aws"
+	}
+
+	return "unknown"
+}
