@@ -1,0 +1,9 @@
+package types
+
+type Kinesisanalyticsv2_ApplicationApplicationConfigurationSqlApplicationConfigurationInputInputSchemaRecordFormatMappingParameters struct {
+	// Provides additional mapping information when the record format uses delimiters (for example, CSV).
+	CsvMappingParameters Kinesisanalyticsv2_ApplicationApplicationConfigurationSqlApplicationConfigurationInputInputSchemaRecordFormatMappingParametersCsvMappingParameters `json:"csvMappingParameters,omitempty" yaml:"csvMappingParameters,omitempty"`
+
+	// Provides additional mapping information when JSON is the record format on the streaming source.
+	JsonMappingParameters Kinesisanalyticsv2_ApplicationApplicationConfigurationSqlApplicationConfigurationInputInputSchemaRecordFormatMappingParametersJsonMappingParameters `json:"jsonMappingParameters,omitempty" yaml:"jsonMappingParameters,omitempty"`
+}

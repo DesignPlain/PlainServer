@@ -1,0 +1,3 @@
+package types
+
+type Cloudwatch_getLogDataProtectionPolicyDocumentStatementOperationDeidentifyMaskConfig struct{}

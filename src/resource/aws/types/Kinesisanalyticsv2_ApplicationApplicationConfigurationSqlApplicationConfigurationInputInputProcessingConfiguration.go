@@ -1,0 +1,6 @@
+package types
+
+type Kinesisanalyticsv2_ApplicationApplicationConfigurationSqlApplicationConfigurationInputInputProcessingConfiguration struct {
+	// Describes the Lambda function that is used to preprocess the records in the stream before being processed by your application code.
+	InputLambdaProcessor Kinesisanalyticsv2_ApplicationApplicationConfigurationSqlApplicationConfigurationInputInputProcessingConfigurationInputLambdaProcessor `json:"inputLambdaProcessor,omitempty" yaml:"inputLambdaProcessor,omitempty"`
+}

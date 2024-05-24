@@ -1,0 +1,12 @@
+package types
+
+type Lex_V2modelsSlotValueElicitationSettingPromptSpecificationPromptAttemptsSpecificationAudioAndDtmfInputSpecification struct {
+	//
+	DtmfSpecification Lex_V2modelsSlotValueElicitationSettingPromptSpecificationPromptAttemptsSpecificationAudioAndDtmfInputSpecificationDtmfSpecification `json:"dtmfSpecification,omitempty" yaml:"dtmfSpecification,omitempty"`
+
+	//
+	StartTimeoutMs int `json:"startTimeoutMs,omitempty" yaml:"startTimeoutMs,omitempty"`
+
+	//
+	AudioSpecification Lex_V2modelsSlotValueElicitationSettingPromptSpecificationPromptAttemptsSpecificationAudioAndDtmfInputSpecificationAudioSpecification `json:"audioSpecification,omitempty" yaml:"audioSpecification,omitempty"`
+}

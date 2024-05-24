@@ -1,0 +1,3 @@
+package types
+
+type S3_BucketLoggingV2TargetObjectKeyFormatSimplePrefix struct{}

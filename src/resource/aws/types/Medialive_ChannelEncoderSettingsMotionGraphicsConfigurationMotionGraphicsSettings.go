@@ -1,0 +1,6 @@
+package types
+
+type Medialive_ChannelEncoderSettingsMotionGraphicsConfigurationMotionGraphicsSettings struct {
+	// Html Motion Graphics Settings.
+	HtmlMotionGraphicsSettings Medialive_ChannelEncoderSettingsMotionGraphicsConfigurationMotionGraphicsSettingsHtmlMotionGraphicsSettings `json:"htmlMotionGraphicsSettings,omitempty" yaml:"htmlMotionGraphicsSettings,omitempty"`
+}

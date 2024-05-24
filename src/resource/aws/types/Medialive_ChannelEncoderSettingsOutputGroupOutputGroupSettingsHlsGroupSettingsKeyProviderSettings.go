@@ -1,0 +1,6 @@
+package types
+
+type Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsKeyProviderSettings struct {
+	//
+	StaticKeySettings []Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsKeyProviderSettingsStaticKeySetting `json:"staticKeySettings,omitempty" yaml:"staticKeySettings,omitempty"`
+}

@@ -1,0 +1,3 @@
+package types
+
+type Appflow_ConnectorProfileConnectorProfileConfigConnectorProfilePropertiesTrendmicro struct{}

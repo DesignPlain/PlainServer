@@ -1,0 +1,6 @@
+package types
+
+type Networkfirewall_getFirewallPolicyFirewallPolicyStatelessCustomActionActionDefinition struct {
+	//
+	PublishMetricActions []Networkfirewall_getFirewallPolicyFirewallPolicyStatelessCustomActionActionDefinitionPublishMetricAction `json:"publishMetricActions,omitempty" yaml:"publishMetricActions,omitempty"`
+}

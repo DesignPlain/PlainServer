@@ -1,0 +1,3 @@
+package types
+
+type S3control_StorageLensConfigurationStorageLensConfigurationDataExportS3BucketDestinationEncryptionSseS3 struct{}
