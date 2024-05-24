@@ -1,0 +1,18 @@
+package types
+
+type Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsHlsCdnSetting struct {
+	//
+	HlsMediaStoreSettings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsHlsCdnSettingHlsMediaStoreSettings `json:"hlsMediaStoreSettings,omitempty" yaml:"hlsMediaStoreSettings,omitempty"`
+
+	//
+	HlsS3Settings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsHlsCdnSettingHlsS3Settings `json:"hlsS3Settings,omitempty" yaml:"hlsS3Settings,omitempty"`
+
+	//
+	HlsWebdavSettings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsHlsCdnSettingHlsWebdavSettings `json:"hlsWebdavSettings,omitempty" yaml:"hlsWebdavSettings,omitempty"`
+
+	//
+	HlsAkamaiSettings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsHlsCdnSettingHlsAkamaiSettings `json:"hlsAkamaiSettings,omitempty" yaml:"hlsAkamaiSettings,omitempty"`
+
+	//
+	HlsBasicPutSettings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsHlsGroupSettingsHlsCdnSettingHlsBasicPutSettings `json:"hlsBasicPutSettings,omitempty" yaml:"hlsBasicPutSettings,omitempty"`
+}

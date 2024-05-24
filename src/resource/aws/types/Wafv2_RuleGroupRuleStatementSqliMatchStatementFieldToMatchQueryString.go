@@ -1,0 +1,3 @@
+package types
+
+type Wafv2_RuleGroupRuleStatementSqliMatchStatementFieldToMatchQueryString struct{}

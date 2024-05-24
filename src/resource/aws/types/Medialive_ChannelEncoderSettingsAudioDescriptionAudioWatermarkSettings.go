@@ -1,0 +1,6 @@
+package types
+
+type Medialive_ChannelEncoderSettingsAudioDescriptionAudioWatermarkSettings struct {
+	//
+	NielsenWatermarksSettings Medialive_ChannelEncoderSettingsAudioDescriptionAudioWatermarkSettingsNielsenWatermarksSettings `json:"nielsenWatermarksSettings,omitempty" yaml:"nielsenWatermarksSettings,omitempty"`
+}

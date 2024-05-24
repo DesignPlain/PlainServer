@@ -1,0 +1,6 @@
+package types
+
+type Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsFrameCaptureGroupSettingsFrameCaptureCdnSettings struct {
+	//
+	FrameCaptureS3Settings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsFrameCaptureGroupSettingsFrameCaptureCdnSettingsFrameCaptureS3Settings `json:"frameCaptureS3Settings,omitempty" yaml:"frameCaptureS3Settings,omitempty"`
+}
