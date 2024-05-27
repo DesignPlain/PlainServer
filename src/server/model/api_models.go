@@ -40,12 +40,13 @@ type DeploymentResource struct {
 	/*
 	   Icon source location for the UI component icon
 	*/
-	IconSrc         string     `json:"iconSrc"`
-	Position        UIPosition `json:"position"`
-	Inlets          []string   `json:"inlets"`
-	Outlets         []string   `json:"outlets"`
-	InletMapString  string     `json:"inletMapString"`
-	OutletMapString string     `json:"outletMapString"`
+	IconSrc   string         `json:"iconSrc"`
+	Status    ResourceStatus `json:"status"`
+	Position  UIPosition     `json:"position"`
+	Inlets    []string       `json:"inlets"`
+	Outlets   []string       `json:"outlets"`
+	InletMap  Any            `json:"inletMap"`
+	OutletMap Any            `json:"outletMap"`
 
 	/*
 	   The configuration representing a cloud resource
@@ -73,10 +74,7 @@ func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &tmpResource); err != nil {
 		return err
 	}
-
-	utils.Log(utils.DEBUG, tmpResource)
 	utils.Log(utils.DEBUG, string(rawResConfig))
-
 	resConfig, err := GetResourceConfigInstance(c.ProviderType, c.ResourceType, rawResConfig)
 	if err != nil {
 		return err
@@ -153,21 +151,35 @@ type ServerError int64
 
 const (
 	ResourceUnMarshalFailed ServerError = iota
+	UnknownResourceProvider
+	NoResourcesAvailable
 )
 
 func (err ServerError) Error() string {
 	switch err {
 	case ResourceUnMarshalFailed:
-		return "Unmarshalling resource type failed"
+		return "Unmarshalling resource type failed."
+	case UnknownResourceProvider:
+		return "Unknown resource provider specified."
+	case NoResourcesAvailable:
+		return "No saved resources are available."
 	}
 
-	return "unknown"
+	return "Unknown Server Error"
 }
 
 type ResourceOutput struct {
 	Name  string `json:"name"`
 	Value Any    `json:"value"`
 }
+
+type ResourceStatus int8
+
+const (
+	Draft ResourceStatus = iota
+	Deployed
+	Errored
+)
 
 /*
 UI position model for UI component rendering
