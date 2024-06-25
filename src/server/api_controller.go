@@ -9,7 +9,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -47,51 +46,26 @@ func StartServer() {
 		Count:        0,
 	}
 
-	apiController.InitServer()
-
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20
 
 	r.Use(apiController.AddCORSHeader)
 
-	r.POST("/deploy", apiController.DeployStack)
-	r.POST("/state", apiController.SaveState)
-	r.GET("/state", apiController.GetState)
-	r.GET("/stack", apiController.DestroyStack)
+	rG := r.Group("/api")
+	{
+		rG.POST("/deploy", apiController.DeployStack)
+		rG.POST("/state", apiController.SaveState)
+		rG.GET("/state", apiController.GetState)
+		rG.GET("/stack", apiController.DestroyStack)
 
-	r.POST("/uploadProjectConfig", apiController.UploadProjectConfig)
-	r.GET("/getProjectConfig", apiController.GetProjectConfig)
-
-	r.Run()
-}
-
-func (_controllerStatus *APIController) InitServer() {
-	utils.Log(utils.INFO, "Initialializing the server.")
-	data, err := os.ReadFile("./.localStore/ServerState")
-	if err == nil {
-		utils.Log(utils.INFO, "Syncing server state")
-		json.Unmarshal(data, &backendGlobalContext)
-
-		// _controllerStatus.ProjectConfig["GCP"] = ProjectData{
-		// 	ProjectName:        backendGlobalContext["GCP_ProjectName"].(string),
-		// 	GCP_APIKeyFileName: backendGlobalContext["GCP_APIFileName"].(string),
-		// }
-
-		// _controllerStatus.ProjectConfig["AWS"] = ProjectData{
-		// 	AWS_AccessKeyId:     backendGlobalContext["AWS_AccessKeyId"].(string),
-		// 	AWS_SecretAccessKey: backendGlobalContext["AWS_SecretKey"].(string),
-		// }
-		// utils.Log(utils.DEBUG, _controllerStatus.ProjectConfig)
+		rG.POST("/uploadProjectConfig", apiController.UploadProjectConfig)
+		rG.GET("/getProjectConfig", apiController.GetProjectConfig)
 	}
 
-	//var depResource []DeploymentResource
-	data, err = os.ReadFile("./.localStore/Database")
-	// if err == nil {
-	// 	utils.Log(utils.INFO, "Syncing resource state")
-	// 	json.Unmarshal(data, &depResource)
-	// 	_controllerStatus.DataStore.Set() = depResource
-	// }
+	r.Static("/app", "./UI")
+	r.Static("/assets", "./UI/assets")
 
+	r.Run()
 }
 
 func (_controllerStatus *APIController) UploadProjectConfig(c *gin.Context) {
