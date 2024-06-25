@@ -17,7 +17,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const ROOTDIR = "/Users/nmbr7/.NMBR7/Projects/DesignSphere/TestBase/"
+const ROOTDIR = "/tmp/"
 const PULUMI_PROJECT_NAME = "DS_PulumiProject"
 
 type ProjectConfig struct {
