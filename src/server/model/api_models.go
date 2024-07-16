@@ -1,15 +1,6 @@
 package model
 
 import (
-	"DesignSphere_Server/src/resource/aws/ec2"
-	"DesignSphere_Server/src/resource/aws/elb"
-	"DesignSphere_Server/src/resource/aws/lambda"
-	"DesignSphere_Server/src/resource/aws/s3"
-
-	"DesignSphere_Server/src/resource/gcp/cloudfunctionsv2"
-	"DesignSphere_Server/src/resource/gcp/compute"
-	"DesignSphere_Server/src/resource/gcp/storage"
-
 	"DesignSphere_Server/src/utils"
 	"encoding/json"
 
@@ -42,11 +33,13 @@ type DeploymentResource struct {
 	*/
 	IconSrc   string         `json:"iconSrc"`
 	Status    ResourceStatus `json:"status"`
-	Position  UIPosition     `json:"position"`
-	Inlets    []string       `json:"inlets"`
-	Outlets   []string       `json:"outlets"`
-	InletMap  Any            `json:"inletMap"`
-	OutletMap Any            `json:"outletMap"`
+	LastError string         `json:"lastError"`
+
+	Position  UIPosition `json:"position"`
+	Inlets    []string   `json:"inlets"`
+	Outlets   []string   `json:"outlets"`
+	InletMap  Any        `json:"inletMap"`
+	OutletMap Any        `json:"outletMap"`
 
 	/*
 	   The configuration representing a cloud resource
@@ -85,50 +78,8 @@ func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var resourceTypeMap = map[ResourceType]func() Any{
-	// GCP Resources
-	COMPUTE_INSTANCE: func() Any {
-		return &compute.Instance{}
-	},
-	COMPUTE_NETWORK: func() Any {
-		return &compute.Network{}
-	},
-	STORAGE_BUCKET: func() Any {
-		return &storage.Bucket{}
-	},
-	COMPUTE_SUBNETWORK: func() Any {
-		return &compute.Subnetwork{}
-	},
-	CLOUDFUNCTIONSV2_FUNCTION: func() Any {
-		return &cloudfunctionsv2.Function{}
-	},
-	COMPUTE_FORWARDINGRULE: func() Any {
-		return &compute.ForwardingRule{}
-	},
-
-	// AWS Resources
-	EC2_INSTANCE: func() Any {
-		return &ec2.Instance{}
-	},
-	EC2_VPC: func() Any {
-		return &ec2.Vpc{}
-	},
-	EC2_SUBNET: func() Any {
-		return &ec2.Subnet{}
-	},
-	S3_BUCKET: func() Any {
-		return &s3.Bucket{}
-	},
-	LAMBDA_FUNCTION: func() Any {
-		return &lambda.Function{}
-	},
-	ELB_LOADBALANCER: func() Any {
-		return &elb.LoadBalancer{}
-	},
-}
-
 func GetResourceConfigInstance(provider_type ProviderType, resource_type ResourceType, rawResConfig json.RawMessage) (Any, error) {
-	initResourceConfigObject, ok := resourceTypeMap[resource_type]
+	initResourceConfigObject, ok := ResourceTypeMap[resource_type]
 
 	if !ok {
 		return nil, ResourceUnMarshalFailed

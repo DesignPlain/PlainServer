@@ -1,6 +1,120 @@
 package model
 
-import "strings"
+import (
+	"DesignSphere_Server/src/resource/gcp/accesscontextmanager"
+	"DesignSphere_Server/src/resource/gcp/activedirectory"
+	"DesignSphere_Server/src/resource/gcp/alloydb"
+	"DesignSphere_Server/src/resource/gcp/apigateway"
+	"DesignSphere_Server/src/resource/gcp/apigee"
+	"DesignSphere_Server/src/resource/gcp/appengine"
+	"DesignSphere_Server/src/resource/gcp/artifactregistry"
+	"DesignSphere_Server/src/resource/gcp/assuredworkloads"
+	"DesignSphere_Server/src/resource/gcp/backupdisasterrecovery"
+	"DesignSphere_Server/src/resource/gcp/beyondcorp"
+	"DesignSphere_Server/src/resource/gcp/biglake"
+	"DesignSphere_Server/src/resource/gcp/bigquery"
+	"DesignSphere_Server/src/resource/gcp/bigqueryanalyticshub"
+	"DesignSphere_Server/src/resource/gcp/bigquerydatapolicy"
+	"DesignSphere_Server/src/resource/gcp/bigtable"
+	"DesignSphere_Server/src/resource/gcp/billing"
+	"DesignSphere_Server/src/resource/gcp/binaryauthorization"
+	"DesignSphere_Server/src/resource/gcp/blockchainnodeengine"
+	"DesignSphere_Server/src/resource/gcp/certificateauthority"
+	"DesignSphere_Server/src/resource/gcp/certificatemanager"
+	"DesignSphere_Server/src/resource/gcp/cloudasset"
+	"DesignSphere_Server/src/resource/gcp/cloudbuild"
+	"DesignSphere_Server/src/resource/gcp/cloudbuildv2"
+	"DesignSphere_Server/src/resource/gcp/clouddeploy"
+	"DesignSphere_Server/src/resource/gcp/clouddomains"
+	"DesignSphere_Server/src/resource/gcp/cloudfunctions"
+	"DesignSphere_Server/src/resource/gcp/cloudfunctionsv2"
+	"DesignSphere_Server/src/resource/gcp/cloudidentity"
+	"DesignSphere_Server/src/resource/gcp/cloudids"
+	"DesignSphere_Server/src/resource/gcp/cloudrun"
+	"DesignSphere_Server/src/resource/gcp/cloudrunv2"
+	"DesignSphere_Server/src/resource/gcp/cloudscheduler"
+	"DesignSphere_Server/src/resource/gcp/cloudtasks"
+	"DesignSphere_Server/src/resource/gcp/composer"
+	"DesignSphere_Server/src/resource/gcp/compute"
+	"DesignSphere_Server/src/resource/gcp/container"
+	"DesignSphere_Server/src/resource/gcp/containeranalysis"
+	"DesignSphere_Server/src/resource/gcp/databasemigrationservice"
+	"DesignSphere_Server/src/resource/gcp/datacatalog"
+	"DesignSphere_Server/src/resource/gcp/dataflow"
+	"DesignSphere_Server/src/resource/gcp/dataform"
+	"DesignSphere_Server/src/resource/gcp/datafusion"
+	"DesignSphere_Server/src/resource/gcp/dataloss"
+	"DesignSphere_Server/src/resource/gcp/dataplex"
+	"DesignSphere_Server/src/resource/gcp/dataproc"
+	"DesignSphere_Server/src/resource/gcp/datastore"
+	"DesignSphere_Server/src/resource/gcp/datastream"
+	"DesignSphere_Server/src/resource/gcp/deploymentmanager"
+	"DesignSphere_Server/src/resource/gcp/diagflow"
+	"DesignSphere_Server/src/resource/gcp/discoveryengine"
+	"DesignSphere_Server/src/resource/gcp/dns"
+	"DesignSphere_Server/src/resource/gcp/edgecontainer"
+	"DesignSphere_Server/src/resource/gcp/edgenetwork"
+	"DesignSphere_Server/src/resource/gcp/endpoints"
+	"DesignSphere_Server/src/resource/gcp/essentialcontacts"
+	"DesignSphere_Server/src/resource/gcp/eventarc"
+	"DesignSphere_Server/src/resource/gcp/filestore"
+	"DesignSphere_Server/src/resource/gcp/firebase"
+	"DesignSphere_Server/src/resource/gcp/firebaserules"
+	"DesignSphere_Server/src/resource/gcp/firestore"
+	"DesignSphere_Server/src/resource/gcp/folder"
+	"DesignSphere_Server/src/resource/gcp/gkebackup"
+	"DesignSphere_Server/src/resource/gcp/gkehub"
+	"DesignSphere_Server/src/resource/gcp/gkeonprem"
+	"DesignSphere_Server/src/resource/gcp/healthcare"
+	"DesignSphere_Server/src/resource/gcp/iam"
+	"DesignSphere_Server/src/resource/gcp/iap"
+	"DesignSphere_Server/src/resource/gcp/identityplatform"
+	"DesignSphere_Server/src/resource/gcp/integrationconnectors"
+	"DesignSphere_Server/src/resource/gcp/kms"
+	"DesignSphere_Server/src/resource/gcp/logging"
+	"DesignSphere_Server/src/resource/gcp/looker"
+	"DesignSphere_Server/src/resource/gcp/memcache"
+	"DesignSphere_Server/src/resource/gcp/migrationcenter"
+	"DesignSphere_Server/src/resource/gcp/ml"
+	"DesignSphere_Server/src/resource/gcp/monitoring"
+	"DesignSphere_Server/src/resource/gcp/netapp"
+	"DesignSphere_Server/src/resource/gcp/networkconnectivity"
+	"DesignSphere_Server/src/resource/gcp/networkmanagement"
+	"DesignSphere_Server/src/resource/gcp/networksecurity"
+	"DesignSphere_Server/src/resource/gcp/networkservices"
+	"DesignSphere_Server/src/resource/gcp/notebooks"
+	"DesignSphere_Server/src/resource/gcp/organizations"
+	"DesignSphere_Server/src/resource/gcp/orgpolicy"
+	"DesignSphere_Server/src/resource/gcp/osconfig"
+	"DesignSphere_Server/src/resource/gcp/oslogin"
+	"DesignSphere_Server/src/resource/gcp/projects"
+	"DesignSphere_Server/src/resource/gcp/pubsub"
+	"DesignSphere_Server/src/resource/gcp/recaptcha"
+	"DesignSphere_Server/src/resource/gcp/redis"
+	"DesignSphere_Server/src/resource/gcp/resourcemanager"
+	"DesignSphere_Server/src/resource/gcp/runtimeconfig"
+	"DesignSphere_Server/src/resource/gcp/secretmanager"
+	"DesignSphere_Server/src/resource/gcp/securesourcemanager"
+	"DesignSphere_Server/src/resource/gcp/securitycenter"
+	"DesignSphere_Server/src/resource/gcp/securityposture"
+	"DesignSphere_Server/src/resource/gcp/serviceaccount"
+	"DesignSphere_Server/src/resource/gcp/servicedirectory"
+	"DesignSphere_Server/src/resource/gcp/servicenetworking"
+	"DesignSphere_Server/src/resource/gcp/serviceusage"
+	"DesignSphere_Server/src/resource/gcp/sourcerepo"
+	"DesignSphere_Server/src/resource/gcp/spanner"
+	"DesignSphere_Server/src/resource/gcp/sql"
+	"DesignSphere_Server/src/resource/gcp/storage"
+	"DesignSphere_Server/src/resource/gcp/tags"
+	"DesignSphere_Server/src/resource/gcp/tpu"
+	"DesignSphere_Server/src/resource/gcp/vertex"
+	"DesignSphere_Server/src/resource/gcp/vmwareengine"
+	"DesignSphere_Server/src/resource/gcp/vpcaccess"
+	"DesignSphere_Server/src/resource/gcp/workbench"
+	"DesignSphere_Server/src/resource/gcp/workflows"
+	"DesignSphere_Server/src/resource/gcp/workstations"
+	"strings"
+)
 
 /*
 Resource Type Enum for a cloud provider resource
@@ -897,61 +1011,6 @@ const (
 	WORKSTATIONS_WORKSTATIONIAMMEMBER
 	WORKSTATIONS_WORKSTATIONIAMPOLICY
 )
-
-// Get resource URI
-// Example: `gcp:compute:Instance`
-func (rType ResourceType) GetURI() string {
-	res := rType.String()
-
-	var provider_name = "aws"
-	if rType < RESOURCE_TYPE_LIMIT {
-		provider_name = "gcp"
-	}
-
-	res_parts := strings.Split(res, "_")
-	res_family := strings.ToLower(res_parts[0])
-
-	res = res_parts[1]
-
-	charArray := []rune(res)
-	res = strings.ToUpper(string(charArray[0])) + string(charArray[1:])
-
-	return provider_name + ":" + res_family + ":" + res
-}
-
-// TODO: auto generate this completely
-func (rType ResourceType) String() string {
-	switch rType {
-	// GCP Resources
-	case COMPUTE_INSTANCE:
-		return "Compute_Instance"
-	case STORAGE_BUCKET:
-		return "Storage_Bucket"
-	case COMPUTE_NETWORK:
-		return "Compute_Network"
-	case COMPUTE_SUBNETWORK:
-		return "Compute_Subnetwork"
-	case CLOUDFUNCTIONSV2_FUNCTION:
-		return "Cloudfunctionsv2_Function"
-	case COMPUTE_FORWARDINGRULE:
-		return "Compute_Forwardingrule"
-	// AWS Resources
-	case EC2_INSTANCE:
-		return "EC2_Instance"
-	case EC2_VPC:
-		return "EC2_VPC"
-	case EC2_SUBNET:
-		return "EC2_Subnet"
-	case S3_BUCKET:
-		return "S3_Bucket"
-	case LAMBDA_FUNCTION:
-		return "Lambda_Function"
-	case ELB_LOADBALANCER:
-		return "ELB_Loadbalancer"
-	}
-
-	return "Unknown ResourceType"
-}
 
 // AWS Resource Types
 const (
@@ -2295,3 +2354,4525 @@ const (
 	XRAY_GROUP
 	XRAY_SAMPLINGRULE
 )
+
+// Get resource URI
+// Example: `gcp:compute:Instance`
+func (rType ResourceType) GetURI() string {
+	res := rType.String()
+
+	var provider_name = "aws"
+	if rType < RESOURCE_TYPE_LIMIT {
+		provider_name = "gcp"
+	}
+
+	res_parts := strings.Split(res, "_")
+	res_family := strings.ToLower(res_parts[0])
+
+	res = res_parts[1]
+
+	charArray := []rune(res)
+	res = strings.ToUpper(string(charArray[0])) + string(charArray[1:])
+
+	return provider_name + ":" + res_family + ":" + res
+}
+
+// // TODO: auto generate this completely
+// func (rType ResourceType) String() string {
+// 	switch rType {
+// 	// GCP Resources
+// 	case COMPUTE_INSTANCE:
+// 		return "Compute_Instance"
+// 	case STORAGE_BUCKET:
+// 		return "Storage_Bucket"
+// 	case COMPUTE_NETWORK:
+// 		return "Compute_Network"
+// 	case COMPUTE_SUBNETWORK:
+// 		return "Compute_Subnetwork"
+// 	case CLOUDFUNCTIONSV2_FUNCTION:
+// 		return "Cloudfunctionsv2_Function"
+// 	case COMPUTE_FORWARDINGRULE:
+// 		return "Compute_Forwardingrule"
+// 	// AWS Resources
+// 	case EC2_INSTANCE:
+// 		return "EC2_Instance"
+// 	case EC2_VPC:
+// 		return "EC2_VPC"
+// 	case EC2_SUBNET:
+// 		return "EC2_Subnet"
+// 	case S3_BUCKET:
+// 		return "S3_Bucket"
+// 	case LAMBDA_FUNCTION:
+// 		return "Lambda_Function"
+// 	case ELB_LOADBALANCER:
+// 		return "ELB_Loadbalancer"
+// 	}
+
+// 	return "Unknown ResourceType"
+// }
+
+// var ResourceTypeMap = map[ResourceType]func() Any{
+// 	// GCP Resources
+// 	COMPUTE_INSTANCE: func() Any {
+// 		return &compute.Instance{}
+// 	},
+// 	COMPUTE_NETWORK: func() Any {
+// 		return &compute.Network{}
+// 	},
+// 	STORAGE_BUCKET: func() Any {
+// 		return &storage.Bucket{}
+// 	},
+// 	COMPUTE_SUBNETWORK: func() Any {
+// 		return &compute.Subnetwork{}
+// 	},
+// 	CLOUDFUNCTIONSV2_FUNCTION: func() Any {
+// 		return &cloudfunctionsv2.Function{}
+// 	},
+// 	COMPUTE_FORWARDINGRULE: func() Any {
+// 		return &compute.ForwardingRule{}
+// 	},
+
+// 	// AWS Resources
+// 	EC2_INSTANCE: func() Any {
+// 		return &ec2.Instance{}
+// 	},
+// 	EC2_VPC: func() Any {
+// 		return &ec2.Vpc{}
+// 	},
+// 	EC2_SUBNET: func() Any {
+// 		return &ec2.Subnet{}
+// 	},
+// 	S3_BUCKET: func() Any {
+// 		return &s3.Bucket{}
+// 	},
+// 	LAMBDA_FUNCTION: func() Any {
+// 		return &lambda.Function{}
+// 	},
+// 	ELB_LOADBALANCER: func() Any {
+// 		return &elb.LoadBalancer{}
+// 	},
+// }
+
+func (rType ResourceType) String() string {
+	switch rType {
+	case LOGGING_ORGANIZATIONBUCKETCONFIG:
+		return "Logging_OrganizationBucketConfig"
+	case NETWORKSERVICES_EDGECACHEKEYSET:
+		return "Networkservices_EdgeCacheKeyset"
+	case COMPUTE_HEALTHCHECK:
+		return "Compute_HealthCheck"
+	case COMPUTE_INSTANCESETTINGS:
+		return "Compute_InstanceSettings"
+	case DATACATALOG_TAXONOMYIAMBINDING:
+		return "Datacatalog_TaxonomyIamBinding"
+	case IAP_WEBTYPEAPPENGINGIAMPOLICY:
+		return "Iap_WebTypeAppEngingIamPolicy"
+	case CLOUDDEPLOY_CUSTOMTARGETTYPE:
+		return "Clouddeploy_CustomTargetType"
+	case CLOUDRUNV2_JOBIAMBINDING:
+		return "Cloudrunv2_JobIamBinding"
+	case PUBSUB_TOPICIAMMEMBER:
+		return "Pubsub_TopicIAMMember"
+	case BIGQUERYDATAPOLICY_DATAPOLICYIAMBINDING:
+		return "Bigquerydatapolicy_DataPolicyIamBinding"
+	case SOURCEREPO_REPOSITORY:
+		return "Sourcerepo_Repository"
+	case BIGQUERYANALYTICSHUB_DATAEXCHANGEIAMPOLICY:
+		return "Bigqueryanalyticshub_DataExchangeIamPolicy"
+	case COMPUTE_DISK:
+		return "Compute_Disk"
+	case COMPUTE_FIREWALLPOLICYRULE:
+		return "Compute_FirewallPolicyRule"
+	case LOGGING_BILLINGACCOUNTSINK:
+		return "Logging_BillingAccountSink"
+	case COMPUTE_SUBNETWORKIAMPOLICY:
+		return "Compute_SubnetworkIAMPolicy"
+	case FIREBASE_APPCHECKRECAPTCHAV3CONFIG:
+		return "Firebase_AppCheckRecaptchaV3Config"
+	case FOLDER_ACCESSAPPROVALSETTINGS:
+		return "Folder_AccessApprovalSettings"
+	case ESSENTIALCONTACTS_DOCUMENTAIPROCESSORDEFAULTVERSION:
+		return "Essentialcontacts_DocumentAiProcessorDefaultVersion"
+	case FIREBASE_APPCHECKAPPATTESTCONFIG:
+		return "Firebase_AppCheckAppAttestConfig"
+	case FIREBASE_HOSTINGSITE:
+		return "Firebase_HostingSite"
+	case ORGANIZATIONS_IAMCUSTOMROLE:
+		return "Organizations_IAMCustomRole"
+	case APIGEE_NATADDRESS:
+		return "Apigee_NatAddress"
+	case CLOUDFUNCTIONSV2_FUNCTIONIAMBINDING:
+		return "Cloudfunctionsv2_FunctionIamBinding"
+	case LOGGING_PROJECTBUCKETCONFIG:
+		return "Logging_ProjectBucketConfig"
+	case IAP_TUNNELINSTANCEIAMMEMBER:
+		return "Iap_TunnelInstanceIAMMember"
+	case KMS_KEYRINGIAMBINDING:
+		return "Kms_KeyRingIAMBinding"
+	case STORAGE_BUCKETIAMMEMBER:
+		return "Storage_BucketIAMMember"
+	case APIGEE_ENVKEYSTORE:
+		return "Apigee_EnvKeystore"
+	case CLOUDDOMAINS_REGISTRATION:
+		return "Clouddomains_Registration"
+	case COMPUTE_NETWORKPEERING:
+		return "Compute_NetworkPeering"
+	case DATACATALOG_TAGTEMPLATEIAMBINDING:
+		return "Datacatalog_TagTemplateIamBinding"
+	case COMPUTE_DISKIAMPOLICY:
+		return "Compute_DiskIamPolicy"
+	case FILESTORE_INSTANCE:
+		return "Filestore_Instance"
+	case NETWORKSECURITY_CLIENTTLSPOLICY:
+		return "Networksecurity_ClientTlsPolicy"
+	case IAP_BRAND:
+		return "Iap_Brand"
+	case COMPUTE_ROUTERNAT:
+		return "Compute_RouterNat"
+	case SECURITYCENTER_MUTECONFIG:
+		return "Securitycenter_MuteConfig"
+	case APIGATEWAY_GATEWAY:
+		return "Apigateway_Gateway"
+	case COMPUTE_MACHINEIMAGE:
+		return "Compute_MachineImage"
+	case BIGTABLE_TABLEIAMBINDING:
+		return "Bigtable_TableIamBinding"
+	case LOGGING_ORGANIZATIONSINK:
+		return "Logging_OrganizationSink"
+	case COMPUTE_VPNTUNNEL:
+		return "Compute_VPNTunnel"
+	case OSCONFIG_OSPOLICYASSIGNMENT:
+		return "Osconfig_OsPolicyAssignment"
+	case FIREBASE_HOSTINGCHANNEL:
+		return "Firebase_HostingChannel"
+	case GKEBACKUP_RESTOREPLANIAMMEMBER:
+		return "Gkebackup_RestorePlanIamMember"
+	case IDENTITYPLATFORM_TENANTDEFAULTSUPPORTEDIDPCONFIG:
+		return "Identityplatform_TenantDefaultSupportedIdpConfig"
+	case COMPUTE_NODETEMPLATE:
+		return "Compute_NodeTemplate"
+	case SERVICEUSAGE_CONSUMERQUOTAOVERRIDE:
+		return "Serviceusage_ConsumerQuotaOverride"
+	case SQL_SOURCEREPRESENTATIONINSTANCE:
+		return "Sql_SourceRepresentationInstance"
+	case DATALOSS_PREVENTIONINSPECTTEMPLATE:
+		return "Dataloss_PreventionInspectTemplate"
+	case DATAPLEX_TASKIAMMEMBER:
+		return "Dataplex_TaskIamMember"
+	case MONITORING_NOTIFICATIONCHANNEL:
+		return "Monitoring_NotificationChannel"
+	case DATAPROC_AUTOSCALINGPOLICYIAMPOLICY:
+		return "Dataproc_AutoscalingPolicyIamPolicy"
+	case TAGS_LOCATIONTAGBINDING:
+		return "Tags_LocationTagBinding"
+	case ALLOYDB_USER:
+		return "Alloydb_User"
+	case CLOUDFUNCTIONS_FUNCTIONIAMMEMBER:
+		return "Cloudfunctions_FunctionIamMember"
+	case CLOUDRUNV2_JOBIAMMEMBER:
+		return "Cloudrunv2_JobIamMember"
+	case COMPUTE_BACKENDBUCKET:
+		return "Compute_BackendBucket"
+	case SECURITYCENTER_SOURCEIAMPOLICY:
+		return "Securitycenter_SourceIamPolicy"
+	case CONTAINER_NODEPOOL:
+		return "Container_NodePool"
+	case SECURITYCENTER_INSTANCEIAMPOLICY:
+		return "Securitycenter_InstanceIamPolicy"
+	case STORAGE_TRANSFERJOB:
+		return "Storage_TransferJob"
+	case LOGGING_ORGANIZATIONSETTINGS:
+		return "Logging_OrganizationSettings"
+	case HEALTHCARE_DATASETIAMPOLICY:
+		return "Healthcare_DatasetIamPolicy"
+	case IAP_TUNNELINSTANCEIAMBINDING:
+		return "Iap_TunnelInstanceIAMBinding"
+	case KMS_CRYPTOKEYVERSION:
+		return "Kms_CryptoKeyVersion"
+	case COMPUTE_INSTANCEFROMMACHINEIMAGE:
+		return "Compute_InstanceFromMachineImage"
+	case ENDPOINTS_SERVICEIAMBINDING:
+		return "Endpoints_ServiceIamBinding"
+	case ACCESSCONTEXTMANAGER_ACCESSPOLICYIAMPOLICY:
+		return "Accesscontextmanager_AccessPolicyIamPolicy"
+	case APIGATEWAY_API:
+		return "Apigateway_Api"
+	case CLOUDDEPLOY_TARGETIAMBINDING:
+		return "Clouddeploy_TargetIamBinding"
+	case NETWORKSECURITY_ADDRESSGROUPIAMMEMBER:
+		return "Networksecurity_AddressGroupIamMember"
+	case BIGQUERY_DATASET:
+		return "Bigquery_Dataset"
+	case BILLING_SUBACCOUNT:
+		return "Billing_SubAccount"
+	case IAP_TUNNELINSTANCEIAMPOLICY:
+		return "Iap_TunnelInstanceIAMPolicy"
+	case IDENTITYPLATFORM_PROJECTDEFAULTCONFIG:
+		return "Identityplatform_ProjectDefaultConfig"
+	case APPENGINE_DOMAINMAPPING:
+		return "Appengine_DomainMapping"
+	case CLOUDRUNV2_SERVICEIAMMEMBER:
+		return "Cloudrunv2_ServiceIamMember"
+	case COMPUTE_BACKENDSERVICEIAMPOLICY:
+		return "Compute_BackendServiceIamPolicy"
+	case COMPUTE_PROJECTDEFAULTNETWORKTIER:
+		return "Compute_ProjectDefaultNetworkTier"
+	case CERTIFICATEMANAGER_CERTIFICATEMAP:
+		return "Certificatemanager_CertificateMap"
+	case SECURESOURCEMANAGER_INSTANCEIAMBINDING:
+		return "Securesourcemanager_InstanceIamBinding"
+	case APIGEE_TARGETSERVER:
+		return "Apigee_TargetServer"
+	case NETWORKCONNECTIVITY_HUB:
+		return "Networkconnectivity_Hub"
+	case NETWORKSECURITY_SECURITYPROFILE:
+		return "Networksecurity_SecurityProfile"
+	case VERTEX_AIMETADATASTORE:
+		return "Vertex_AiMetadataStore"
+	case PROJECTS_IAMAUDITCONFIG:
+		return "Projects_IAMAuditConfig"
+	case DNS_DNSMANAGEDZONEIAMPOLICY:
+		return "Dns_DnsManagedZoneIamPolicy"
+	case COMPUTE_INSTANCE:
+		return "Compute_Instance"
+	case COMPUTE_INSTANCEGROUPMANAGER:
+		return "Compute_InstanceGroupManager"
+	case ACCESSCONTEXTMANAGER_SERVICEPERIMETERRESOURCE:
+		return "Accesscontextmanager_ServicePerimeterResource"
+	case SECURITYCENTER_FOLDERCUSTOMMODULE:
+		return "Securitycenter_FolderCustomModule"
+	case STORAGE_TRANSFERAGENTPOOL:
+		return "Storage_TransferAgentPool"
+	case PROJECTS_USAGEEXPORTBUCKET:
+		return "Projects_UsageExportBucket"
+	case CLOUDBUILD_BITBUCKETSERVERCONFIG:
+		return "Cloudbuild_BitbucketServerConfig"
+	case GKEHUB_NAMESPACE:
+		return "Gkehub_Namespace"
+	case IAP_WEBIAMPOLICY:
+		return "Iap_WebIamPolicy"
+	case COMPUTE_FIREWALL:
+		return "Compute_Firewall"
+	case COMPUTE_REGIONDISKRESOURCEPOLICYATTACHMENT:
+		return "Compute_RegionDiskResourcePolicyAttachment"
+	case DNS_POLICY:
+		return "Dns_Policy"
+	case DATACATALOG_TAGTEMPLATE:
+		return "Datacatalog_TagTemplate"
+	case CLOUDIDENTITY_GROUP:
+		return "Cloudidentity_Group"
+	case FIRESTORE_DATABASE:
+		return "Firestore_Database"
+	case IAM_WORKFORCEPOOL:
+		return "Iam_WorkforcePool"
+	case KMS_KEYRINGIAMMEMBER:
+		return "Kms_KeyRingIAMMember"
+	case CLOUDRUNV2_SERVICEIAMBINDING:
+		return "Cloudrunv2_ServiceIamBinding"
+	case CONTAINERANALYSIS_OCCURENCE:
+		return "Containeranalysis_Occurence"
+	case PUBSUB_SUBSCRIPTIONIAMBINDING:
+		return "Pubsub_SubscriptionIAMBinding"
+	case CERTIFICATEAUTHORITY_CAPOOL:
+		return "Certificateauthority_CaPool"
+	case COMPUTE_TARGETTCPPROXY:
+		return "Compute_TargetTCPProxy"
+	case NETWORKSECURITY_ADDRESSGROUPIAMPOLICY:
+		return "Networksecurity_AddressGroupIamPolicy"
+	case DATACATALOG_TAGTEMPLATEIAMMEMBER:
+		return "Datacatalog_TagTemplateIamMember"
+	case ML_ENGINEMODEL:
+		return "Ml_EngineModel"
+	case COMPUTE_BACKENDBUCKETSIGNEDURLKEY:
+		return "Compute_BackendBucketSignedUrlKey"
+	case DATACATALOG_POLICYTAG:
+		return "Datacatalog_PolicyTag"
+	case IAM_ACCESSBOUNDARYPOLICY:
+		return "Iam_AccessBoundaryPolicy"
+	case APIGEE_FLOWHOOK:
+		return "Apigee_Flowhook"
+	case MONITORING_MONITOREDPROJECT:
+		return "Monitoring_MonitoredProject"
+	case SECRETMANAGER_SECRETIAMMEMBER:
+		return "Secretmanager_SecretIamMember"
+	case BIGQUERYANALYTICSHUB_DATAEXCHANGEIAMMEMBER:
+		return "Bigqueryanalyticshub_DataExchangeIamMember"
+	case DNS_RESPONSEPOLICY:
+		return "Dns_ResponsePolicy"
+	case OSLOGIN_SSHPUBLICKEY:
+		return "Oslogin_SshPublicKey"
+	case APIGEE_ORGANIZATION:
+		return "Apigee_Organization"
+	case COMPUTE_INSTANCETEMPLATE:
+		return "Compute_InstanceTemplate"
+	case COMPUTE_NETWORKEDGESECURITYSERVICE:
+		return "Compute_NetworkEdgeSecurityService"
+	case VERTEX_AIFEATUREGROUPFEATURE:
+		return "Vertex_AiFeatureGroupFeature"
+	case VERTEX_AIFEATUREONLINESTOREFEATUREVIEW:
+		return "Vertex_AiFeatureOnlineStoreFeatureview"
+	case CLOUDRUNV2_SERVICEIAMPOLICY:
+		return "Cloudrunv2_ServiceIamPolicy"
+	case MONITORING_GROUP:
+		return "Monitoring_Group"
+	case PUBSUB_LITETOPIC:
+		return "Pubsub_LiteTopic"
+	case STORAGE_DEFAULTOBJECTACCESSCONTROL:
+		return "Storage_DefaultObjectAccessControl"
+	case SECURITYCENTER_INSTANCEIAMBINDING:
+		return "Securitycenter_InstanceIamBinding"
+	case COMPUTE_SNAPSHOTIAMBINDING:
+		return "Compute_SnapshotIamBinding"
+	case FIRESTORE_BACKUPSCHEDULE:
+		return "Firestore_BackupSchedule"
+	case STORAGE_DEFAULTOBJECTACL:
+		return "Storage_DefaultObjectACL"
+	case BIGTABLE_TABLE:
+		return "Bigtable_Table"
+	case CLOUDDEPLOY_DELIVERYPIPELINEIAMBINDING:
+		return "Clouddeploy_DeliveryPipelineIamBinding"
+	case BLOCKCHAINNODEENGINE_BLOCKCHAINNODES:
+		return "Blockchainnodeengine_BlockchainNodes"
+	case COMPUTE_PROJECTMETADATAITEM:
+		return "Compute_ProjectMetadataItem"
+	case TAGS_TAGBINDING:
+		return "Tags_TagBinding"
+	case WORKSTATIONS_WORKSTATIONCONFIGIAMMEMBER:
+		return "Workstations_WorkstationConfigIamMember"
+	case HEALTHCARE_CONSENTSTOREIAMBINDING:
+		return "Healthcare_ConsentStoreIamBinding"
+	case COMPUTE_MANAGEDSSLCERTIFICATE:
+		return "Compute_ManagedSslCertificate"
+	case PROJECTS_ACCESSAPPROVALSETTINGS:
+		return "Projects_AccessApprovalSettings"
+	case HEALTHCARE_DICOMSTOREIAMMEMBER:
+		return "Healthcare_DicomStoreIamMember"
+	case STORAGE_BUCKETACL:
+		return "Storage_BucketACL"
+	case COMPUTE_TARGETHTTPSPROXY:
+		return "Compute_TargetHttpsProxy"
+	case DIAGFLOW_FULFILLMENT:
+		return "Diagflow_Fulfillment"
+	case LOGGING_ORGANIZATIONEXCLUSION:
+		return "Logging_OrganizationExclusion"
+	case PROJECTS_SERVICE:
+		return "Projects_Service"
+	case DATAPLEX_LAKE:
+		return "Dataplex_Lake"
+	case NETWORKSECURITY_FIREWALLENDPOINT:
+		return "Networksecurity_FirewallEndpoint"
+	case ACCESSCONTEXTMANAGER_ACCESSLEVEL:
+		return "Accesscontextmanager_AccessLevel"
+	case ACCESSCONTEXTMANAGER_SERVICEPERIMETER:
+		return "Accesscontextmanager_ServicePerimeter"
+	case BEYONDCORP_APPCONNECTOR:
+		return "Beyondcorp_AppConnector"
+	case RUNTIMECONFIG_CONFIGIAMMEMBER:
+		return "Runtimeconfig_ConfigIamMember"
+	case COMPUTE_BACKENDSERVICEIAMBINDING:
+		return "Compute_BackendServiceIamBinding"
+	case DATAFORM_REPOSITORYIAMBINDING:
+		return "Dataform_RepositoryIamBinding"
+	case IAP_WEBREGIONBACKENDSERVICEIAMPOLICY:
+		return "Iap_WebRegionBackendServiceIamPolicy"
+	case VMWAREENGINE_NETWORKPEERING:
+		return "Vmwareengine_NetworkPeering"
+	case COMPUTE_FIREWALLPOLICYASSOCIATION:
+		return "Compute_FirewallPolicyAssociation"
+	case IAP_WEBTYPECOMPUTEIAMBINDING:
+		return "Iap_WebTypeComputeIamBinding"
+	case VERTEX_AIFEATURESTOREIAMBINDING:
+		return "Vertex_AiFeatureStoreIamBinding"
+	case RESOURCEMANAGER_LIEN:
+		return "Resourcemanager_Lien"
+	case BIGQUERYANALYTICSHUB_LISTINGIAMBINDING:
+		return "Bigqueryanalyticshub_ListingIamBinding"
+	case COMPUTE_GLOBALNETWORKENDPOINTGROUP:
+		return "Compute_GlobalNetworkEndpointGroup"
+	case BACKUPDISASTERRECOVERY_MANAGEMENTSERVER:
+		return "Backupdisasterrecovery_ManagementServer"
+	case BIGTABLE_TABLEIAMPOLICY:
+		return "Bigtable_TableIamPolicy"
+	case OSCONFIG_GUESTPOLICIES:
+		return "Osconfig_GuestPolicies"
+	case BILLING_ACCOUNTIAMBINDING:
+		return "Billing_AccountIamBinding"
+	case CERTIFICATEMANAGER_CERTIFICATEISSUANCECONFIG:
+		return "Certificatemanager_CertificateIssuanceConfig"
+	case KMS_CRYPTOKEY:
+		return "Kms_CryptoKey"
+	case NETWORKSECURITY_GATEWAYSECURITYPOLICYRULE:
+		return "Networksecurity_GatewaySecurityPolicyRule"
+	case CLOUDRUN_SERVICE:
+		return "Cloudrun_Service"
+	case COMPUTE_ORGANIZATIONSECURITYPOLICYASSOCIATION:
+		return "Compute_OrganizationSecurityPolicyAssociation"
+	case COMPUTE_REGIONSSLCERTIFICATE:
+		return "Compute_RegionSslCertificate"
+	case WORKFLOWS_WORKFLOW:
+		return "Workflows_Workflow"
+	case BIGQUERY_IAMBINDING:
+		return "Bigquery_IamBinding"
+	case COMPUTE_FIREWALLPOLICY:
+		return "Compute_FirewallPolicy"
+	case IAP_WEBTYPECOMPUTEIAMMEMBER:
+		return "Iap_WebTypeComputeIamMember"
+	case BIGQUERY_APPPROFILE:
+		return "Bigquery_AppProfile"
+	case CONTAINER_AZURECLUSTER:
+		return "Container_AzureCluster"
+	case DIAGFLOW_AGENT:
+		return "Diagflow_Agent"
+	case SPANNER_INSTANCE:
+		return "Spanner_Instance"
+	case GKEHUB_FEATURE:
+		return "Gkehub_Feature"
+	case IAP_WEBREGIONBACKENDSERVICEIAMMEMBER:
+		return "Iap_WebRegionBackendServiceIamMember"
+	case RUNTIMECONFIG_CONFIGIAMBINDING:
+		return "Runtimeconfig_ConfigIamBinding"
+	case BIGQUERY_CAPACITYCOMMITMENT:
+		return "Bigquery_CapacityCommitment"
+	case COMPUTE_INSTANCEGROUP:
+		return "Compute_InstanceGroup"
+	case DNS_DNSMANAGEDZONEIAMBINDING:
+		return "Dns_DnsManagedZoneIamBinding"
+	case IAP_CLIENT:
+		return "Iap_Client"
+	case ACCESSCONTEXTMANAGER_AUTHORIZEDORGSDESC:
+		return "Accesscontextmanager_AuthorizedOrgsDesc"
+	case APIGEE_KEYSTORESALIASESPKCS12:
+		return "Apigee_KeystoresAliasesPkcs12"
+	case BIGQUERYANALYTICSHUB_LISTING:
+		return "Bigqueryanalyticshub_Listing"
+	case COMPUTE_REGIONHEALTHCHECK:
+		return "Compute_RegionHealthCheck"
+	case DATAPROC_JOBIAMMEMBER:
+		return "Dataproc_JobIAMMember"
+	case FIRESTORE_FIELD:
+		return "Firestore_Field"
+	case COMPUTE_REGIONTARGETHTTPPROXY:
+		return "Compute_RegionTargetHttpProxy"
+	case IAP_TUNNELIAMMEMBER:
+		return "Iap_TunnelIamMember"
+	case KMS_CRYPTOKEYIAMBINDING:
+		return "Kms_CryptoKeyIAMBinding"
+	case PUBSUB_SCHEMAIAMBINDING:
+		return "Pubsub_SchemaIamBinding"
+	case COMPUTE_REGIONINSTANCEGROUPMANAGER:
+		return "Compute_RegionInstanceGroupManager"
+	case DATASTREAM_CONNECTIONPROFILE:
+		return "Datastream_ConnectionProfile"
+	case FIRESTORE_DOCUMENT:
+		return "Firestore_Document"
+	case CLOUDSCHEDULER_JOB:
+		return "Cloudscheduler_Job"
+	case COMPUTE_BACKENDBUCKETIAMPOLICY:
+		return "Compute_BackendBucketIamPolicy"
+	case FIREBASE_ANDROIDAPP:
+		return "Firebase_AndroidApp"
+	case IAP_WEBTYPEAPPENGINGIAMBINDING:
+		return "Iap_WebTypeAppEngingIamBinding"
+	case DATAFORM_REPOSITORY:
+		return "Dataform_Repository"
+	case GKEONPREM_BAREMETALCLUSTER:
+		return "Gkeonprem_BareMetalCluster"
+	case NETWORKSECURITY_GATEWAYSECURITYPOLICY:
+		return "Networksecurity_GatewaySecurityPolicy"
+	case CONTAINER_CLUSTER:
+		return "Container_Cluster"
+	case DATAFORM_REPOSITORYIAMPOLICY:
+		return "Dataform_RepositoryIamPolicy"
+	case DATAPROC_AUTOSCALINGPOLICYIAMBINDING:
+		return "Dataproc_AutoscalingPolicyIamBinding"
+	case ESSENTIALCONTACTS_DOCUMENTAIWAREHOUSELOCATION:
+		return "Essentialcontacts_DocumentAiWarehouseLocation"
+	case CERTIFICATEAUTHORITY_CERTIFICATETEMPLATEIAMPOLICY:
+		return "Certificateauthority_CertificateTemplateIamPolicy"
+	case SOURCEREPO_REPOSITORYIAMBINDING:
+		return "Sourcerepo_RepositoryIamBinding"
+	case RUNTIMECONFIG_CONFIGIAMPOLICY:
+		return "Runtimeconfig_ConfigIamPolicy"
+	case APIGEE_SHAREDFLOW:
+		return "Apigee_Sharedflow"
+	case BIGQUERYANALYTICSHUB_DATAEXCHANGEIAMBINDING:
+		return "Bigqueryanalyticshub_DataExchangeIamBinding"
+	case BINARYAUTHORIZATION_ATTESTORIAMMEMBER:
+		return "Binaryauthorization_AttestorIamMember"
+	case VMWAREENGINE_NETWORK:
+		return "Vmwareengine_Network"
+	case FIREBASE_APPCHECKDEBUGTOKEN:
+		return "Firebase_AppCheckDebugToken"
+	case STORAGE_HMACKEY:
+		return "Storage_HmacKey"
+	case ACCESSCONTEXTMANAGER_ACCESSPOLICYIAMMEMBER:
+		return "Accesscontextmanager_AccessPolicyIamMember"
+	case DATACATALOG_TAGTEMPLATEIAMPOLICY:
+		return "Datacatalog_TagTemplateIamPolicy"
+	case ENDPOINTS_CONSUMERSIAMBINDING:
+		return "Endpoints_ConsumersIamBinding"
+	case TAGS_TAGVALUEIAMPOLICY:
+		return "Tags_TagValueIamPolicy"
+	case HEALTHCARE_HL7STORE:
+		return "Healthcare_Hl7Store"
+	case COMPUTE_INTERCONNECTATTACHMENT:
+		return "Compute_InterconnectAttachment"
+	case COMPUTE_REGIONNETWORKFIREWALLPOLICY:
+		return "Compute_RegionNetworkFirewallPolicy"
+	case COMPUTE_TARGETGRPCPROXY:
+		return "Compute_TargetGrpcProxy"
+	case NETWORKSERVICES_TCPROUTE:
+		return "Networkservices_TcpRoute"
+	case IDENTITYPLATFORM_CONFIG:
+		return "Identityplatform_Config"
+	case SECURITYCENTER_SOURCEIAMBINDING:
+		return "Securitycenter_SourceIamBinding"
+	case CONTAINER_AZURECLIENT:
+		return "Container_AzureClient"
+	case FOLDER_IAMBINDING:
+		return "Folder_IAMBinding"
+	case GKEBACKUP_BACKUPPLANIAMBINDING:
+		return "Gkebackup_BackupPlanIamBinding"
+	case WORKSTATIONS_WORKSTATIONIAMBINDING:
+		return "Workstations_WorkstationIamBinding"
+	case EDGENETWORK_NETWORK:
+		return "Edgenetwork_Network"
+	case GKEHUB_SCOPEIAMBINDING:
+		return "Gkehub_ScopeIamBinding"
+	case IAP_WEBBACKENDSERVICEIAMPOLICY:
+		return "Iap_WebBackendServiceIamPolicy"
+	case WORKSTATIONS_WORKSTATIONCLUSTER:
+		return "Workstations_WorkstationCluster"
+	case COMPUTE_ROUTERPEER:
+		return "Compute_RouterPeer"
+	case COMPUTE_SSLPOLICY:
+		return "Compute_SSLPolicy"
+	case NETWORKCONNECTIVITY_POLICYBASEDROUTE:
+		return "Networkconnectivity_PolicyBasedRoute"
+	case ARTIFACTREGISTRY_REPOSITORYIAMPOLICY:
+		return "Artifactregistry_RepositoryIamPolicy"
+	case COMPUTE_SNAPSHOTIAMMEMBER:
+		return "Compute_SnapshotIamMember"
+	case CONTAINER_AZURENODEPOOL:
+		return "Container_AzureNodePool"
+	case FIRESTORE_INDEX:
+		return "Firestore_Index"
+	case CERTIFICATEAUTHORITY_CAPOOLIAMPOLICY:
+		return "Certificateauthority_CaPoolIamPolicy"
+	case COMPUTE_TARGETSSLPROXY:
+		return "Compute_TargetSSLProxy"
+	case GKEHUB_MEMBERSHIPRBACROLEBINDING:
+		return "Gkehub_MembershipRbacRoleBinding"
+	case CONTAINER_REGISTRY:
+		return "Container_Registry"
+	case DATACATALOG_POLICYTAGIAMMEMBER:
+		return "Datacatalog_PolicyTagIamMember"
+	case SECRETMANAGER_SECRETVERSION:
+		return "Secretmanager_SecretVersion"
+	case BILLING_PROJECTINFO:
+		return "Billing_ProjectInfo"
+	case COMPUTE_DISKIAMBINDING:
+		return "Compute_DiskIamBinding"
+	case DATAPROC_METASTOREFEDERATION:
+		return "Dataproc_MetastoreFederation"
+	case NETWORKSERVICES_ENDPOINTPOLICY:
+		return "Networkservices_EndpointPolicy"
+	case DATAPROC_METASTORESERVICEIAMPOLICY:
+		return "Dataproc_MetastoreServiceIamPolicy"
+	case ORGPOLICY_POLICY:
+		return "Orgpolicy_Policy"
+	case ACCESSCONTEXTMANAGER_GCPUSERACCESSBINDING:
+		return "Accesscontextmanager_GcpUserAccessBinding"
+	case LOGGING_FOLDERSINK:
+		return "Logging_FolderSink"
+	case NETWORKMANAGEMENT_CONNECTIVITYTEST:
+		return "Networkmanagement_ConnectivityTest"
+	case BILLING_ACCOUNTIAMPOLICY:
+		return "Billing_AccountIamPolicy"
+	case VERTEX_AIFEATURESTOREENTITYTYPEIAMPOLICY:
+		return "Vertex_AiFeatureStoreEntityTypeIamPolicy"
+	case COMPUTE_REGIONNETWORKENDPOINT:
+		return "Compute_RegionNetworkEndpoint"
+	case DATAPLEX_ASSETIAMMEMBER:
+		return "Dataplex_AssetIamMember"
+	case NETWORKSECURITY_URLLIST:
+		return "Networksecurity_UrlList"
+	case FOLDER_ORGANIZATIONPOLICY:
+		return "Folder_OrganizationPolicy"
+	case WORKBENCH_INSTANCE:
+		return "Workbench_Instance"
+	case GKEBACKUP_BACKUPPLANIAMMEMBER:
+		return "Gkebackup_BackupPlanIamMember"
+	case HEALTHCARE_HL7STOREIAMMEMBER:
+		return "Healthcare_Hl7StoreIamMember"
+	case APIGEE_ENVIRONMENTIAMBINDING:
+		return "Apigee_EnvironmentIamBinding"
+	case CERTIFICATEAUTHORITY_AUTHORITY:
+		return "Certificateauthority_Authority"
+	case DATALOSS_PREVENTIONJOBTRIGGER:
+		return "Dataloss_PreventionJobTrigger"
+	case DATALOSS_PREVENTIONSTOREDINFOTYPE:
+		return "Dataloss_PreventionStoredInfoType"
+	case CLOUDDEPLOY_AUTOMATION:
+		return "Clouddeploy_Automation"
+	case FILESTORE_BACKUP:
+		return "Filestore_Backup"
+	case IDENTITYPLATFORM_TENANTOAUTHIDPCONFIG:
+		return "Identityplatform_TenantOauthIdpConfig"
+	case VERTEX_AIFEATURESTOREENTITYTYPEIAMBINDING:
+		return "Vertex_AiFeatureStoreEntityTypeIamBinding"
+	case COMPUTE_MANGEDSSLCERTIFICATE:
+		return "Compute_MangedSslCertificate"
+	case VERTEX_AIFEATURESTOREIAMMEMBER:
+		return "Vertex_AiFeatureStoreIamMember"
+	case APIGATEWAY_APIIAMPOLICY:
+		return "Apigateway_ApiIamPolicy"
+	case ESSENTIALCONTACTS_DOCUMENTAIPROCESSOR:
+		return "Essentialcontacts_DocumentAiProcessor"
+	case BIGQUERYDATAPOLICY_DATAPOLICYIAMMEMBER:
+		return "Bigquerydatapolicy_DataPolicyIamMember"
+	case CERTIFICATEAUTHORITY_CERTIFICATETEMPLATEIAMBINDING:
+		return "Certificateauthority_CertificateTemplateIamBinding"
+	case GKEHUB_MEMBERSHIPIAMPOLICY:
+		return "Gkehub_MembershipIamPolicy"
+	case MIGRATIONCENTER_GROUP:
+		return "Migrationcenter_Group"
+	case TAGS_TAGVALUEIAMMEMBER:
+		return "Tags_TagValueIamMember"
+	case ACCESSCONTEXTMANAGER_ACCESSPOLICY:
+		return "Accesscontextmanager_AccessPolicy"
+	case APIGEE_ENDPOINTATTACHMENT:
+		return "Apigee_EndpointAttachment"
+	case COMPUTE_IMAGEIAMMEMBER:
+		return "Compute_ImageIamMember"
+	case SERVICEACCOUNT_ACCOUNT:
+		return "Serviceaccount_Account"
+	case CLOUDRUN_IAMPOLICY:
+		return "Cloudrun_IamPolicy"
+	case FIREBASE_WEBAPP:
+		return "Firebase_WebApp"
+	case SECURITYCENTER_SOURCE:
+		return "Securitycenter_Source"
+	case SPANNER_DATABASE:
+		return "Spanner_Database"
+	case NETWORKSERVICES_SERVICEBINDING:
+		return "Networkservices_ServiceBinding"
+	case BINARYAUTHORIZATION_ATTESTORIAMPOLICY:
+		return "Binaryauthorization_AttestorIamPolicy"
+	case COMPUTE_CAEXTERNALACCOUNTKEY:
+		return "Compute_CaExternalAccountKey"
+	case DATACATALOG_TAXONOMYIAMPOLICY:
+		return "Datacatalog_TaxonomyIamPolicy"
+	case FIREBASE_PROJECT:
+		return "Firebase_Project"
+	case APIGATEWAY_APIIAMMEMBER:
+		return "Apigateway_ApiIamMember"
+	case BILLING_ACCOUNTIAMMEMBER:
+		return "Billing_AccountIamMember"
+	case BILLING_BUDGET:
+		return "Billing_Budget"
+	case PROJECTS_SERVICEIDENTITY:
+		return "Projects_ServiceIdentity"
+	case IDENTITYPLATFORM_TENANTINBOUNDSAMLCONFIG:
+		return "Identityplatform_TenantInboundSamlConfig"
+	case STORAGE_BUCKETACCESSCONTROL:
+		return "Storage_BucketAccessControl"
+	case TAGS_TAGKEYIAMMEMBER:
+		return "Tags_TagKeyIamMember"
+	case DATAPLEX_LAKEIAMMEMBER:
+		return "Dataplex_LakeIamMember"
+	case WORKBENCH_INSTANCEIAMBINDING:
+		return "Workbench_InstanceIamBinding"
+	case ACTIVEDIRECTORY_DOMAIN:
+		return "Activedirectory_Domain"
+	case DNS_RECORDSET:
+		return "Dns_RecordSet"
+	case COMPUTE_REGIONCOMMITMENT:
+		return "Compute_RegionCommitment"
+	case BINARYAUTHORIZATION_ATTESTORIAMBINDING:
+		return "Binaryauthorization_AttestorIamBinding"
+	case DATACATALOG_TAXONOMY:
+		return "Datacatalog_Taxonomy"
+	case SECRETMANAGER_SECRETIAMBINDING:
+		return "Secretmanager_SecretIamBinding"
+	case COMPUTE_NETWORKPEERINGROUTESCONFIG:
+		return "Compute_NetworkPeeringRoutesConfig"
+	case SPANNER_DATABASEIAMBINDING:
+		return "Spanner_DatabaseIAMBinding"
+	case APIGEE_SHAREDFLOWDEPLOYMENT:
+		return "Apigee_SharedflowDeployment"
+	case IAM_WORKLOADIDENTITYPOOLPROVIDER:
+		return "Iam_WorkloadIdentityPoolProvider"
+	case DATACATALOG_POLICYTAGIAMPOLICY:
+		return "Datacatalog_PolicyTagIamPolicy"
+	case DATASTREAM_STREAM:
+		return "Datastream_Stream"
+	case HEALTHCARE_CONSENTSTORE:
+		return "Healthcare_ConsentStore"
+	case SECURESOURCEMANAGER_INSTANCEIAMPOLICY:
+		return "Securesourcemanager_InstanceIamPolicy"
+	case COMPUTE_NETWORKFIREWALLPOLICYRULE:
+		return "Compute_NetworkFirewallPolicyRule"
+	case PUBSUB_SUBSCRIPTION:
+		return "Pubsub_Subscription"
+	case VERTEX_AIFEATUREGROUP:
+		return "Vertex_AiFeatureGroup"
+	case DATAPLEX_ZONEIAMMEMBER:
+		return "Dataplex_ZoneIamMember"
+	case PUBSUB_LITESUBSCRIPTION:
+		return "Pubsub_LiteSubscription"
+	case PUBSUB_TOPICIAMPOLICY:
+		return "Pubsub_TopicIAMPolicy"
+	case WORKSTATIONS_WORKSTATIONCONFIGIAMPOLICY:
+		return "Workstations_WorkstationConfigIamPolicy"
+	case APIGEE_ENVREFERENCES:
+		return "Apigee_EnvReferences"
+	case COMPUTE_ROUTER:
+		return "Compute_Router"
+	case GKEONPREM_BAREMETALADMINCLUSTER:
+		return "Gkeonprem_BareMetalAdminCluster"
+	case VERTEX_AIINDEXENDPOINT:
+		return "Vertex_AiIndexEndpoint"
+	case NOTEBOOKS_LOCATION:
+		return "Notebooks_Location"
+	case VERTEX_AIFEATURESTOREIAMPOLICY:
+		return "Vertex_AiFeatureStoreIamPolicy"
+	case APIGATEWAY_GATEWAYIAMBINDING:
+		return "Apigateway_GatewayIamBinding"
+	case BIGLAKE_TABLE:
+		return "Biglake_Table"
+	case DATAPROC_JOBIAMBINDING:
+		return "Dataproc_JobIAMBinding"
+	case FIREBASE_EXTENSIONSINSTANCE:
+		return "Firebase_ExtensionsInstance"
+	case COMPUTE_HTTPHEALTHCHECK:
+		return "Compute_HttpHealthCheck"
+	case DATAPROC_CLUSTERIAMMEMBER:
+		return "Dataproc_ClusterIAMMember"
+	case GKEONPREM_BAREMETALNODEPOOL:
+		return "Gkeonprem_BareMetalNodePool"
+	case NETAPP_VOLUMESNAPSHOT:
+		return "Netapp_VolumeSnapshot"
+	case DATACATALOG_TAG:
+		return "Datacatalog_Tag"
+	case KMS_KEYRINGIAMPOLICY:
+		return "Kms_KeyRingIAMPolicy"
+	case CERTIFICATEMANAGER_DNSAUTHORIZATION:
+		return "Certificatemanager_DnsAuthorization"
+	case CLOUDBUILDV2_CONNECTIONIAMMEMBER:
+		return "Cloudbuildv2_ConnectionIAMMember"
+	case CLOUDDEPLOY_DELIVERYPIPELINE:
+		return "Clouddeploy_DeliveryPipeline"
+	case COMPUTE_IMAGEIAMBINDING:
+		return "Compute_ImageIamBinding"
+	case CLOUDTASKS_QUEUEIAMBINDING:
+		return "Cloudtasks_QueueIamBinding"
+	case DATACATALOG_TAXONOMYIAMMEMBER:
+		return "Datacatalog_TaxonomyIamMember"
+	case DATASTREAM_PRIVATECONNECTION:
+		return "Datastream_PrivateConnection"
+	case DIAGFLOW_INTENT:
+		return "Diagflow_Intent"
+	case GKEHUB_FEATUREIAMMEMBER:
+		return "Gkehub_FeatureIamMember"
+	case HEALTHCARE_HL7STOREIAMPOLICY:
+		return "Healthcare_Hl7StoreIamPolicy"
+	case PROJECTS_APIKEY:
+		return "Projects_ApiKey"
+	case CLOUDRUN_IAMMEMBER:
+		return "Cloudrun_IamMember"
+	case DATAPLEX_LAKEIAMBINDING:
+		return "Dataplex_LakeIamBinding"
+	case FIREBASE_APPCHECKRECAPTCHAENTERPRISECONFIG:
+		return "Firebase_AppCheckRecaptchaEnterpriseConfig"
+	case FIREBASE_DATABASEINSTANCE:
+		return "Firebase_DatabaseInstance"
+	case SECURESOURCEMANAGER_INSTANCEIAMMEMBER:
+		return "Securesourcemanager_InstanceIamMember"
+	case STORAGE_BUCKETIAMPOLICY:
+		return "Storage_BucketIAMPolicy"
+	case VERTEX_AIFEATURESTOREENTITYTYPEFEATURE:
+		return "Vertex_AiFeatureStoreEntityTypeFeature"
+	case SOURCEREPO_REPOSITORYIAMPOLICY:
+		return "Sourcerepo_RepositoryIamPolicy"
+	case ARTIFACTREGISTRY_REPOSITORY:
+		return "Artifactregistry_Repository"
+	case COMPUTE_ORGANIZATIONSECURITYPOLICYRULE:
+		return "Compute_OrganizationSecurityPolicyRule"
+	case ENDPOINTS_CONSUMERSIAMPOLICY:
+		return "Endpoints_ConsumersIamPolicy"
+	case ORGANIZATIONS_POLICY:
+		return "Organizations_Policy"
+	case SQL_DATABASE:
+		return "Sql_Database"
+	case STORAGE_OBJECTACL:
+		return "Storage_ObjectACL"
+	case CONTAINER_AWSCLUSTER:
+		return "Container_AwsCluster"
+	case DATAFUSION_INSTANCE:
+		return "Datafusion_Instance"
+	case DATAPROC_CLUSTERIAMPOLICY:
+		return "Dataproc_ClusterIAMPolicy"
+	case LOGGING_PROJECTEXCLUSION:
+		return "Logging_ProjectExclusion"
+	case COMPUTE_ADDRESS:
+		return "Compute_Address"
+	case SPANNER_INSTANCEIAMPOLICY:
+		return "Spanner_InstanceIAMPolicy"
+	case DATAPLEX_ZONEIAMBINDING:
+		return "Dataplex_ZoneIamBinding"
+	case KMS_KEYRING:
+		return "Kms_KeyRing"
+	case DATAPLEX_TASKIAMBINDING:
+		return "Dataplex_TaskIamBinding"
+	case DATAPROC_METASTORESERVICEIAMBINDING:
+		return "Dataproc_MetastoreServiceIamBinding"
+	case IAP_WEBIAMMEMBER:
+		return "Iap_WebIamMember"
+	case COMPUTE_REGIONAUTOSCALER:
+		return "Compute_RegionAutoscaler"
+	case DATAPROC_METASTOREFEDERATIONIAMPOLICY:
+		return "Dataproc_MetastoreFederationIamPolicy"
+	case FIREBASERULES_RULESET:
+		return "Firebaserules_Ruleset"
+	case CLOUDFUNCTIONS_FUNCTIONIAMBINDING:
+		return "Cloudfunctions_FunctionIamBinding"
+	case COMPUTE_REGIONURLMAP:
+		return "Compute_RegionUrlMap"
+	case SECURITYCENTER_ORGANIZATIONCUSTOMMODULE:
+		return "Securitycenter_OrganizationCustomModule"
+	case SECURITYPOSTURE_POSTURE:
+		return "Securityposture_Posture"
+	case ESSENTIALCONTACTS_DOCUMENTAIWAREHOUSEDOCUMENTSCHEMA:
+		return "Essentialcontacts_DocumentAiWarehouseDocumentSchema"
+	case MIGRATIONCENTER_PREFERENCESET:
+		return "Migrationcenter_PreferenceSet"
+	case SERVICEACCOUNT_KEY:
+		return "Serviceaccount_Key"
+	case APIGEE_ENVIRONMENT:
+		return "Apigee_Environment"
+	case CLOUDIDENTITY_GROUPMEMBERSHIP:
+		return "Cloudidentity_GroupMembership"
+	case DATACATALOG_ENTRYGROUPIAMMEMBER:
+		return "Datacatalog_EntryGroupIamMember"
+	case DATAPROC_JOBIAMPOLICY:
+		return "Dataproc_JobIAMPolicy"
+	case BIGQUERY_DATASETIAMBINDING:
+		return "Bigquery_DatasetIamBinding"
+	case COMPUTE_MACHINEIMAGEIAMPOLICY:
+		return "Compute_MachineImageIamPolicy"
+	case COMPUTE_TARGETINSTANCE:
+		return "Compute_TargetInstance"
+	case BIGQUERYANALYTICSHUB_LISTINGIAMMEMBER:
+		return "Bigqueryanalyticshub_ListingIamMember"
+	case COMPUTE_REGIONINSTANCETEMPLATE:
+		return "Compute_RegionInstanceTemplate"
+	case EVENTARC_TRIGGER:
+		return "Eventarc_Trigger"
+	case PUBSUB_TOPICIAMBINDING:
+		return "Pubsub_TopicIAMBinding"
+	case SECRETMANAGER_SECRETIAMPOLICY:
+		return "Secretmanager_SecretIamPolicy"
+	case STORAGE_NOTIFICATION:
+		return "Storage_Notification"
+	case COMPUTE_GLOBALNETWORKENDPOINT:
+		return "Compute_GlobalNetworkEndpoint"
+	case COMPUTE_ROUTERINTERFACE:
+		return "Compute_RouterInterface"
+	case MONITORING_SLO:
+		return "Monitoring_Slo"
+	case NETWORKSECURITY_ADDRESSGROUP:
+		return "Networksecurity_AddressGroup"
+	case PUBSUB_SCHEMAIAMMEMBER:
+		return "Pubsub_SchemaIamMember"
+	case SECURITYCENTER_NOTIFICATIONCONFIG:
+		return "Securitycenter_NotificationConfig"
+	case TAGS_TAGKEYIAMPOLICY:
+		return "Tags_TagKeyIamPolicy"
+	case BIGQUERY_CONNECTIONIAMBINDING:
+		return "Bigquery_ConnectionIamBinding"
+	case BIGQUERY_CONNECTIONIAMMEMBER:
+		return "Bigquery_ConnectionIamMember"
+	case DIAGFLOW_CXSECURITYSETTINGS:
+		return "Diagflow_CxSecuritySettings"
+	case EDGECONTAINER_CLUSTER:
+		return "Edgecontainer_Cluster"
+	case PUBSUB_SUBSCRIPTIONIAMPOLICY:
+		return "Pubsub_SubscriptionIAMPolicy"
+	case SQL_SSLCERT:
+		return "Sql_SslCert"
+	case DIAGFLOW_CXINTENT:
+		return "Diagflow_CxIntent"
+	case GKEHUB_MEMBERSHIPIAMMEMBER:
+		return "Gkehub_MembershipIamMember"
+	case IAP_TUNNELIAMPOLICY:
+		return "Iap_TunnelIamPolicy"
+	case CLOUDBUILDV2_REPOSITORY:
+		return "Cloudbuildv2_Repository"
+	case COMPUTE_SUBNETWORKIAMMEMBER:
+		return "Compute_SubnetworkIAMMember"
+	case NETAPP_STORAGEPOOL:
+		return "Netapp_StoragePool"
+	case VMWAREENGINE_NETWORKPOLICY:
+		return "Vmwareengine_NetworkPolicy"
+	case ACCESSCONTEXTMANAGER_SERVICEPERIMETERINGRESSPOLICY:
+		return "Accesscontextmanager_ServicePerimeterIngressPolicy"
+	case BIGQUERY_RESERVATIONASSIGNMENT:
+		return "Bigquery_ReservationAssignment"
+	case DATAPLEX_ASSETIAMPOLICY:
+		return "Dataplex_AssetIamPolicy"
+	case DISCOVERYENGINE_SEARCHENGINE:
+		return "Discoveryengine_SearchEngine"
+	case VMWAREENGINE_EXTERNALACCESSRULE:
+		return "Vmwareengine_ExternalAccessRule"
+	case COMPUTE_REGIONSECURITYPOLICYRULE:
+		return "Compute_RegionSecurityPolicyRule"
+	case COMPUTE_REGIONTARGETTCPPROXY:
+		return "Compute_RegionTargetTcpProxy"
+	case GKEBACKUP_RESTOREPLANIAMBINDING:
+		return "Gkebackup_RestorePlanIamBinding"
+	case KMS_CRYPTOKEYIAMMEMBER:
+		return "Kms_CryptoKeyIAMMember"
+	case COMPUTE_MACHINEIMAGEIAMBINDING:
+		return "Compute_MachineImageIamBinding"
+	case NOTEBOOKS_ENVIRONMENT:
+		return "Notebooks_Environment"
+	case COMPUTE_REGIONBACKENDSERVICEIAMPOLICY:
+		return "Compute_RegionBackendServiceIamPolicy"
+	case DATAFORM_REPOSITORYRELEASECONFIG:
+		return "Dataform_RepositoryReleaseConfig"
+	case DISCOVERYENGINE_CHATENGINE:
+		return "Discoveryengine_ChatEngine"
+	case LOGGING_LINKEDDATASET:
+		return "Logging_LinkedDataset"
+	case NOTEBOOKS_INSTANCE:
+		return "Notebooks_Instance"
+	case SERVICENETWORKING_PEEREDDNSDOMAIN:
+		return "Servicenetworking_PeeredDnsDomain"
+	case PROJECTS_IAMMEMBER:
+		return "Projects_IAMMember"
+	case VERTEX_AIDATASET:
+		return "Vertex_AiDataset"
+	case DATAFLOW_JOB:
+		return "Dataflow_Job"
+	case EVENTARC_GOOGLECHANNELCONFIG:
+		return "Eventarc_GoogleChannelConfig"
+	case IAM_WORKLOADIDENTITYPOOL:
+		return "Iam_WorkloadIdentityPool"
+	case ACCESSCONTEXTMANAGER_SERVICEPERIMETERS:
+		return "Accesscontextmanager_ServicePerimeters"
+	case HEALTHCARE_FHIRSTOREIAMBINDING:
+		return "Healthcare_FhirStoreIamBinding"
+	case HEALTHCARE_DATASETIAMMEMBER:
+		return "Healthcare_DatasetIamMember"
+	case SERVICEACCOUNT_IAMMEMBER:
+		return "Serviceaccount_IAMMember"
+	case SERVICEACCOUNT_IAMPOLICY:
+		return "Serviceaccount_IAMPolicy"
+	case SOURCEREPO_REPOSITORYIAMMEMBER:
+		return "Sourcerepo_RepositoryIamMember"
+	case APPENGINE_SERVICENETWORKSETTINGS:
+		return "Appengine_ServiceNetworkSettings"
+	case COMPUTE_NETWORKFIREWALLPOLICY:
+		return "Compute_NetworkFirewallPolicy"
+	case COMPUTE_SSLCERTIFICATE:
+		return "Compute_SSLCertificate"
+	case ENDPOINTS_SERVICE:
+		return "Endpoints_Service"
+	case CLOUDFUNCTIONSV2_FUNCTIONIAMMEMBER:
+		return "Cloudfunctionsv2_FunctionIamMember"
+	case GKEHUB_SCOPEIAMMEMBER:
+		return "Gkehub_ScopeIamMember"
+	case STORAGE_INSIGHTSREPORTCONFIG:
+		return "Storage_InsightsReportConfig"
+	case LOGGING_BILLINGACCOUNTBUCKETCONFIG:
+		return "Logging_BillingAccountBucketConfig"
+	case PUBSUB_TOPIC:
+		return "Pubsub_Topic"
+	case SPANNER_INSTANCEIAMMEMBER:
+		return "Spanner_InstanceIAMMember"
+	case ACCESSCONTEXTMANAGER_ACCESSPOLICYIAMBINDING:
+		return "Accesscontextmanager_AccessPolicyIamBinding"
+	case APPENGINE_APPLICATIONURLDISPATCHRULES:
+		return "Appengine_ApplicationUrlDispatchRules"
+	case DATAPLEX_ZONEIAMPOLICY:
+		return "Dataplex_ZoneIamPolicy"
+	case ESSENTIALCONTACTS_CONTACT:
+		return "Essentialcontacts_Contact"
+	case IAP_WEBREGIONBACKENDSERVICEIAMBINDING:
+		return "Iap_WebRegionBackendServiceIamBinding"
+	case IDENTITYPLATFORM_TENANT:
+		return "Identityplatform_Tenant"
+	case COMPUTE_ATTACHEDDISK:
+		return "Compute_AttachedDisk"
+	case DATACATALOG_ENTRYGROUP:
+		return "Datacatalog_EntryGroup"
+	case HEALTHCARE_DATASET:
+		return "Healthcare_Dataset"
+	case COMPUTE_PACKETMIRRORING:
+		return "Compute_PacketMirroring"
+	case EDGENETWORK_SUBNET:
+		return "Edgenetwork_Subnet"
+	case BIGTABLE_GCPOLICY:
+		return "Bigtable_GCPolicy"
+	case COMPOSER_ENVIRONMENT:
+		return "Composer_Environment"
+	case CERTIFICATEAUTHORITY_CERTIFICATE:
+		return "Certificateauthority_Certificate"
+	case COMPUTE_REGIONDISKIAMMEMBER:
+		return "Compute_RegionDiskIamMember"
+	case SERVICENETWORKING_CONNECTION:
+		return "Servicenetworking_Connection"
+	case APPENGINE_APPLICATION:
+		return "Appengine_Application"
+	case COMPUTE_INSTANCEIAMMEMBER:
+		return "Compute_InstanceIAMMember"
+	case VERTEX_AIINDEX:
+		return "Vertex_AiIndex"
+	case FIREBASERULES_RELEASE:
+		return "Firebaserules_Release"
+	case ACCESSCONTEXTMANAGER_ACCESSLEVELS:
+		return "Accesscontextmanager_AccessLevels"
+	case CONTAINER_ATTACHEDCLUSTER:
+		return "Container_AttachedCluster"
+	case DATAFLOW_FLEXTEMPLATEJOB:
+		return "Dataflow_FlexTemplateJob"
+	case MONITORING_METRICDESCRIPTOR:
+		return "Monitoring_MetricDescriptor"
+	case NETWORKSERVICES_GATEWAY:
+		return "Networkservices_Gateway"
+	case ORGANIZATIONS_IAMPOLICY:
+		return "Organizations_IAMPolicy"
+	case NOTEBOOKS_RUNTIMEIAMMEMBER:
+		return "Notebooks_RuntimeIamMember"
+	case COMPUTE_REGIONNETWORKFIREWALLPOLICYASSOCIATION:
+		return "Compute_RegionNetworkFirewallPolicyAssociation"
+	case GKEBACKUP_BACKUPPLANIAMPOLICY:
+		return "Gkebackup_BackupPlanIamPolicy"
+	case GKEONPREM_VMWARECLUSTER:
+		return "Gkeonprem_VMwareCluster"
+	case LOGGING_FOLDEREXCLUSION:
+		return "Logging_FolderExclusion"
+	case NETAPP_ACTIVEDIRECTORY:
+		return "Netapp_ActiveDirectory"
+	case CERTIFICATEAUTHORITY_CAPOOLIAMBINDING:
+		return "Certificateauthority_CaPoolIamBinding"
+	case DATAPROC_CLUSTER:
+		return "Dataproc_Cluster"
+	case ENDPOINTS_SERVICEIAMPOLICY:
+		return "Endpoints_ServiceIamPolicy"
+	case DATAPROC_JOB:
+		return "Dataproc_Job"
+	case DIAGFLOW_CXENVIRONMENT:
+		return "Diagflow_CxEnvironment"
+	case ORGANIZATIONS_IAMBINDING:
+		return "Organizations_IAMBinding"
+	case COMPUTE_TARGETHTTPPROXY:
+		return "Compute_TargetHttpProxy"
+	case CLOUDFUNCTIONS_FUNCTIONIAMPOLICY:
+		return "Cloudfunctions_FunctionIamPolicy"
+	case HEALTHCARE_DICOMSTOREIAMBINDING:
+		return "Healthcare_DicomStoreIamBinding"
+	case KMS_SECRETCIPHERTEXT:
+		return "Kms_SecretCiphertext"
+	case NETWORKSECURITY_TLSINSPECTIONPOLICY:
+		return "Networksecurity_TlsInspectionPolicy"
+	case IAM_WORKFORCEPOOLPROVIDER:
+		return "Iam_WorkforcePoolProvider"
+	case OSCONFIG_PATCHDEPLOYMENT:
+		return "Osconfig_PatchDeployment"
+	case CLOUDDEPLOY_DELIVERYPIPELINEIAMMEMBER:
+		return "Clouddeploy_DeliveryPipelineIamMember"
+	case COMPUTE_BACKENDSERVICEIAMMEMBER:
+		return "Compute_BackendServiceIamMember"
+	case COMPUTE_GLOBALADDRESS:
+		return "Compute_GlobalAddress"
+	case ACCESSCONTEXTMANAGER_EGRESSPOLICY:
+		return "Accesscontextmanager_EgressPolicy"
+	case APPENGINE_FIREWALLRULE:
+		return "Appengine_FirewallRule"
+	case FIREBASE_APPCHECKSERVICECONFIG:
+		return "Firebase_AppCheckServiceConfig"
+	case HEALTHCARE_CONSENTSTOREIAMPOLICY:
+		return "Healthcare_ConsentStoreIamPolicy"
+	case ORGANIZATIONS_ACCESSAPPROVALSETTINGS:
+		return "Organizations_AccessApprovalSettings"
+	case COMPUTE_TARGETPOOL:
+		return "Compute_TargetPool"
+	case COMPUTE_NETWORKATTACHMENT:
+		return "Compute_NetworkAttachment"
+	case EDGECONTAINER_VPNCONNECTION:
+		return "Edgecontainer_VpnConnection"
+	case BINARYAUTHORIZATION_ATTESTOR:
+		return "Binaryauthorization_Attestor"
+	case IAP_WEBBACKENDSERVICEIAMBINDING:
+		return "Iap_WebBackendServiceIamBinding"
+	case PUBSUB_LITERESERVATION:
+		return "Pubsub_LiteReservation"
+	case STORAGE_OBJECTACCESSCONTROL:
+		return "Storage_ObjectAccessControl"
+	case NOTEBOOKS_INSTANCEIAMBINDING:
+		return "Notebooks_InstanceIamBinding"
+	case WORKSTATIONS_WORKSTATIONIAMMEMBER:
+		return "Workstations_WorkstationIamMember"
+	case ACTIVEDIRECTORY_PEERING:
+		return "Activedirectory_Peering"
+	case DATAPLEX_DATASCANIAMBINDING:
+		return "Dataplex_DatascanIamBinding"
+	case DATAPROC_AUTOSCALINGPOLICY:
+		return "Dataproc_AutoscalingPolicy"
+	case DNS_RESPONSEPOLICYRULE:
+		return "Dns_ResponsePolicyRule"
+	case CERTIFICATEAUTHORITY_CERTIFICATETEMPLATE:
+		return "Certificateauthority_CertificateTemplate"
+	case COMPUTE_NETWORK:
+		return "Compute_Network"
+	case VERTEX_AIENDPOINT:
+		return "Vertex_AiEndpoint"
+	case SECURITYPOSTURE_POSTUREDEPLOYMENT:
+		return "Securityposture_PostureDeployment"
+	case COMPUTE_PERINSTANCECONFIG:
+		return "Compute_PerInstanceConfig"
+	case IAP_WEBBACKENDSERVICEIAMMEMBER:
+		return "Iap_WebBackendServiceIamMember"
+	case BIGQUERYANALYTICSHUB_DATAEXCHANGE:
+		return "Bigqueryanalyticshub_DataExchange"
+	case COMPUTE_PROJECTMETADATA:
+		return "Compute_ProjectMetadata"
+	case COMPUTE_SNAPSHOTIAMPOLICY:
+		return "Compute_SnapshotIamPolicy"
+	case PROJECTS_IAMPOLICY:
+		return "Projects_IAMPolicy"
+	case PUBSUB_SUBSCRIPTIONIAMMEMBER:
+		return "Pubsub_SubscriptionIAMMember"
+	case DATABASEMIGRATIONSERVICE_PRIVATECONNECTION:
+		return "Databasemigrationservice_PrivateConnection"
+	case GKEHUB_SCOPE:
+		return "Gkehub_Scope"
+	case ORGANIZATIONS_PROJECT:
+		return "Organizations_Project"
+	case CONTAINERANALYSIS_NOTEIAMBINDING:
+		return "Containeranalysis_NoteIamBinding"
+	case HEALTHCARE_DATASETIAMBINDING:
+		return "Healthcare_DatasetIamBinding"
+	case ACTIVEDIRECTORY_DOMAINTRUST:
+		return "Activedirectory_DomainTrust"
+	case ARTIFACTREGISTRY_REPOSITORYIAMMEMBER:
+		return "Artifactregistry_RepositoryIamMember"
+	case BIGTABLE_TABLEIAMMEMBER:
+		return "Bigtable_TableIamMember"
+	case PUBSUB_SCHEMAIAMPOLICY:
+		return "Pubsub_SchemaIamPolicy"
+	case APIGEE_KEYSTORESALIASESKEYCERTFILE:
+		return "Apigee_KeystoresAliasesKeyCertFile"
+	case ENDPOINTS_CONSUMERSIAMMEMBER:
+		return "Endpoints_ConsumersIamMember"
+	case GKEHUB_FEATUREIAMBINDING:
+		return "Gkehub_FeatureIamBinding"
+	case GKEHUB_SCOPEIAMPOLICY:
+		return "Gkehub_ScopeIamPolicy"
+	case RUNTIMECONFIG_VARIABLE:
+		return "Runtimeconfig_Variable"
+	case CLOUDFUNCTIONSV2_FUNCTIONIAMPOLICY:
+		return "Cloudfunctionsv2_FunctionIamPolicy"
+	case CERTIFICATEAUTHORITY_CAPOOLIAMMEMBER:
+		return "Certificateauthority_CaPoolIamMember"
+	case CLOUDTASKS_QUEUEIAMMEMBER:
+		return "Cloudtasks_QueueIamMember"
+	case COMPUTE_GLOBALFORWARDINGRULE:
+		return "Compute_GlobalForwardingRule"
+	case DIAGFLOW_CXVERSION:
+		return "Diagflow_CxVersion"
+	case COMPUTE_BACKENDSERVICESIGNEDURLKEY:
+		return "Compute_BackendServiceSignedUrlKey"
+	case COMPUTE_INSTANCEGROUPNAMEDPORT:
+		return "Compute_InstanceGroupNamedPort"
+	case MONITORING_DASHBOARD:
+		return "Monitoring_Dashboard"
+	case ALLOYDB_CLUSTER:
+		return "Alloydb_Cluster"
+	case MONITORING_ALERTPOLICY:
+		return "Monitoring_AlertPolicy"
+	case ACCESSCONTEXTMANAGER_ACCESSLEVELCONDITION:
+		return "Accesscontextmanager_AccessLevelCondition"
+	case ARTIFACTREGISTRY_REPOSITORYIAMBINDING:
+		return "Artifactregistry_RepositoryIamBinding"
+	case BIGQUERY_IAMPOLICY:
+		return "Bigquery_IamPolicy"
+	case IAP_APPENGINESERVICEIAMBINDING:
+		return "Iap_AppEngineServiceIamBinding"
+	case APIGEE_ENVGROUP:
+		return "Apigee_EnvGroup"
+	case COMPUTE_INSTANCEIAMPOLICY:
+		return "Compute_InstanceIAMPolicy"
+	case HEALTHCARE_DICOMSTORE:
+		return "Healthcare_DicomStore"
+	case INTEGRATIONCONNECTORS_ENDPOINTATTACHMENT:
+		return "Integrationconnectors_EndpointAttachment"
+	case BIGQUERY_CONNECTION:
+		return "Bigquery_Connection"
+	case COMPUTE_SUBNETWORK:
+		return "Compute_Subnetwork"
+	case DATACATALOG_POLICYTAGIAMBINDING:
+		return "Datacatalog_PolicyTagIamBinding"
+	case GKEHUB_FEATUREIAMPOLICY:
+		return "Gkehub_FeatureIamPolicy"
+	case ORGANIZATIONS_IAMMEMBER:
+		return "Organizations_IAMMember"
+	case STORAGE_BUCKETOBJECT:
+		return "Storage_BucketObject"
+	case NETAPP_VOLUME:
+		return "Netapp_Volume"
+	case ORGANIZATIONS_FOLDER:
+		return "Organizations_Folder"
+	case BEYONDCORP_APPGATEWAY:
+		return "Beyondcorp_AppGateway"
+	case COMPUTE_HAVPNGATEWAY:
+		return "Compute_HaVpnGateway"
+	case APIGEE_INSTANCEATTACHMENT:
+		return "Apigee_InstanceAttachment"
+	case TAGS_TAGVALUE:
+		return "Tags_TagValue"
+	case COMPUTE_PUBLICDELEGATEDPREFIX:
+		return "Compute_PublicDelegatedPrefix"
+	case NETAPP_BACKUPPOLICY:
+		return "Netapp_BackupPolicy"
+	case NOTEBOOKS_RUNTIMEIAMPOLICY:
+		return "Notebooks_RuntimeIamPolicy"
+	case BIGQUERY_BIRESERVATION:
+		return "Bigquery_BiReservation"
+	case COMPUTE_DISKRESOURCEPOLICYATTACHMENT:
+		return "Compute_DiskResourcePolicyAttachment"
+	case COMPUTE_IMAGEIAMPOLICY:
+		return "Compute_ImageIamPolicy"
+	case GKEONPREM_VMWARENODEPOOL:
+		return "Gkeonprem_VMwareNodePool"
+	case APIGATEWAY_GATEWAYIAMMEMBER:
+		return "Apigateway_GatewayIamMember"
+	case BIGQUERYDATAPOLICY_DATAPOLICY:
+		return "Bigquerydatapolicy_DataPolicy"
+	case BIGQUERYDATAPOLICY_DATAPOLICYIAMPOLICY:
+		return "Bigquerydatapolicy_DataPolicyIamPolicy"
+	case BIGTABLE_INSTANCEIAMPOLICY:
+		return "Bigtable_InstanceIamPolicy"
+	case NETWORKSERVICES_MESH:
+		return "Networkservices_Mesh"
+	case CLOUDRUNV2_JOBIAMPOLICY:
+		return "Cloudrunv2_JobIamPolicy"
+	case GKEHUB_FLEET:
+		return "Gkehub_Fleet"
+	case IAP_TUNNELIAMBINDING:
+		return "Iap_TunnelIamBinding"
+	case NOTEBOOKS_INSTANCEIAMMEMBER:
+		return "Notebooks_InstanceIamMember"
+	case VPCACCESS_CONNECTOR:
+		return "Vpcaccess_Connector"
+	case CLOUDASSET_ORGANIZATIONFEED:
+		return "Cloudasset_OrganizationFeed"
+	case CLOUDFUNCTIONS_FUNCTION:
+		return "Cloudfunctions_Function"
+	case COMPUTE_SHAREDVPCHOSTPROJECT:
+		return "Compute_SharedVPCHostProject"
+	case DATAPROC_AUTOSCALINGPOLICYIAMMEMBER:
+		return "Dataproc_AutoscalingPolicyIamMember"
+	case CLOUDFUNCTIONSV2_FUNCTION:
+		return "Cloudfunctionsv2_Function"
+	case COMPUTE_REGIONDISKIAMBINDING:
+		return "Compute_RegionDiskIamBinding"
+	case DATASTORE_DATASTOREINDEX:
+		return "Datastore_DataStoreIndex"
+	case FILESTORE_SNAPSHOT:
+		return "Filestore_Snapshot"
+	case CLOUDDEPLOY_TARGETIAMMEMBER:
+		return "Clouddeploy_TargetIamMember"
+	case COMPUTE_NETWORKENDPOINT:
+		return "Compute_NetworkEndpoint"
+	case CONTAINERANALYSIS_NOTEIAMMEMBER:
+		return "Containeranalysis_NoteIamMember"
+	case KMS_CRYPTOKEYIAMPOLICY:
+		return "Kms_CryptoKeyIAMPolicy"
+	case CLOUDRUNV2_SERVICE:
+		return "Cloudrunv2_Service"
+	case DATAPROC_METASTORESERVICE:
+		return "Dataproc_MetastoreService"
+	case ALLOYDB_BACKUP:
+		return "Alloydb_Backup"
+	case DIAGFLOW_ENTITYTYPE:
+		return "Diagflow_EntityType"
+	case VERTEX_AIENDPOINTIAMPOLICY:
+		return "Vertex_AiEndpointIamPolicy"
+	case DATAFORM_REPOSITORYWORKFLOWCONFIG:
+		return "Dataform_RepositoryWorkflowConfig"
+	case NETWORKCONNECTIVITY_SERVICECONNECTIONPOLICY:
+		return "Networkconnectivity_ServiceConnectionPolicy"
+	case PUBSUB_SCHEMA:
+		return "Pubsub_Schema"
+	case TAGS_TAGKEY:
+		return "Tags_TagKey"
+	case ALLOYDB_INSTANCE:
+		return "Alloydb_Instance"
+	case APIGEE_SYNCAUTHORIZATION:
+		return "Apigee_SyncAuthorization"
+	case COMPUTE_MACHINEIMAGEIAMMEMBER:
+		return "Compute_MachineImageIamMember"
+	case COMPUTE_REGIONSECURITYPOLICY:
+		return "Compute_RegionSecurityPolicy"
+	case VMWAREENGINE_SUBNET:
+		return "Vmwareengine_Subnet"
+	case BIGQUERY_DATASETIAMPOLICY:
+		return "Bigquery_DatasetIamPolicy"
+	case DATAPLEX_LAKEIAMPOLICY:
+		return "Dataplex_LakeIamPolicy"
+	case ORGPOLICY_CUSTOMCONSTRAINT:
+		return "Orgpolicy_CustomConstraint"
+	case SECURESOURCEMANAGER_INSTANCE:
+		return "Securesourcemanager_Instance"
+	case COMPUTE_NETWORKENDPOINTLIST:
+		return "Compute_NetworkEndpointList"
+	case COMPUTE_REGIONDISK:
+		return "Compute_RegionDisk"
+	case DATALOSS_PREVENTIONDEIDENTIFYTEMPLATE:
+		return "Dataloss_PreventionDeidentifyTemplate"
+	case FIREBASE_APPCHECKPLAYINTEGRITYCONFIG:
+		return "Firebase_AppCheckPlayIntegrityConfig"
+	case APIGATEWAY_APICONFIGIAMMEMBER:
+		return "Apigateway_ApiConfigIamMember"
+	case BIGQUERYANALYTICSHUB_LISTINGIAMPOLICY:
+		return "Bigqueryanalyticshub_ListingIamPolicy"
+	case CLOUDTASKS_QUEUEIAMPOLICY:
+		return "Cloudtasks_QueueIamPolicy"
+	case COMPUTE_FORWARDINGRULE:
+		return "Compute_ForwardingRule"
+	case WORKSTATIONS_WORKSTATION:
+		return "Workstations_Workstation"
+	case IAP_APPENGINEVERSIONIAMBINDING:
+		return "Iap_AppEngineVersionIamBinding"
+	case SECURITYCENTER_PROJECTCUSTOMMODULE:
+		return "Securitycenter_ProjectCustomModule"
+	case SERVICEDIRECTORY_NAMESPACEIAMMEMBER:
+		return "Servicedirectory_NamespaceIamMember"
+	case GKEHUB_MEMBERSHIP:
+		return "Gkehub_Membership"
+	case FIREBASE_HOSTINGVERSION:
+		return "Firebase_HostingVersion"
+	case DATAPLEX_ASSET:
+		return "Dataplex_Asset"
+	case COMPUTE_URLMAP:
+		return "Compute_URLMap"
+	case DIAGFLOW_CXPAGE:
+		return "Diagflow_CxPage"
+	case FOLDER_IAMPOLICY:
+		return "Folder_IAMPolicy"
+	case SECRETMANAGER_SECRET:
+		return "Secretmanager_Secret"
+	case REDIS_CLUSTER:
+		return "Redis_Cluster"
+	case APIGEE_KEYSTORESALIASESSELFSIGNEDCERT:
+		return "Apigee_KeystoresAliasesSelfSignedCert"
+	case ASSUREDWORKLOADS_WORKLOAD:
+		return "Assuredworkloads_Workload"
+	case CLOUDDEPLOY_TARGETIAMPOLICY:
+		return "Clouddeploy_TargetIamPolicy"
+	case COMPUTE_SERVICEATTACHMENT:
+		return "Compute_ServiceAttachment"
+	case VERTEX_AIFEATURESTOREENTITYTYPE:
+		return "Vertex_AiFeatureStoreEntityType"
+	case WORKBENCH_INSTANCEIAMPOLICY:
+		return "Workbench_InstanceIamPolicy"
+	case APIGEE_ENVIRONMENTIAMPOLICY:
+		return "Apigee_EnvironmentIamPolicy"
+	case BIGQUERY_TABLE:
+		return "Bigquery_Table"
+	case CLOUDBUILDV2_CONNECTIONIAMPOLICY:
+		return "Cloudbuildv2_ConnectionIAMPolicy"
+	case GKEHUB_MEMBERSHIPBINDING:
+		return "Gkehub_MembershipBinding"
+	case ACCESSCONTEXTMANAGER_INGRESSPOLICY:
+		return "Accesscontextmanager_IngressPolicy"
+	case COMPUTE_REGIONDISKIAMPOLICY:
+		return "Compute_RegionDiskIamPolicy"
+	case DATAPLEX_DATASCANIAMMEMBER:
+		return "Dataplex_DatascanIamMember"
+	case BIGQUERY_IAMMEMBER:
+		return "Bigquery_IamMember"
+	case COMPUTE_BACKENDBUCKETIAMMEMBER:
+		return "Compute_BackendBucketIamMember"
+	case COMPUTE_BACKENDSERVICE:
+		return "Compute_BackendService"
+	case SECURITYCENTER_EVENTTHREATDETECTIONCUSTOMMODULE:
+		return "Securitycenter_EventThreatDetectionCustomModule"
+	case HEALTHCARE_DICOMSTOREIAMPOLICY:
+		return "Healthcare_DicomStoreIamPolicy"
+	case HEALTHCARE_FHIRSTOREIAMMEMBER:
+		return "Healthcare_FhirStoreIamMember"
+	case MONITORING_UPTIMECHECKCONFIG:
+		return "Monitoring_UptimeCheckConfig"
+	case APIGATEWAY_APICONFIGIAMPOLICY:
+		return "Apigateway_ApiConfigIamPolicy"
+	case COMPUTE_SHAREDVPCSERVICEPROJECT:
+		return "Compute_SharedVPCServiceProject"
+	case DATAPLEX_TASKIAMPOLICY:
+		return "Dataplex_TaskIamPolicy"
+	case VERTEX_AIFEATURESTOREENTITYTYPEIAMMEMBER:
+		return "Vertex_AiFeatureStoreEntityTypeIamMember"
+	case CLOUDTASKS_QUEUE:
+		return "Cloudtasks_Queue"
+	case COMPUTE_INSTANCEIAMBINDING:
+		return "Compute_InstanceIAMBinding"
+	case DATACATALOG_ENTRYGROUPIAMPOLICY:
+		return "Datacatalog_EntryGroupIamPolicy"
+	case APIGEE_ADDONSCONFIG:
+		return "Apigee_AddonsConfig"
+	case COMPUTE_REGIONPERINSTANCECONFIG:
+		return "Compute_RegionPerInstanceConfig"
+	case DNS_MANAGEDZONE:
+		return "Dns_ManagedZone"
+	case VERTEX_AIFEATUREONLINESTORE:
+		return "Vertex_AiFeatureOnlineStore"
+	case VERTEX_AITENSORBOARD:
+		return "Vertex_AiTensorboard"
+	case APIGATEWAY_APIIAMBINDING:
+		return "Apigateway_ApiIamBinding"
+	case BIGQUERY_DATASETIAMMEMBER:
+		return "Bigquery_DatasetIamMember"
+	case COMPUTE_ROUTE:
+		return "Compute_Route"
+	case DATAPLEX_DATASCAN:
+		return "Dataplex_Datascan"
+	case DATACATALOG_ENTRY:
+		return "Datacatalog_Entry"
+	case HEALTHCARE_FHIRSTOREIAMPOLICY:
+		return "Healthcare_FhirStoreIamPolicy"
+	case IDENTITYPLATFORM_DEFAULTSUPPORTEDIDPCONFIG:
+		return "Identityplatform_DefaultSupportedIdpConfig"
+	case CLOUDASSET_FOLDERFEED:
+		return "Cloudasset_FolderFeed"
+	case EDGECONTAINER_NODEPOOL:
+		return "Edgecontainer_NodePool"
+	case APIGEE_ENVGROUPATTACHMENT:
+		return "Apigee_EnvGroupAttachment"
+	case DATABASEMIGRATIONSERVICE_CONNECTIONPROFILE:
+		return "Databasemigrationservice_ConnectionProfile"
+	case FIREBASE_APPLEAPP:
+		return "Firebase_AppleApp"
+	case SERVICEDIRECTORY_ENDPOINT:
+		return "Servicedirectory_Endpoint"
+	case BEYONDCORP_APPCONNECTION:
+		return "Beyondcorp_AppConnection"
+	case COMPUTE_SUBNETWORKIAMBINDING:
+		return "Compute_SubnetworkIAMBinding"
+	case VERTEX_AIENDPOINTIAMMEMBER:
+		return "Vertex_AiEndpointIamMember"
+	case GKEHUB_FEATUREMEMBERSHIP:
+		return "Gkehub_FeatureMembership"
+	case LOOKER_INSTANCE:
+		return "Looker_Instance"
+	case MEMCACHE_INSTANCE:
+		return "Memcache_Instance"
+	case PROJECTS_IAMCUSTOMROLE:
+		return "Projects_IAMCustomRole"
+	case ACCESSCONTEXTMANAGER_SERVICEPERIMETEREGRESSPOLICY:
+		return "Accesscontextmanager_ServicePerimeterEgressPolicy"
+	case COMPUTE_IMAGE:
+		return "Compute_Image"
+	case COMPUTE_PUBLICADVERTISEDPREFIX:
+		return "Compute_PublicAdvertisedPrefix"
+	case SERVICEDIRECTORY_SERVICEIAMPOLICY:
+		return "Servicedirectory_ServiceIamPolicy"
+	case CLOUDDEPLOY_DELIVERYPIPELINEIAMPOLICY:
+		return "Clouddeploy_DeliveryPipelineIamPolicy"
+	case COMPUTE_REGIONBACKENDSERVICEIAMBINDING:
+		return "Compute_RegionBackendServiceIamBinding"
+	case IAP_WEBTYPECOMPUTEIAMPOLICY:
+		return "Iap_WebTypeComputeIamPolicy"
+	case SQL_USER:
+		return "Sql_User"
+	case CERTIFICATEMANAGER_TRUSTCONFIG:
+		return "Certificatemanager_TrustConfig"
+	case WORKBENCH_INSTANCEIAMMEMBER:
+		return "Workbench_InstanceIamMember"
+	case COMPUTE_INSTANCEGROUPMEMBERSHIP:
+		return "Compute_InstanceGroupMembership"
+	case IAP_WEBTYPEAPPENGINGIAMMEMBER:
+		return "Iap_WebTypeAppEngingIamMember"
+	case BIGTABLE_INSTANCEIAMBINDING:
+		return "Bigtable_InstanceIamBinding"
+	case CLOUDBUILD_TRIGGER:
+		return "Cloudbuild_Trigger"
+	case BIGQUERY_DATATRANSFERCONFIG:
+		return "Bigquery_DataTransferConfig"
+	case COMPUTE_REGIONSSLPOLICY:
+		return "Compute_RegionSslPolicy"
+	case DATAPROC_METASTORESERVICEIAMMEMBER:
+		return "Dataproc_MetastoreServiceIamMember"
+	case DIAGFLOW_CXWEBHOOK:
+		return "Diagflow_CxWebhook"
+	case VMWAREENGINE_CLUSTER:
+		return "Vmwareengine_Cluster"
+	case CLOUDRUNV2_JOB:
+		return "Cloudrunv2_Job"
+	case COMPUTE_HTTPSHEALTHCHECK:
+		return "Compute_HttpsHealthCheck"
+	case COMPUTE_SECURITYPOLICY:
+		return "Compute_SecurityPolicy"
+	case DATAPROC_METASTOREFEDERATIONIAMBINDING:
+		return "Dataproc_MetastoreFederationIamBinding"
+	case DIAGFLOW_CXFLOW:
+		return "Diagflow_CxFlow"
+	case SECURITYCENTER_SOURCEIAMMEMBER:
+		return "Securitycenter_SourceIamMember"
+	case SERVICEDIRECTORY_NAMESPACEIAMPOLICY:
+		return "Servicedirectory_NamespaceIamPolicy"
+	case TPU_NODE:
+		return "Tpu_Node"
+	case NETAPP_BACKUPVAULT:
+		return "Netapp_BackupVault"
+	case NETWORKSERVICES_EDGECACHEORIGIN:
+		return "Networkservices_EdgeCacheOrigin"
+	case WORKSTATIONS_WORKSTATIONCONFIG:
+		return "Workstations_WorkstationConfig"
+	case BIGLAKE_CATALOG:
+		return "Biglake_Catalog"
+	case CLOUDBUILD_WORKERPOOL:
+		return "Cloudbuild_WorkerPool"
+	case CLOUDBUILDV2_CONNECTION:
+		return "Cloudbuildv2_Connection"
+	case IAP_APPENGINEVERSIONIAMPOLICY:
+		return "Iap_AppEngineVersionIamPolicy"
+	case APIGEE_ENVIRONMENTIAMMEMBER:
+		return "Apigee_EnvironmentIamMember"
+	case BIGTABLE_INSTANCE:
+		return "Bigtable_Instance"
+	case DEPLOYMENTMANAGER_DEPLOYMENT:
+		return "Deploymentmanager_Deployment"
+	case DATAPLEX_DATASCANIAMPOLICY:
+		return "Dataplex_DatascanIamPolicy"
+	case LOGGING_LOGVIEW:
+		return "Logging_LogView"
+	case SERVICEDIRECTORY_NAMESPACEIAMBINDING:
+		return "Servicedirectory_NamespaceIamBinding"
+	case DATAFORM_REPOSITORYIAMMEMBER:
+		return "Dataform_RepositoryIamMember"
+	case IDENTITYPLATFORM_INBOUNDSAMLCONFIG:
+		return "Identityplatform_InboundSamlConfig"
+	case TAGS_TAGKEYIAMBINDING:
+		return "Tags_TagKeyIamBinding"
+	case DIAGFLOW_CXENTITYTYPE:
+		return "Diagflow_CxEntityType"
+	case CONTAINERANALYSIS_NOTE:
+		return "Containeranalysis_Note"
+	case GKEHUB_SCOPERBACROLEBINDING:
+		return "Gkehub_ScopeRbacRoleBinding"
+	case LOGGING_FOLDERSETTINGS:
+		return "Logging_FolderSettings"
+	case CLOUDIDS_ENDPOINT:
+		return "Cloudids_Endpoint"
+	case COMPUTE_BACKENDBUCKETIAMBINDING:
+		return "Compute_BackendBucketIamBinding"
+	case TAGS_TAGVALUEIAMBINDING:
+		return "Tags_TagValueIamBinding"
+	case NETWORKSERVICES_TLSROUTE:
+		return "Networkservices_TlsRoute"
+	case CLOUDDEPLOY_TARGET:
+		return "Clouddeploy_Target"
+	case COMPUTE_INSTANCEFROMTEMPLATE:
+		return "Compute_InstanceFromTemplate"
+	case IAP_APPENGINESERVICEIAMMEMBER:
+		return "Iap_AppEngineServiceIamMember"
+	case INTEGRATIONCONNECTORS_CONNECTION:
+		return "Integrationconnectors_Connection"
+	case COMPUTE_SNAPSHOT:
+		return "Compute_Snapshot"
+	case NETWORKSECURITY_AUTHORIZATIONPOLICY:
+		return "Networksecurity_AuthorizationPolicy"
+	case NOTEBOOKS_RUNTIMEIAMBINDING:
+		return "Notebooks_RuntimeIamBinding"
+	case PROJECTS_DEFAULTSERVICEACCOUNTS:
+		return "Projects_DefaultServiceAccounts"
+	case VMWAREENGINE_EXTERNALADDRESS:
+		return "Vmwareengine_ExternalAddress"
+	case ORGANIZATIONS_IAMAUDITCONFIG:
+		return "Organizations_IamAuditConfig"
+	case BIGQUERY_JOB:
+		return "Bigquery_Job"
+	case CLOUDRUN_DOMAINMAPPING:
+		return "Cloudrun_DomainMapping"
+	case DNS_DNSMANAGEDZONEIAMMEMBER:
+		return "Dns_DnsManagedZoneIamMember"
+	case GKEBACKUP_RESTOREPLANIAMPOLICY:
+		return "Gkebackup_RestorePlanIamPolicy"
+	case DATAFLOW_PIPELINE:
+		return "Dataflow_Pipeline"
+	case REDIS_INSTANCE:
+		return "Redis_Instance"
+	case DATAPROC_METASTOREFEDERATIONIAMMEMBER:
+		return "Dataproc_MetastoreFederationIamMember"
+	case FIREBASE_HOSTINGCUSTOMDOMAIN:
+		return "Firebase_HostingCustomDomain"
+	case IAM_DENYPOLICY:
+		return "Iam_DenyPolicy"
+	case CLOUDRUN_IAMBINDING:
+		return "Cloudrun_IamBinding"
+	case HEALTHCARE_HL7STOREIAMBINDING:
+		return "Healthcare_Hl7StoreIamBinding"
+	case NETWORKSECURITY_SERVERTLSPOLICY:
+		return "Networksecurity_ServerTlsPolicy"
+	case VERTEX_AIENDPOINTIAMBINDING:
+		return "Vertex_AiEndpointIamBinding"
+	case IDENTITYPLATFORM_OAUTHIDPCONFIG:
+		return "Identityplatform_OauthIdpConfig"
+	case NOTEBOOKS_INSTANCEIAMPOLICY:
+		return "Notebooks_InstanceIamPolicy"
+	case RECAPTCHA_ENTERPRISEKEY:
+		return "Recaptcha_EnterpriseKey"
+	case APPENGINE_STANDARDAPPVERSION:
+		return "Appengine_StandardAppVersion"
+	case FIREBASE_STORAGEBUCKET:
+		return "Firebase_StorageBucket"
+	case LOGGING_PROJECTSINK:
+		return "Logging_ProjectSink"
+	case NOTEBOOKS_RUNTIME:
+		return "Notebooks_Runtime"
+	case SERVICEDIRECTORY_SERVICE:
+		return "Servicedirectory_Service"
+	case COMPUTE_SECURITYSCANCONFIG:
+		return "Compute_SecurityScanConfig"
+	case DATAPROC_WORKFLOWTEMPLATE:
+		return "Dataproc_WorkflowTemplate"
+	case DIAGFLOW_CXTESTCASE:
+		return "Diagflow_CxTestCase"
+	case SERVICEDIRECTORY_NAMESPACE:
+		return "Servicedirectory_Namespace"
+	case COMPUTE_DISKASYNCREPLICATION:
+		return "Compute_DiskAsyncReplication"
+	case COMPUTE_NETWORKENDPOINTGROUP:
+		return "Compute_NetworkEndpointGroup"
+	case COMPUTE_RESOURCEPOLICY:
+		return "Compute_ResourcePolicy"
+	case EVENTARC_CHANNEL:
+		return "Eventarc_Channel"
+	case HEALTHCARE_CONSENTSTOREIAMMEMBER:
+		return "Healthcare_ConsentStoreIamMember"
+	case KMS_KEYRINGIMPORTJOB:
+		return "Kms_KeyRingImportJob"
+	case IAP_APPENGINESERVICEIAMPOLICY:
+		return "Iap_AppEngineServiceIamPolicy"
+	case VERTEX_AIFEATURESTORE:
+		return "Vertex_AiFeatureStore"
+	case SERVICEACCOUNT_IAMBINDING:
+		return "Serviceaccount_IAMBinding"
+	case PROJECTS_ORGANIZATIONPOLICY:
+		return "Projects_OrganizationPolicy"
+	case VMWAREENGINE_PRIVATECLOUD:
+		return "Vmwareengine_PrivateCloud"
+	case APIGATEWAY_APICONFIGIAMBINDING:
+		return "Apigateway_ApiConfigIamBinding"
+	case BIGTABLE_INSTANCEIAMMEMBER:
+		return "Bigtable_InstanceIamMember"
+	case DISCOVERYENGINE_DATASTORE:
+		return "Discoveryengine_DataStore"
+	case ENDPOINTS_SERVICEIAMMEMBER:
+		return "Endpoints_ServiceIamMember"
+	case BIGQUERY_CONNECTIONIAMPOLICY:
+		return "Bigquery_ConnectionIamPolicy"
+	case COMPUTE_NODEGROUP:
+		return "Compute_NodeGroup"
+	case COMPUTE_REGIONNETWORKENDPOINTGROUP:
+		return "Compute_RegionNetworkEndpointGroup"
+	case NETWORKSERVICES_EDGECACHESERVICE:
+		return "Networkservices_EdgeCacheService"
+	case BINARYAUTHORIZATION_POLICY:
+		return "Binaryauthorization_Policy"
+	case NETWORKSERVICES_HTTPROUTE:
+		return "Networkservices_HttpRoute"
+	case STORAGE_BUCKET:
+		return "Storage_Bucket"
+	case BIGLAKE_DATABASE:
+		return "Biglake_Database"
+	case NETAPP_KMSCONFIG:
+		return "Netapp_Kmsconfig"
+	case SPANNER_DATABASEIAMMEMBER:
+		return "Spanner_DatabaseIAMMember"
+	case FOLDER_IAMAUDITCONFIG:
+		return "Folder_IamAuditConfig"
+	case SPANNER_INSTANCEIAMBINDING:
+		return "Spanner_InstanceIAMBinding"
+	case APIGATEWAY_GATEWAYIAMPOLICY:
+		return "Apigateway_GatewayIamPolicy"
+	case APIGEE_INSTANCE:
+		return "Apigee_Instance"
+	case BIGQUERY_DATASETACCESS:
+		return "Bigquery_DatasetAccess"
+	case FOLDER_IAMMEMBER:
+		return "Folder_IAMMember"
+	case DIAGFLOW_CXAGENT:
+		return "Diagflow_CxAgent"
+	case COMPUTE_AUTOSCALER:
+		return "Compute_Autoscaler"
+	case CONTAINERANALYSIS_NOTEIAMPOLICY:
+		return "Containeranalysis_NoteIamPolicy"
+	case DATAPLEX_TASK:
+		return "Dataplex_Task"
+	case DATAPROC_CLUSTERIAMBINDING:
+		return "Dataproc_ClusterIAMBinding"
+	case CERTIFICATEMANAGER_CERTIFICATE:
+		return "Certificatemanager_Certificate"
+	case LOGGING_BILLINGACCOUNTEXCLUSION:
+		return "Logging_BillingAccountExclusion"
+	case SQL_DATABASEINSTANCE:
+		return "Sql_DatabaseInstance"
+	case LOGGING_METRIC:
+		return "Logging_Metric"
+	case WORKSTATIONS_WORKSTATIONIAMPOLICY:
+		return "Workstations_WorkstationIamPolicy"
+	case NETAPP_VOLUMEREPLICATION:
+		return "Netapp_VolumeReplication"
+	case SECURITYCENTER_INSTANCEIAMMEMBER:
+		return "Securitycenter_InstanceIamMember"
+	case COMPUTE_EXTERNALVPNGATEWAY:
+		return "Compute_ExternalVpnGateway"
+	case COMPUTE_RESERVATION:
+		return "Compute_Reservation"
+	case DATAPLEX_ZONE:
+		return "Dataplex_Zone"
+	case GKEBACKUP_BACKUPPLAN:
+		return "Gkebackup_BackupPlan"
+	case COMPUTE_NETWORKFIREWALLPOLICYASSOCIATION:
+		return "Compute_NetworkFirewallPolicyAssociation"
+	case COMPUTE_VPNGATEWAY:
+		return "Compute_VPNGateway"
+	case MONITORING_GENERICSERVICE:
+		return "Monitoring_GenericService"
+	case RUNTIMECONFIG_CONFIG:
+		return "Runtimeconfig_Config"
+	case COMPUTE_REGIONTARGETHTTPSPROXY:
+		return "Compute_RegionTargetHttpsProxy"
+	case STORAGE_BUCKETIAMBINDING:
+		return "Storage_BucketIAMBinding"
+	case SERVICEDIRECTORY_SERVICEIAMMEMBER:
+		return "Servicedirectory_ServiceIamMember"
+	case CERTIFICATEAUTHORITY_CERTIFICATETEMPLATEIAMMEMBER:
+		return "Certificateauthority_CertificateTemplateIamMember"
+	case DATAPLEX_ASSETIAMBINDING:
+		return "Dataplex_AssetIamBinding"
+	case GKEBACKUP_RESTOREPLAN:
+		return "Gkebackup_RestorePlan"
+	case NETWORKSECURITY_ADDRESSGROUPIAMBINDING:
+		return "Networksecurity_AddressGroupIamBinding"
+	case BIGQUERY_RESERVATION:
+		return "Bigquery_Reservation"
+	case CLOUDASSET_PROJECTFEED:
+		return "Cloudasset_ProjectFeed"
+	case COMPUTE_DISKIAMMEMBER:
+		return "Compute_DiskIamMember"
+	case MONITORING_CUSTOMSERVICE:
+		return "Monitoring_CustomService"
+	case NETWORKSECURITY_SECURITYPROFILEGROUP:
+		return "Networksecurity_SecurityProfileGroup"
+	case WORKSTATIONS_WORKSTATIONCONFIGIAMBINDING:
+		return "Workstations_WorkstationConfigIamBinding"
+	case IAP_APPENGINEVERSIONIAMMEMBER:
+		return "Iap_AppEngineVersionIamMember"
+	case PROJECTS_IAMBINDING:
+		return "Projects_IAMBinding"
+	case NETWORKCONNECTIVITY_SPOKE:
+		return "Networkconnectivity_Spoke"
+	case APIGATEWAY_APICONFIG:
+		return "Apigateway_ApiConfig"
+	case GKEHUB_MEMBERSHIPIAMBINDING:
+		return "Gkehub_MembershipIamBinding"
+	case SERVICEDIRECTORY_SERVICEIAMBINDING:
+		return "Servicedirectory_ServiceIamBinding"
+	case ARTIFACTREGISTRY_VPCSCCONFIG:
+		return "Artifactregistry_VpcscConfig"
+	case TPU_V2VM:
+		return "Tpu_V2Vm"
+	case CLOUDBUILDV2_CONNECTIONIAMBINDING:
+		return "Cloudbuildv2_ConnectionIAMBinding"
+	case NETWORKSERVICES_GRPCROUTE:
+		return "Networkservices_GrpcRoute"
+	case COMPUTE_REGIONBACKENDSERVICE:
+		return "Compute_RegionBackendService"
+	case COMPUTE_REGIONBACKENDSERVICEIAMMEMBER:
+		return "Compute_RegionBackendServiceIamMember"
+	case CONTAINER_AWSNODEPOOL:
+		return "Container_AwsNodePool"
+	case DATACATALOG_ENTRYGROUPIAMBINDING:
+		return "Datacatalog_EntryGroupIamBinding"
+	case APPENGINE_ENGINESPLITTRAFFIC:
+		return "Appengine_EngineSplitTraffic"
+	case APPENGINE_FLEXIBLEAPPVERSION:
+		return "Appengine_FlexibleAppVersion"
+	case BIGQUERY_ROUTINE:
+		return "Bigquery_Routine"
+	case COMPUTE_ORGANIZATIONSECURITYPOLICY:
+		return "Compute_OrganizationSecurityPolicy"
+	case FIREBASE_HOSTINGRELEASE:
+		return "Firebase_HostingRelease"
+	case HEALTHCARE_FHIRSTORE:
+		return "Healthcare_FhirStore"
+	case IAP_WEBIAMBINDING:
+		return "Iap_WebIamBinding"
+	case COMPUTE_REGIONNETWORKFIREWALLPOLICYRULE:
+		return "Compute_RegionNetworkFirewallPolicyRule"
+	case SPANNER_DATABASEIAMPOLICY:
+		return "Spanner_DatabaseIAMPolicy"
+	case CERTIFICATEMANAGER_CERTIFICATEMAPENTRY:
+		return "Certificatemanager_CertificateMapEntry"
+	case LOGGING_FOLDERBUCKETCONFIG:
+		return "Logging_FolderBucketConfig"
+
+	}
+	return "Unknown ResourceType"
+}
+
+var ResourceTypeMap = map[ResourceType]func() Any{
+	LOGGING_ORGANIZATIONBUCKETCONFIG: func() Any {
+		return &logging.OrganizationBucketConfig{}
+	},
+	NETWORKSERVICES_EDGECACHEKEYSET: func() Any {
+		return &networkservices.EdgeCacheKeyset{}
+	},
+	COMPUTE_HEALTHCHECK: func() Any {
+		return &compute.HealthCheck{}
+	},
+	COMPUTE_INSTANCESETTINGS: func() Any {
+		return &compute.InstanceSettings{}
+	},
+	DATACATALOG_TAXONOMYIAMBINDING: func() Any {
+		return &datacatalog.TaxonomyIamBinding{}
+	},
+	IAP_WEBTYPEAPPENGINGIAMPOLICY: func() Any {
+		return &iap.WebTypeAppEngingIamPolicy{}
+	},
+	CLOUDDEPLOY_CUSTOMTARGETTYPE: func() Any {
+		return &clouddeploy.CustomTargetType{}
+	},
+	CLOUDRUNV2_JOBIAMBINDING: func() Any {
+		return &cloudrunv2.JobIamBinding{}
+	},
+	PUBSUB_TOPICIAMMEMBER: func() Any {
+		return &pubsub.TopicIAMMember{}
+	},
+	BIGQUERYDATAPOLICY_DATAPOLICYIAMBINDING: func() Any {
+		return &bigquerydatapolicy.DataPolicyIamBinding{}
+	},
+	SOURCEREPO_REPOSITORY: func() Any {
+		return &sourcerepo.Repository{}
+	},
+	BIGQUERYANALYTICSHUB_DATAEXCHANGEIAMPOLICY: func() Any {
+		return &bigqueryanalyticshub.DataExchangeIamPolicy{}
+	},
+	COMPUTE_DISK: func() Any {
+		return &compute.Disk{}
+	},
+	COMPUTE_FIREWALLPOLICYRULE: func() Any {
+		return &compute.FirewallPolicyRule{}
+	},
+	LOGGING_BILLINGACCOUNTSINK: func() Any {
+		return &logging.BillingAccountSink{}
+	},
+	COMPUTE_SUBNETWORKIAMPOLICY: func() Any {
+		return &compute.SubnetworkIAMPolicy{}
+	},
+	FIREBASE_APPCHECKRECAPTCHAV3CONFIG: func() Any {
+		return &firebase.AppCheckRecaptchaV3Config{}
+	},
+	FOLDER_ACCESSAPPROVALSETTINGS: func() Any {
+		return &folder.AccessApprovalSettings{}
+	},
+	ESSENTIALCONTACTS_DOCUMENTAIPROCESSORDEFAULTVERSION: func() Any {
+		return &essentialcontacts.DocumentAiProcessorDefaultVersion{}
+	},
+	FIREBASE_APPCHECKAPPATTESTCONFIG: func() Any {
+		return &firebase.AppCheckAppAttestConfig{}
+	},
+	FIREBASE_HOSTINGSITE: func() Any {
+		return &firebase.HostingSite{}
+	},
+	ORGANIZATIONS_IAMCUSTOMROLE: func() Any {
+		return &organizations.IAMCustomRole{}
+	},
+	APIGEE_NATADDRESS: func() Any {
+		return &apigee.NatAddress{}
+	},
+	CLOUDFUNCTIONSV2_FUNCTIONIAMBINDING: func() Any {
+		return &cloudfunctionsv2.FunctionIamBinding{}
+	},
+	LOGGING_PROJECTBUCKETCONFIG: func() Any {
+		return &logging.ProjectBucketConfig{}
+	},
+	IAP_TUNNELINSTANCEIAMMEMBER: func() Any {
+		return &iap.TunnelInstanceIAMMember{}
+	},
+	KMS_KEYRINGIAMBINDING: func() Any {
+		return &kms.KeyRingIAMBinding{}
+	},
+	STORAGE_BUCKETIAMMEMBER: func() Any {
+		return &storage.BucketIAMMember{}
+	},
+	APIGEE_ENVKEYSTORE: func() Any {
+		return &apigee.EnvKeystore{}
+	},
+	CLOUDDOMAINS_REGISTRATION: func() Any {
+		return &clouddomains.Registration{}
+	},
+	COMPUTE_NETWORKPEERING: func() Any {
+		return &compute.NetworkPeering{}
+	},
+	DATACATALOG_TAGTEMPLATEIAMBINDING: func() Any {
+		return &datacatalog.TagTemplateIamBinding{}
+	},
+	COMPUTE_DISKIAMPOLICY: func() Any {
+		return &compute.DiskIamPolicy{}
+	},
+	FILESTORE_INSTANCE: func() Any {
+		return &filestore.Instance{}
+	},
+	NETWORKSECURITY_CLIENTTLSPOLICY: func() Any {
+		return &networksecurity.ClientTlsPolicy{}
+	},
+	IAP_BRAND: func() Any {
+		return &iap.Brand{}
+	},
+	COMPUTE_ROUTERNAT: func() Any {
+		return &compute.RouterNat{}
+	},
+	SECURITYCENTER_MUTECONFIG: func() Any {
+		return &securitycenter.MuteConfig{}
+	},
+	APIGATEWAY_GATEWAY: func() Any {
+		return &apigateway.Gateway{}
+	},
+	COMPUTE_MACHINEIMAGE: func() Any {
+		return &compute.MachineImage{}
+	},
+	BIGTABLE_TABLEIAMBINDING: func() Any {
+		return &bigtable.TableIamBinding{}
+	},
+	LOGGING_ORGANIZATIONSINK: func() Any {
+		return &logging.OrganizationSink{}
+	},
+	COMPUTE_VPNTUNNEL: func() Any {
+		return &compute.VPNTunnel{}
+	},
+	OSCONFIG_OSPOLICYASSIGNMENT: func() Any {
+		return &osconfig.OsPolicyAssignment{}
+	},
+	FIREBASE_HOSTINGCHANNEL: func() Any {
+		return &firebase.HostingChannel{}
+	},
+	GKEBACKUP_RESTOREPLANIAMMEMBER: func() Any {
+		return &gkebackup.RestorePlanIamMember{}
+	},
+	IDENTITYPLATFORM_TENANTDEFAULTSUPPORTEDIDPCONFIG: func() Any {
+		return &identityplatform.TenantDefaultSupportedIdpConfig{}
+	},
+	COMPUTE_NODETEMPLATE: func() Any {
+		return &compute.NodeTemplate{}
+	},
+	SERVICEUSAGE_CONSUMERQUOTAOVERRIDE: func() Any {
+		return &serviceusage.ConsumerQuotaOverride{}
+	},
+	SQL_SOURCEREPRESENTATIONINSTANCE: func() Any {
+		return &sql.SourceRepresentationInstance{}
+	},
+	DATALOSS_PREVENTIONINSPECTTEMPLATE: func() Any {
+		return &dataloss.PreventionInspectTemplate{}
+	},
+	DATAPLEX_TASKIAMMEMBER: func() Any {
+		return &dataplex.TaskIamMember{}
+	},
+	MONITORING_NOTIFICATIONCHANNEL: func() Any {
+		return &monitoring.NotificationChannel{}
+	},
+	DATAPROC_AUTOSCALINGPOLICYIAMPOLICY: func() Any {
+		return &dataproc.AutoscalingPolicyIamPolicy{}
+	},
+	TAGS_LOCATIONTAGBINDING: func() Any {
+		return &tags.LocationTagBinding{}
+	},
+	ALLOYDB_USER: func() Any {
+		return &alloydb.User{}
+	},
+	CLOUDFUNCTIONS_FUNCTIONIAMMEMBER: func() Any {
+		return &cloudfunctions.FunctionIamMember{}
+	},
+	CLOUDRUNV2_JOBIAMMEMBER: func() Any {
+		return &cloudrunv2.JobIamMember{}
+	},
+	COMPUTE_BACKENDBUCKET: func() Any {
+		return &compute.BackendBucket{}
+	},
+	SECURITYCENTER_SOURCEIAMPOLICY: func() Any {
+		return &securitycenter.SourceIamPolicy{}
+	},
+	CONTAINER_NODEPOOL: func() Any {
+		return &container.NodePool{}
+	},
+	SECURITYCENTER_INSTANCEIAMPOLICY: func() Any {
+		return &securitycenter.InstanceIamPolicy{}
+	},
+	STORAGE_TRANSFERJOB: func() Any {
+		return &storage.TransferJob{}
+	},
+	LOGGING_ORGANIZATIONSETTINGS: func() Any {
+		return &logging.OrganizationSettings{}
+	},
+	HEALTHCARE_DATASETIAMPOLICY: func() Any {
+		return &healthcare.DatasetIamPolicy{}
+	},
+	IAP_TUNNELINSTANCEIAMBINDING: func() Any {
+		return &iap.TunnelInstanceIAMBinding{}
+	},
+	KMS_CRYPTOKEYVERSION: func() Any {
+		return &kms.CryptoKeyVersion{}
+	},
+	COMPUTE_INSTANCEFROMMACHINEIMAGE: func() Any {
+		return &compute.InstanceFromMachineImage{}
+	},
+	ENDPOINTS_SERVICEIAMBINDING: func() Any {
+		return &endpoints.ServiceIamBinding{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSPOLICYIAMPOLICY: func() Any {
+		return &accesscontextmanager.AccessPolicyIamPolicy{}
+	},
+	APIGATEWAY_API: func() Any {
+		return &apigateway.Api{}
+	},
+	CLOUDDEPLOY_TARGETIAMBINDING: func() Any {
+		return &clouddeploy.TargetIamBinding{}
+	},
+	NETWORKSECURITY_ADDRESSGROUPIAMMEMBER: func() Any {
+		return &networksecurity.AddressGroupIamMember{}
+	},
+	BIGQUERY_DATASET: func() Any {
+		return &bigquery.Dataset{}
+	},
+	BILLING_SUBACCOUNT: func() Any {
+		return &billing.SubAccount{}
+	},
+	IAP_TUNNELINSTANCEIAMPOLICY: func() Any {
+		return &iap.TunnelInstanceIAMPolicy{}
+	},
+	IDENTITYPLATFORM_PROJECTDEFAULTCONFIG: func() Any {
+		return &identityplatform.ProjectDefaultConfig{}
+	},
+	APPENGINE_DOMAINMAPPING: func() Any {
+		return &appengine.DomainMapping{}
+	},
+	CLOUDRUNV2_SERVICEIAMMEMBER: func() Any {
+		return &cloudrunv2.ServiceIamMember{}
+	},
+	COMPUTE_BACKENDSERVICEIAMPOLICY: func() Any {
+		return &compute.BackendServiceIamPolicy{}
+	},
+	COMPUTE_PROJECTDEFAULTNETWORKTIER: func() Any {
+		return &compute.ProjectDefaultNetworkTier{}
+	},
+	CERTIFICATEMANAGER_CERTIFICATEMAP: func() Any {
+		return &certificatemanager.CertificateMap{}
+	},
+	SECURESOURCEMANAGER_INSTANCEIAMBINDING: func() Any {
+		return &securesourcemanager.InstanceIamBinding{}
+	},
+	APIGEE_TARGETSERVER: func() Any {
+		return &apigee.TargetServer{}
+	},
+	NETWORKCONNECTIVITY_HUB: func() Any {
+		return &networkconnectivity.Hub{}
+	},
+	NETWORKSECURITY_SECURITYPROFILE: func() Any {
+		return &networksecurity.SecurityProfile{}
+	},
+	VERTEX_AIMETADATASTORE: func() Any {
+		return &vertex.AiMetadataStore{}
+	},
+	PROJECTS_IAMAUDITCONFIG: func() Any {
+		return &projects.IAMAuditConfig{}
+	},
+	DNS_DNSMANAGEDZONEIAMPOLICY: func() Any {
+		return &dns.DnsManagedZoneIamPolicy{}
+	},
+	COMPUTE_INSTANCE: func() Any {
+		return &compute.Instance{}
+	},
+	COMPUTE_INSTANCEGROUPMANAGER: func() Any {
+		return &compute.InstanceGroupManager{}
+	},
+	ACCESSCONTEXTMANAGER_SERVICEPERIMETERRESOURCE: func() Any {
+		return &accesscontextmanager.ServicePerimeterResource{}
+	},
+	SECURITYCENTER_FOLDERCUSTOMMODULE: func() Any {
+		return &securitycenter.FolderCustomModule{}
+	},
+	STORAGE_TRANSFERAGENTPOOL: func() Any {
+		return &storage.TransferAgentPool{}
+	},
+	PROJECTS_USAGEEXPORTBUCKET: func() Any {
+		return &projects.UsageExportBucket{}
+	},
+	CLOUDBUILD_BITBUCKETSERVERCONFIG: func() Any {
+		return &cloudbuild.BitbucketServerConfig{}
+	},
+	GKEHUB_NAMESPACE: func() Any {
+		return &gkehub.Namespace{}
+	},
+	IAP_WEBIAMPOLICY: func() Any {
+		return &iap.WebIamPolicy{}
+	},
+	COMPUTE_FIREWALL: func() Any {
+		return &compute.Firewall{}
+	},
+	COMPUTE_REGIONDISKRESOURCEPOLICYATTACHMENT: func() Any {
+		return &compute.RegionDiskResourcePolicyAttachment{}
+	},
+	DNS_POLICY: func() Any {
+		return &dns.Policy{}
+	},
+	DATACATALOG_TAGTEMPLATE: func() Any {
+		return &datacatalog.TagTemplate{}
+	},
+	CLOUDIDENTITY_GROUP: func() Any {
+		return &cloudidentity.Group{}
+	},
+	FIRESTORE_DATABASE: func() Any {
+		return &firestore.Database{}
+	},
+	IAM_WORKFORCEPOOL: func() Any {
+		return &iam.WorkforcePool{}
+	},
+	KMS_KEYRINGIAMMEMBER: func() Any {
+		return &kms.KeyRingIAMMember{}
+	},
+	CLOUDRUNV2_SERVICEIAMBINDING: func() Any {
+		return &cloudrunv2.ServiceIamBinding{}
+	},
+	CONTAINERANALYSIS_OCCURENCE: func() Any {
+		return &containeranalysis.Occurence{}
+	},
+	PUBSUB_SUBSCRIPTIONIAMBINDING: func() Any {
+		return &pubsub.SubscriptionIAMBinding{}
+	},
+	CERTIFICATEAUTHORITY_CAPOOL: func() Any {
+		return &certificateauthority.CaPool{}
+	},
+	COMPUTE_TARGETTCPPROXY: func() Any {
+		return &compute.TargetTCPProxy{}
+	},
+	NETWORKSECURITY_ADDRESSGROUPIAMPOLICY: func() Any {
+		return &networksecurity.AddressGroupIamPolicy{}
+	},
+	DATACATALOG_TAGTEMPLATEIAMMEMBER: func() Any {
+		return &datacatalog.TagTemplateIamMember{}
+	},
+	ML_ENGINEMODEL: func() Any {
+		return &ml.EngineModel{}
+	},
+	COMPUTE_BACKENDBUCKETSIGNEDURLKEY: func() Any {
+		return &compute.BackendBucketSignedUrlKey{}
+	},
+	DATACATALOG_POLICYTAG: func() Any {
+		return &datacatalog.PolicyTag{}
+	},
+	IAM_ACCESSBOUNDARYPOLICY: func() Any {
+		return &iam.AccessBoundaryPolicy{}
+	},
+	APIGEE_FLOWHOOK: func() Any {
+		return &apigee.Flowhook{}
+	},
+	MONITORING_MONITOREDPROJECT: func() Any {
+		return &monitoring.MonitoredProject{}
+	},
+	SECRETMANAGER_SECRETIAMMEMBER: func() Any {
+		return &secretmanager.SecretIamMember{}
+	},
+	BIGQUERYANALYTICSHUB_DATAEXCHANGEIAMMEMBER: func() Any {
+		return &bigqueryanalyticshub.DataExchangeIamMember{}
+	},
+	DNS_RESPONSEPOLICY: func() Any {
+		return &dns.ResponsePolicy{}
+	},
+	OSLOGIN_SSHPUBLICKEY: func() Any {
+		return &oslogin.SshPublicKey{}
+	},
+	APIGEE_ORGANIZATION: func() Any {
+		return &apigee.Organization{}
+	},
+	COMPUTE_INSTANCETEMPLATE: func() Any {
+		return &compute.InstanceTemplate{}
+	},
+	COMPUTE_NETWORKEDGESECURITYSERVICE: func() Any {
+		return &compute.NetworkEdgeSecurityService{}
+	},
+	VERTEX_AIFEATUREGROUPFEATURE: func() Any {
+		return &vertex.AiFeatureGroupFeature{}
+	},
+	VERTEX_AIFEATUREONLINESTOREFEATUREVIEW: func() Any {
+		return &vertex.AiFeatureOnlineStoreFeatureview{}
+	},
+	CLOUDRUNV2_SERVICEIAMPOLICY: func() Any {
+		return &cloudrunv2.ServiceIamPolicy{}
+	},
+	MONITORING_GROUP: func() Any {
+		return &monitoring.Group{}
+	},
+	PUBSUB_LITETOPIC: func() Any {
+		return &pubsub.LiteTopic{}
+	},
+	STORAGE_DEFAULTOBJECTACCESSCONTROL: func() Any {
+		return &storage.DefaultObjectAccessControl{}
+	},
+	SECURITYCENTER_INSTANCEIAMBINDING: func() Any {
+		return &securitycenter.InstanceIamBinding{}
+	},
+	COMPUTE_SNAPSHOTIAMBINDING: func() Any {
+		return &compute.SnapshotIamBinding{}
+	},
+	FIRESTORE_BACKUPSCHEDULE: func() Any {
+		return &firestore.BackupSchedule{}
+	},
+	STORAGE_DEFAULTOBJECTACL: func() Any {
+		return &storage.DefaultObjectACL{}
+	},
+	BIGTABLE_TABLE: func() Any {
+		return &bigtable.Table{}
+	},
+	CLOUDDEPLOY_DELIVERYPIPELINEIAMBINDING: func() Any {
+		return &clouddeploy.DeliveryPipelineIamBinding{}
+	},
+	BLOCKCHAINNODEENGINE_BLOCKCHAINNODES: func() Any {
+		return &blockchainnodeengine.BlockchainNodes{}
+	},
+	COMPUTE_PROJECTMETADATAITEM: func() Any {
+		return &compute.ProjectMetadataItem{}
+	},
+	TAGS_TAGBINDING: func() Any {
+		return &tags.TagBinding{}
+	},
+	WORKSTATIONS_WORKSTATIONCONFIGIAMMEMBER: func() Any {
+		return &workstations.WorkstationConfigIamMember{}
+	},
+	HEALTHCARE_CONSENTSTOREIAMBINDING: func() Any {
+		return &healthcare.ConsentStoreIamBinding{}
+	},
+	COMPUTE_MANAGEDSSLCERTIFICATE: func() Any {
+		return &compute.ManagedSslCertificate{}
+	},
+	PROJECTS_ACCESSAPPROVALSETTINGS: func() Any {
+		return &projects.AccessApprovalSettings{}
+	},
+	HEALTHCARE_DICOMSTOREIAMMEMBER: func() Any {
+		return &healthcare.DicomStoreIamMember{}
+	},
+	STORAGE_BUCKETACL: func() Any {
+		return &storage.BucketACL{}
+	},
+	COMPUTE_TARGETHTTPSPROXY: func() Any {
+		return &compute.TargetHttpsProxy{}
+	},
+	DIAGFLOW_FULFILLMENT: func() Any {
+		return &diagflow.Fulfillment{}
+	},
+	LOGGING_ORGANIZATIONEXCLUSION: func() Any {
+		return &logging.OrganizationExclusion{}
+	},
+	PROJECTS_SERVICE: func() Any {
+		return &projects.Service{}
+	},
+	DATAPLEX_LAKE: func() Any {
+		return &dataplex.Lake{}
+	},
+	NETWORKSECURITY_FIREWALLENDPOINT: func() Any {
+		return &networksecurity.FirewallEndpoint{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSLEVEL: func() Any {
+		return &accesscontextmanager.AccessLevel{}
+	},
+	ACCESSCONTEXTMANAGER_SERVICEPERIMETER: func() Any {
+		return &accesscontextmanager.ServicePerimeter{}
+	},
+	BEYONDCORP_APPCONNECTOR: func() Any {
+		return &beyondcorp.AppConnector{}
+	},
+	RUNTIMECONFIG_CONFIGIAMMEMBER: func() Any {
+		return &runtimeconfig.ConfigIamMember{}
+	},
+	COMPUTE_BACKENDSERVICEIAMBINDING: func() Any {
+		return &compute.BackendServiceIamBinding{}
+	},
+	DATAFORM_REPOSITORYIAMBINDING: func() Any {
+		return &dataform.RepositoryIamBinding{}
+	},
+	IAP_WEBREGIONBACKENDSERVICEIAMPOLICY: func() Any {
+		return &iap.WebRegionBackendServiceIamPolicy{}
+	},
+	VMWAREENGINE_NETWORKPEERING: func() Any {
+		return &vmwareengine.NetworkPeering{}
+	},
+	COMPUTE_FIREWALLPOLICYASSOCIATION: func() Any {
+		return &compute.FirewallPolicyAssociation{}
+	},
+	IAP_WEBTYPECOMPUTEIAMBINDING: func() Any {
+		return &iap.WebTypeComputeIamBinding{}
+	},
+	VERTEX_AIFEATURESTOREIAMBINDING: func() Any {
+		return &vertex.AiFeatureStoreIamBinding{}
+	},
+	RESOURCEMANAGER_LIEN: func() Any {
+		return &resourcemanager.Lien{}
+	},
+	BIGQUERYANALYTICSHUB_LISTINGIAMBINDING: func() Any {
+		return &bigqueryanalyticshub.ListingIamBinding{}
+	},
+	COMPUTE_GLOBALNETWORKENDPOINTGROUP: func() Any {
+		return &compute.GlobalNetworkEndpointGroup{}
+	},
+	BACKUPDISASTERRECOVERY_MANAGEMENTSERVER: func() Any {
+		return &backupdisasterrecovery.ManagementServer{}
+	},
+	BIGTABLE_TABLEIAMPOLICY: func() Any {
+		return &bigtable.TableIamPolicy{}
+	},
+	OSCONFIG_GUESTPOLICIES: func() Any {
+		return &osconfig.GuestPolicies{}
+	},
+	BILLING_ACCOUNTIAMBINDING: func() Any {
+		return &billing.AccountIamBinding{}
+	},
+	CERTIFICATEMANAGER_CERTIFICATEISSUANCECONFIG: func() Any {
+		return &certificatemanager.CertificateIssuanceConfig{}
+	},
+	KMS_CRYPTOKEY: func() Any {
+		return &kms.CryptoKey{}
+	},
+	NETWORKSECURITY_GATEWAYSECURITYPOLICYRULE: func() Any {
+		return &networksecurity.GatewaySecurityPolicyRule{}
+	},
+	CLOUDRUN_SERVICE: func() Any {
+		return &cloudrun.Service{}
+	},
+	COMPUTE_ORGANIZATIONSECURITYPOLICYASSOCIATION: func() Any {
+		return &compute.OrganizationSecurityPolicyAssociation{}
+	},
+	COMPUTE_REGIONSSLCERTIFICATE: func() Any {
+		return &compute.RegionSslCertificate{}
+	},
+	WORKFLOWS_WORKFLOW: func() Any {
+		return &workflows.Workflow{}
+	},
+	BIGQUERY_IAMBINDING: func() Any {
+		return &bigquery.IamBinding{}
+	},
+	COMPUTE_FIREWALLPOLICY: func() Any {
+		return &compute.FirewallPolicy{}
+	},
+	IAP_WEBTYPECOMPUTEIAMMEMBER: func() Any {
+		return &iap.WebTypeComputeIamMember{}
+	},
+	BIGQUERY_APPPROFILE: func() Any {
+		return &bigquery.AppProfile{}
+	},
+	CONTAINER_AZURECLUSTER: func() Any {
+		return &container.AzureCluster{}
+	},
+	DIAGFLOW_AGENT: func() Any {
+		return &diagflow.Agent{}
+	},
+	SPANNER_INSTANCE: func() Any {
+		return &spanner.Instance{}
+	},
+	GKEHUB_FEATURE: func() Any {
+		return &gkehub.Feature{}
+	},
+	IAP_WEBREGIONBACKENDSERVICEIAMMEMBER: func() Any {
+		return &iap.WebRegionBackendServiceIamMember{}
+	},
+	RUNTIMECONFIG_CONFIGIAMBINDING: func() Any {
+		return &runtimeconfig.ConfigIamBinding{}
+	},
+	BIGQUERY_CAPACITYCOMMITMENT: func() Any {
+		return &bigquery.CapacityCommitment{}
+	},
+	COMPUTE_INSTANCEGROUP: func() Any {
+		return &compute.InstanceGroup{}
+	},
+	DNS_DNSMANAGEDZONEIAMBINDING: func() Any {
+		return &dns.DnsManagedZoneIamBinding{}
+	},
+	IAP_CLIENT: func() Any {
+		return &iap.Client{}
+	},
+	ACCESSCONTEXTMANAGER_AUTHORIZEDORGSDESC: func() Any {
+		return &accesscontextmanager.AuthorizedOrgsDesc{}
+	},
+	APIGEE_KEYSTORESALIASESPKCS12: func() Any {
+		return &apigee.KeystoresAliasesPkcs12{}
+	},
+	BIGQUERYANALYTICSHUB_LISTING: func() Any {
+		return &bigqueryanalyticshub.Listing{}
+	},
+	COMPUTE_REGIONHEALTHCHECK: func() Any {
+		return &compute.RegionHealthCheck{}
+	},
+	DATAPROC_JOBIAMMEMBER: func() Any {
+		return &dataproc.JobIAMMember{}
+	},
+	FIRESTORE_FIELD: func() Any {
+		return &firestore.Field{}
+	},
+	COMPUTE_REGIONTARGETHTTPPROXY: func() Any {
+		return &compute.RegionTargetHttpProxy{}
+	},
+	IAP_TUNNELIAMMEMBER: func() Any {
+		return &iap.TunnelIamMember{}
+	},
+	KMS_CRYPTOKEYIAMBINDING: func() Any {
+		return &kms.CryptoKeyIAMBinding{}
+	},
+	PUBSUB_SCHEMAIAMBINDING: func() Any {
+		return &pubsub.SchemaIamBinding{}
+	},
+	COMPUTE_REGIONINSTANCEGROUPMANAGER: func() Any {
+		return &compute.RegionInstanceGroupManager{}
+	},
+	DATASTREAM_CONNECTIONPROFILE: func() Any {
+		return &datastream.ConnectionProfile{}
+	},
+	FIRESTORE_DOCUMENT: func() Any {
+		return &firestore.Document{}
+	},
+	CLOUDSCHEDULER_JOB: func() Any {
+		return &cloudscheduler.Job{}
+	},
+	COMPUTE_BACKENDBUCKETIAMPOLICY: func() Any {
+		return &compute.BackendBucketIamPolicy{}
+	},
+	FIREBASE_ANDROIDAPP: func() Any {
+		return &firebase.AndroidApp{}
+	},
+	IAP_WEBTYPEAPPENGINGIAMBINDING: func() Any {
+		return &iap.WebTypeAppEngingIamBinding{}
+	},
+	DATAFORM_REPOSITORY: func() Any {
+		return &dataform.Repository{}
+	},
+	GKEONPREM_BAREMETALCLUSTER: func() Any {
+		return &gkeonprem.BareMetalCluster{}
+	},
+	NETWORKSECURITY_GATEWAYSECURITYPOLICY: func() Any {
+		return &networksecurity.GatewaySecurityPolicy{}
+	},
+	CONTAINER_CLUSTER: func() Any {
+		return &container.Cluster{}
+	},
+	DATAFORM_REPOSITORYIAMPOLICY: func() Any {
+		return &dataform.RepositoryIamPolicy{}
+	},
+	DATAPROC_AUTOSCALINGPOLICYIAMBINDING: func() Any {
+		return &dataproc.AutoscalingPolicyIamBinding{}
+	},
+	ESSENTIALCONTACTS_DOCUMENTAIWAREHOUSELOCATION: func() Any {
+		return &essentialcontacts.DocumentAiWarehouseLocation{}
+	},
+	CERTIFICATEAUTHORITY_CERTIFICATETEMPLATEIAMPOLICY: func() Any {
+		return &certificateauthority.CertificateTemplateIamPolicy{}
+	},
+	SOURCEREPO_REPOSITORYIAMBINDING: func() Any {
+		return &sourcerepo.RepositoryIamBinding{}
+	},
+	RUNTIMECONFIG_CONFIGIAMPOLICY: func() Any {
+		return &runtimeconfig.ConfigIamPolicy{}
+	},
+	APIGEE_SHAREDFLOW: func() Any {
+		return &apigee.Sharedflow{}
+	},
+	BIGQUERYANALYTICSHUB_DATAEXCHANGEIAMBINDING: func() Any {
+		return &bigqueryanalyticshub.DataExchangeIamBinding{}
+	},
+	BINARYAUTHORIZATION_ATTESTORIAMMEMBER: func() Any {
+		return &binaryauthorization.AttestorIamMember{}
+	},
+	VMWAREENGINE_NETWORK: func() Any {
+		return &vmwareengine.Network{}
+	},
+	FIREBASE_APPCHECKDEBUGTOKEN: func() Any {
+		return &firebase.AppCheckDebugToken{}
+	},
+	STORAGE_HMACKEY: func() Any {
+		return &storage.HmacKey{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSPOLICYIAMMEMBER: func() Any {
+		return &accesscontextmanager.AccessPolicyIamMember{}
+	},
+	DATACATALOG_TAGTEMPLATEIAMPOLICY: func() Any {
+		return &datacatalog.TagTemplateIamPolicy{}
+	},
+	ENDPOINTS_CONSUMERSIAMBINDING: func() Any {
+		return &endpoints.ConsumersIamBinding{}
+	},
+	TAGS_TAGVALUEIAMPOLICY: func() Any {
+		return &tags.TagValueIamPolicy{}
+	},
+	HEALTHCARE_HL7STORE: func() Any {
+		return &healthcare.Hl7Store{}
+	},
+	COMPUTE_INTERCONNECTATTACHMENT: func() Any {
+		return &compute.InterconnectAttachment{}
+	},
+	COMPUTE_REGIONNETWORKFIREWALLPOLICY: func() Any {
+		return &compute.RegionNetworkFirewallPolicy{}
+	},
+	COMPUTE_TARGETGRPCPROXY: func() Any {
+		return &compute.TargetGrpcProxy{}
+	},
+	NETWORKSERVICES_TCPROUTE: func() Any {
+		return &networkservices.TcpRoute{}
+	},
+	IDENTITYPLATFORM_CONFIG: func() Any {
+		return &identityplatform.Config{}
+	},
+	SECURITYCENTER_SOURCEIAMBINDING: func() Any {
+		return &securitycenter.SourceIamBinding{}
+	},
+	CONTAINER_AZURECLIENT: func() Any {
+		return &container.AzureClient{}
+	},
+	FOLDER_IAMBINDING: func() Any {
+		return &folder.IAMBinding{}
+	},
+	GKEBACKUP_BACKUPPLANIAMBINDING: func() Any {
+		return &gkebackup.BackupPlanIamBinding{}
+	},
+	WORKSTATIONS_WORKSTATIONIAMBINDING: func() Any {
+		return &workstations.WorkstationIamBinding{}
+	},
+	EDGENETWORK_NETWORK: func() Any {
+		return &edgenetwork.Network{}
+	},
+	GKEHUB_SCOPEIAMBINDING: func() Any {
+		return &gkehub.ScopeIamBinding{}
+	},
+	IAP_WEBBACKENDSERVICEIAMPOLICY: func() Any {
+		return &iap.WebBackendServiceIamPolicy{}
+	},
+	WORKSTATIONS_WORKSTATIONCLUSTER: func() Any {
+		return &workstations.WorkstationCluster{}
+	},
+	COMPUTE_ROUTERPEER: func() Any {
+		return &compute.RouterPeer{}
+	},
+	COMPUTE_SSLPOLICY: func() Any {
+		return &compute.SSLPolicy{}
+	},
+	NETWORKCONNECTIVITY_POLICYBASEDROUTE: func() Any {
+		return &networkconnectivity.PolicyBasedRoute{}
+	},
+	ARTIFACTREGISTRY_REPOSITORYIAMPOLICY: func() Any {
+		return &artifactregistry.RepositoryIamPolicy{}
+	},
+	COMPUTE_SNAPSHOTIAMMEMBER: func() Any {
+		return &compute.SnapshotIamMember{}
+	},
+	CONTAINER_AZURENODEPOOL: func() Any {
+		return &container.AzureNodePool{}
+	},
+	FIRESTORE_INDEX: func() Any {
+		return &firestore.Index{}
+	},
+	CERTIFICATEAUTHORITY_CAPOOLIAMPOLICY: func() Any {
+		return &certificateauthority.CaPoolIamPolicy{}
+	},
+	COMPUTE_TARGETSSLPROXY: func() Any {
+		return &compute.TargetSSLProxy{}
+	},
+	GKEHUB_MEMBERSHIPRBACROLEBINDING: func() Any {
+		return &gkehub.MembershipRbacRoleBinding{}
+	},
+	CONTAINER_REGISTRY: func() Any {
+		return &container.Registry{}
+	},
+	DATACATALOG_POLICYTAGIAMMEMBER: func() Any {
+		return &datacatalog.PolicyTagIamMember{}
+	},
+	SECRETMANAGER_SECRETVERSION: func() Any {
+		return &secretmanager.SecretVersion{}
+	},
+	BILLING_PROJECTINFO: func() Any {
+		return &billing.ProjectInfo{}
+	},
+	COMPUTE_DISKIAMBINDING: func() Any {
+		return &compute.DiskIamBinding{}
+	},
+	DATAPROC_METASTOREFEDERATION: func() Any {
+		return &dataproc.MetastoreFederation{}
+	},
+	NETWORKSERVICES_ENDPOINTPOLICY: func() Any {
+		return &networkservices.EndpointPolicy{}
+	},
+	DATAPROC_METASTORESERVICEIAMPOLICY: func() Any {
+		return &dataproc.MetastoreServiceIamPolicy{}
+	},
+	ORGPOLICY_POLICY: func() Any {
+		return &orgpolicy.Policy{}
+	},
+	ACCESSCONTEXTMANAGER_GCPUSERACCESSBINDING: func() Any {
+		return &accesscontextmanager.GcpUserAccessBinding{}
+	},
+	LOGGING_FOLDERSINK: func() Any {
+		return &logging.FolderSink{}
+	},
+	NETWORKMANAGEMENT_CONNECTIVITYTEST: func() Any {
+		return &networkmanagement.ConnectivityTest{}
+	},
+	BILLING_ACCOUNTIAMPOLICY: func() Any {
+		return &billing.AccountIamPolicy{}
+	},
+	VERTEX_AIFEATURESTOREENTITYTYPEIAMPOLICY: func() Any {
+		return &vertex.AiFeatureStoreEntityTypeIamPolicy{}
+	},
+	COMPUTE_REGIONNETWORKENDPOINT: func() Any {
+		return &compute.RegionNetworkEndpoint{}
+	},
+	DATAPLEX_ASSETIAMMEMBER: func() Any {
+		return &dataplex.AssetIamMember{}
+	},
+	NETWORKSECURITY_URLLIST: func() Any {
+		return &networksecurity.UrlList{}
+	},
+	FOLDER_ORGANIZATIONPOLICY: func() Any {
+		return &folder.OrganizationPolicy{}
+	},
+	WORKBENCH_INSTANCE: func() Any {
+		return &workbench.Instance{}
+	},
+	GKEBACKUP_BACKUPPLANIAMMEMBER: func() Any {
+		return &gkebackup.BackupPlanIamMember{}
+	},
+	HEALTHCARE_HL7STOREIAMMEMBER: func() Any {
+		return &healthcare.Hl7StoreIamMember{}
+	},
+	APIGEE_ENVIRONMENTIAMBINDING: func() Any {
+		return &apigee.EnvironmentIamBinding{}
+	},
+	CERTIFICATEAUTHORITY_AUTHORITY: func() Any {
+		return &certificateauthority.Authority{}
+	},
+	DATALOSS_PREVENTIONJOBTRIGGER: func() Any {
+		return &dataloss.PreventionJobTrigger{}
+	},
+	DATALOSS_PREVENTIONSTOREDINFOTYPE: func() Any {
+		return &dataloss.PreventionStoredInfoType{}
+	},
+	CLOUDDEPLOY_AUTOMATION: func() Any {
+		return &clouddeploy.Automation{}
+	},
+	FILESTORE_BACKUP: func() Any {
+		return &filestore.Backup{}
+	},
+	IDENTITYPLATFORM_TENANTOAUTHIDPCONFIG: func() Any {
+		return &identityplatform.TenantOauthIdpConfig{}
+	},
+	VERTEX_AIFEATURESTOREENTITYTYPEIAMBINDING: func() Any {
+		return &vertex.AiFeatureStoreEntityTypeIamBinding{}
+	},
+	COMPUTE_MANGEDSSLCERTIFICATE: func() Any {
+		return &compute.MangedSslCertificate{}
+	},
+	VERTEX_AIFEATURESTOREIAMMEMBER: func() Any {
+		return &vertex.AiFeatureStoreIamMember{}
+	},
+	APIGATEWAY_APIIAMPOLICY: func() Any {
+		return &apigateway.ApiIamPolicy{}
+	},
+	ESSENTIALCONTACTS_DOCUMENTAIPROCESSOR: func() Any {
+		return &essentialcontacts.DocumentAiProcessor{}
+	},
+	BIGQUERYDATAPOLICY_DATAPOLICYIAMMEMBER: func() Any {
+		return &bigquerydatapolicy.DataPolicyIamMember{}
+	},
+	CERTIFICATEAUTHORITY_CERTIFICATETEMPLATEIAMBINDING: func() Any {
+		return &certificateauthority.CertificateTemplateIamBinding{}
+	},
+	GKEHUB_MEMBERSHIPIAMPOLICY: func() Any {
+		return &gkehub.MembershipIamPolicy{}
+	},
+	MIGRATIONCENTER_GROUP: func() Any {
+		return &migrationcenter.Group{}
+	},
+	TAGS_TAGVALUEIAMMEMBER: func() Any {
+		return &tags.TagValueIamMember{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSPOLICY: func() Any {
+		return &accesscontextmanager.AccessPolicy{}
+	},
+	APIGEE_ENDPOINTATTACHMENT: func() Any {
+		return &apigee.EndpointAttachment{}
+	},
+	COMPUTE_IMAGEIAMMEMBER: func() Any {
+		return &compute.ImageIamMember{}
+	},
+	SERVICEACCOUNT_ACCOUNT: func() Any {
+		return &serviceaccount.Account{}
+	},
+	CLOUDRUN_IAMPOLICY: func() Any {
+		return &cloudrun.IamPolicy{}
+	},
+	FIREBASE_WEBAPP: func() Any {
+		return &firebase.WebApp{}
+	},
+	SECURITYCENTER_SOURCE: func() Any {
+		return &securitycenter.Source{}
+	},
+	SPANNER_DATABASE: func() Any {
+		return &spanner.Database{}
+	},
+	NETWORKSERVICES_SERVICEBINDING: func() Any {
+		return &networkservices.ServiceBinding{}
+	},
+	BINARYAUTHORIZATION_ATTESTORIAMPOLICY: func() Any {
+		return &binaryauthorization.AttestorIamPolicy{}
+	},
+	COMPUTE_CAEXTERNALACCOUNTKEY: func() Any {
+		return &compute.CaExternalAccountKey{}
+	},
+	DATACATALOG_TAXONOMYIAMPOLICY: func() Any {
+		return &datacatalog.TaxonomyIamPolicy{}
+	},
+	FIREBASE_PROJECT: func() Any {
+		return &firebase.Project{}
+	},
+	APIGATEWAY_APIIAMMEMBER: func() Any {
+		return &apigateway.ApiIamMember{}
+	},
+	BILLING_ACCOUNTIAMMEMBER: func() Any {
+		return &billing.AccountIamMember{}
+	},
+	BILLING_BUDGET: func() Any {
+		return &billing.Budget{}
+	},
+	PROJECTS_SERVICEIDENTITY: func() Any {
+		return &projects.ServiceIdentity{}
+	},
+	IDENTITYPLATFORM_TENANTINBOUNDSAMLCONFIG: func() Any {
+		return &identityplatform.TenantInboundSamlConfig{}
+	},
+	STORAGE_BUCKETACCESSCONTROL: func() Any {
+		return &storage.BucketAccessControl{}
+	},
+	TAGS_TAGKEYIAMMEMBER: func() Any {
+		return &tags.TagKeyIamMember{}
+	},
+	DATAPLEX_LAKEIAMMEMBER: func() Any {
+		return &dataplex.LakeIamMember{}
+	},
+	WORKBENCH_INSTANCEIAMBINDING: func() Any {
+		return &workbench.InstanceIamBinding{}
+	},
+	ACTIVEDIRECTORY_DOMAIN: func() Any {
+		return &activedirectory.Domain{}
+	},
+	DNS_RECORDSET: func() Any {
+		return &dns.RecordSet{}
+	},
+	COMPUTE_REGIONCOMMITMENT: func() Any {
+		return &compute.RegionCommitment{}
+	},
+	BINARYAUTHORIZATION_ATTESTORIAMBINDING: func() Any {
+		return &binaryauthorization.AttestorIamBinding{}
+	},
+	DATACATALOG_TAXONOMY: func() Any {
+		return &datacatalog.Taxonomy{}
+	},
+	SECRETMANAGER_SECRETIAMBINDING: func() Any {
+		return &secretmanager.SecretIamBinding{}
+	},
+	COMPUTE_NETWORKPEERINGROUTESCONFIG: func() Any {
+		return &compute.NetworkPeeringRoutesConfig{}
+	},
+	SPANNER_DATABASEIAMBINDING: func() Any {
+		return &spanner.DatabaseIAMBinding{}
+	},
+	APIGEE_SHAREDFLOWDEPLOYMENT: func() Any {
+		return &apigee.SharedflowDeployment{}
+	},
+	IAM_WORKLOADIDENTITYPOOLPROVIDER: func() Any {
+		return &iam.WorkloadIdentityPoolProvider{}
+	},
+	DATACATALOG_POLICYTAGIAMPOLICY: func() Any {
+		return &datacatalog.PolicyTagIamPolicy{}
+	},
+	DATASTREAM_STREAM: func() Any {
+		return &datastream.Stream{}
+	},
+	HEALTHCARE_CONSENTSTORE: func() Any {
+		return &healthcare.ConsentStore{}
+	},
+	SECURESOURCEMANAGER_INSTANCEIAMPOLICY: func() Any {
+		return &securesourcemanager.InstanceIamPolicy{}
+	},
+	COMPUTE_NETWORKFIREWALLPOLICYRULE: func() Any {
+		return &compute.NetworkFirewallPolicyRule{}
+	},
+	PUBSUB_SUBSCRIPTION: func() Any {
+		return &pubsub.Subscription{}
+	},
+	VERTEX_AIFEATUREGROUP: func() Any {
+		return &vertex.AiFeatureGroup{}
+	},
+	DATAPLEX_ZONEIAMMEMBER: func() Any {
+		return &dataplex.ZoneIamMember{}
+	},
+	PUBSUB_LITESUBSCRIPTION: func() Any {
+		return &pubsub.LiteSubscription{}
+	},
+	PUBSUB_TOPICIAMPOLICY: func() Any {
+		return &pubsub.TopicIAMPolicy{}
+	},
+	WORKSTATIONS_WORKSTATIONCONFIGIAMPOLICY: func() Any {
+		return &workstations.WorkstationConfigIamPolicy{}
+	},
+	APIGEE_ENVREFERENCES: func() Any {
+		return &apigee.EnvReferences{}
+	},
+	COMPUTE_ROUTER: func() Any {
+		return &compute.Router{}
+	},
+	GKEONPREM_BAREMETALADMINCLUSTER: func() Any {
+		return &gkeonprem.BareMetalAdminCluster{}
+	},
+	VERTEX_AIINDEXENDPOINT: func() Any {
+		return &vertex.AiIndexEndpoint{}
+	},
+	NOTEBOOKS_LOCATION: func() Any {
+		return &notebooks.Location{}
+	},
+	VERTEX_AIFEATURESTOREIAMPOLICY: func() Any {
+		return &vertex.AiFeatureStoreIamPolicy{}
+	},
+	APIGATEWAY_GATEWAYIAMBINDING: func() Any {
+		return &apigateway.GatewayIamBinding{}
+	},
+	BIGLAKE_TABLE: func() Any {
+		return &biglake.Table{}
+	},
+	DATAPROC_JOBIAMBINDING: func() Any {
+		return &dataproc.JobIAMBinding{}
+	},
+	FIREBASE_EXTENSIONSINSTANCE: func() Any {
+		return &firebase.ExtensionsInstance{}
+	},
+	COMPUTE_HTTPHEALTHCHECK: func() Any {
+		return &compute.HttpHealthCheck{}
+	},
+	DATAPROC_CLUSTERIAMMEMBER: func() Any {
+		return &dataproc.ClusterIAMMember{}
+	},
+	GKEONPREM_BAREMETALNODEPOOL: func() Any {
+		return &gkeonprem.BareMetalNodePool{}
+	},
+	NETAPP_VOLUMESNAPSHOT: func() Any {
+		return &netapp.VolumeSnapshot{}
+	},
+	DATACATALOG_TAG: func() Any {
+		return &datacatalog.Tag{}
+	},
+	KMS_KEYRINGIAMPOLICY: func() Any {
+		return &kms.KeyRingIAMPolicy{}
+	},
+	CERTIFICATEMANAGER_DNSAUTHORIZATION: func() Any {
+		return &certificatemanager.DnsAuthorization{}
+	},
+	CLOUDBUILDV2_CONNECTIONIAMMEMBER: func() Any {
+		return &cloudbuildv2.ConnectionIAMMember{}
+	},
+	CLOUDDEPLOY_DELIVERYPIPELINE: func() Any {
+		return &clouddeploy.DeliveryPipeline{}
+	},
+	COMPUTE_IMAGEIAMBINDING: func() Any {
+		return &compute.ImageIamBinding{}
+	},
+	CLOUDTASKS_QUEUEIAMBINDING: func() Any {
+		return &cloudtasks.QueueIamBinding{}
+	},
+	DATACATALOG_TAXONOMYIAMMEMBER: func() Any {
+		return &datacatalog.TaxonomyIamMember{}
+	},
+	DATASTREAM_PRIVATECONNECTION: func() Any {
+		return &datastream.PrivateConnection{}
+	},
+	DIAGFLOW_INTENT: func() Any {
+		return &diagflow.Intent{}
+	},
+	GKEHUB_FEATUREIAMMEMBER: func() Any {
+		return &gkehub.FeatureIamMember{}
+	},
+	HEALTHCARE_HL7STOREIAMPOLICY: func() Any {
+		return &healthcare.Hl7StoreIamPolicy{}
+	},
+	PROJECTS_APIKEY: func() Any {
+		return &projects.ApiKey{}
+	},
+	CLOUDRUN_IAMMEMBER: func() Any {
+		return &cloudrun.IamMember{}
+	},
+	DATAPLEX_LAKEIAMBINDING: func() Any {
+		return &dataplex.LakeIamBinding{}
+	},
+	FIREBASE_APPCHECKRECAPTCHAENTERPRISECONFIG: func() Any {
+		return &firebase.AppCheckRecaptchaEnterpriseConfig{}
+	},
+	FIREBASE_DATABASEINSTANCE: func() Any {
+		return &firebase.DatabaseInstance{}
+	},
+	SECURESOURCEMANAGER_INSTANCEIAMMEMBER: func() Any {
+		return &securesourcemanager.InstanceIamMember{}
+	},
+	STORAGE_BUCKETIAMPOLICY: func() Any {
+		return &storage.BucketIAMPolicy{}
+	},
+	VERTEX_AIFEATURESTOREENTITYTYPEFEATURE: func() Any {
+		return &vertex.AiFeatureStoreEntityTypeFeature{}
+	},
+	SOURCEREPO_REPOSITORYIAMPOLICY: func() Any {
+		return &sourcerepo.RepositoryIamPolicy{}
+	},
+	ARTIFACTREGISTRY_REPOSITORY: func() Any {
+		return &artifactregistry.Repository{}
+	},
+	COMPUTE_ORGANIZATIONSECURITYPOLICYRULE: func() Any {
+		return &compute.OrganizationSecurityPolicyRule{}
+	},
+	ENDPOINTS_CONSUMERSIAMPOLICY: func() Any {
+		return &endpoints.ConsumersIamPolicy{}
+	},
+	ORGANIZATIONS_POLICY: func() Any {
+		return &organizations.Policy{}
+	},
+	SQL_DATABASE: func() Any {
+		return &sql.Database{}
+	},
+	STORAGE_OBJECTACL: func() Any {
+		return &storage.ObjectACL{}
+	},
+	CONTAINER_AWSCLUSTER: func() Any {
+		return &container.AwsCluster{}
+	},
+	DATAFUSION_INSTANCE: func() Any {
+		return &datafusion.Instance{}
+	},
+	DATAPROC_CLUSTERIAMPOLICY: func() Any {
+		return &dataproc.ClusterIAMPolicy{}
+	},
+	LOGGING_PROJECTEXCLUSION: func() Any {
+		return &logging.ProjectExclusion{}
+	},
+	COMPUTE_ADDRESS: func() Any {
+		return &compute.Address{}
+	},
+	SPANNER_INSTANCEIAMPOLICY: func() Any {
+		return &spanner.InstanceIAMPolicy{}
+	},
+	DATAPLEX_ZONEIAMBINDING: func() Any {
+		return &dataplex.ZoneIamBinding{}
+	},
+	KMS_KEYRING: func() Any {
+		return &kms.KeyRing{}
+	},
+	DATAPLEX_TASKIAMBINDING: func() Any {
+		return &dataplex.TaskIamBinding{}
+	},
+	DATAPROC_METASTORESERVICEIAMBINDING: func() Any {
+		return &dataproc.MetastoreServiceIamBinding{}
+	},
+	IAP_WEBIAMMEMBER: func() Any {
+		return &iap.WebIamMember{}
+	},
+	COMPUTE_REGIONAUTOSCALER: func() Any {
+		return &compute.RegionAutoscaler{}
+	},
+	DATAPROC_METASTOREFEDERATIONIAMPOLICY: func() Any {
+		return &dataproc.MetastoreFederationIamPolicy{}
+	},
+	FIREBASERULES_RULESET: func() Any {
+		return &firebaserules.Ruleset{}
+	},
+	CLOUDFUNCTIONS_FUNCTIONIAMBINDING: func() Any {
+		return &cloudfunctions.FunctionIamBinding{}
+	},
+	COMPUTE_REGIONURLMAP: func() Any {
+		return &compute.RegionUrlMap{}
+	},
+	SECURITYCENTER_ORGANIZATIONCUSTOMMODULE: func() Any {
+		return &securitycenter.OrganizationCustomModule{}
+	},
+	SECURITYPOSTURE_POSTURE: func() Any {
+		return &securityposture.Posture{}
+	},
+	ESSENTIALCONTACTS_DOCUMENTAIWAREHOUSEDOCUMENTSCHEMA: func() Any {
+		return &essentialcontacts.DocumentAiWarehouseDocumentSchema{}
+	},
+	MIGRATIONCENTER_PREFERENCESET: func() Any {
+		return &migrationcenter.PreferenceSet{}
+	},
+	SERVICEACCOUNT_KEY: func() Any {
+		return &serviceaccount.Key{}
+	},
+	APIGEE_ENVIRONMENT: func() Any {
+		return &apigee.Environment{}
+	},
+	CLOUDIDENTITY_GROUPMEMBERSHIP: func() Any {
+		return &cloudidentity.GroupMembership{}
+	},
+	DATACATALOG_ENTRYGROUPIAMMEMBER: func() Any {
+		return &datacatalog.EntryGroupIamMember{}
+	},
+	DATAPROC_JOBIAMPOLICY: func() Any {
+		return &dataproc.JobIAMPolicy{}
+	},
+	BIGQUERY_DATASETIAMBINDING: func() Any {
+		return &bigquery.DatasetIamBinding{}
+	},
+	COMPUTE_MACHINEIMAGEIAMPOLICY: func() Any {
+		return &compute.MachineImageIamPolicy{}
+	},
+	COMPUTE_TARGETINSTANCE: func() Any {
+		return &compute.TargetInstance{}
+	},
+	BIGQUERYANALYTICSHUB_LISTINGIAMMEMBER: func() Any {
+		return &bigqueryanalyticshub.ListingIamMember{}
+	},
+	COMPUTE_REGIONINSTANCETEMPLATE: func() Any {
+		return &compute.RegionInstanceTemplate{}
+	},
+	EVENTARC_TRIGGER: func() Any {
+		return &eventarc.Trigger{}
+	},
+	PUBSUB_TOPICIAMBINDING: func() Any {
+		return &pubsub.TopicIAMBinding{}
+	},
+	SECRETMANAGER_SECRETIAMPOLICY: func() Any {
+		return &secretmanager.SecretIamPolicy{}
+	},
+	STORAGE_NOTIFICATION: func() Any {
+		return &storage.Notification{}
+	},
+	COMPUTE_GLOBALNETWORKENDPOINT: func() Any {
+		return &compute.GlobalNetworkEndpoint{}
+	},
+	COMPUTE_ROUTERINTERFACE: func() Any {
+		return &compute.RouterInterface{}
+	},
+	MONITORING_SLO: func() Any {
+		return &monitoring.Slo{}
+	},
+	NETWORKSECURITY_ADDRESSGROUP: func() Any {
+		return &networksecurity.AddressGroup{}
+	},
+	PUBSUB_SCHEMAIAMMEMBER: func() Any {
+		return &pubsub.SchemaIamMember{}
+	},
+	SECURITYCENTER_NOTIFICATIONCONFIG: func() Any {
+		return &securitycenter.NotificationConfig{}
+	},
+	TAGS_TAGKEYIAMPOLICY: func() Any {
+		return &tags.TagKeyIamPolicy{}
+	},
+	BIGQUERY_CONNECTIONIAMBINDING: func() Any {
+		return &bigquery.ConnectionIamBinding{}
+	},
+	BIGQUERY_CONNECTIONIAMMEMBER: func() Any {
+		return &bigquery.ConnectionIamMember{}
+	},
+	DIAGFLOW_CXSECURITYSETTINGS: func() Any {
+		return &diagflow.CxSecuritySettings{}
+	},
+	EDGECONTAINER_CLUSTER: func() Any {
+		return &edgecontainer.Cluster{}
+	},
+	PUBSUB_SUBSCRIPTIONIAMPOLICY: func() Any {
+		return &pubsub.SubscriptionIAMPolicy{}
+	},
+	SQL_SSLCERT: func() Any {
+		return &sql.SslCert{}
+	},
+	DIAGFLOW_CXINTENT: func() Any {
+		return &diagflow.CxIntent{}
+	},
+	GKEHUB_MEMBERSHIPIAMMEMBER: func() Any {
+		return &gkehub.MembershipIamMember{}
+	},
+	IAP_TUNNELIAMPOLICY: func() Any {
+		return &iap.TunnelIamPolicy{}
+	},
+	CLOUDBUILDV2_REPOSITORY: func() Any {
+		return &cloudbuildv2.Repository{}
+	},
+	COMPUTE_SUBNETWORKIAMMEMBER: func() Any {
+		return &compute.SubnetworkIAMMember{}
+	},
+	NETAPP_STORAGEPOOL: func() Any {
+		return &netapp.StoragePool{}
+	},
+	VMWAREENGINE_NETWORKPOLICY: func() Any {
+		return &vmwareengine.NetworkPolicy{}
+	},
+	ACCESSCONTEXTMANAGER_SERVICEPERIMETERINGRESSPOLICY: func() Any {
+		return &accesscontextmanager.ServicePerimeterIngressPolicy{}
+	},
+	BIGQUERY_RESERVATIONASSIGNMENT: func() Any {
+		return &bigquery.ReservationAssignment{}
+	},
+	DATAPLEX_ASSETIAMPOLICY: func() Any {
+		return &dataplex.AssetIamPolicy{}
+	},
+	DISCOVERYENGINE_SEARCHENGINE: func() Any {
+		return &discoveryengine.SearchEngine{}
+	},
+	VMWAREENGINE_EXTERNALACCESSRULE: func() Any {
+		return &vmwareengine.ExternalAccessRule{}
+	},
+	COMPUTE_REGIONSECURITYPOLICYRULE: func() Any {
+		return &compute.RegionSecurityPolicyRule{}
+	},
+	COMPUTE_REGIONTARGETTCPPROXY: func() Any {
+		return &compute.RegionTargetTcpProxy{}
+	},
+	GKEBACKUP_RESTOREPLANIAMBINDING: func() Any {
+		return &gkebackup.RestorePlanIamBinding{}
+	},
+	KMS_CRYPTOKEYIAMMEMBER: func() Any {
+		return &kms.CryptoKeyIAMMember{}
+	},
+	COMPUTE_MACHINEIMAGEIAMBINDING: func() Any {
+		return &compute.MachineImageIamBinding{}
+	},
+	NOTEBOOKS_ENVIRONMENT: func() Any {
+		return &notebooks.Environment{}
+	},
+	COMPUTE_REGIONBACKENDSERVICEIAMPOLICY: func() Any {
+		return &compute.RegionBackendServiceIamPolicy{}
+	},
+	DATAFORM_REPOSITORYRELEASECONFIG: func() Any {
+		return &dataform.RepositoryReleaseConfig{}
+	},
+	DISCOVERYENGINE_CHATENGINE: func() Any {
+		return &discoveryengine.ChatEngine{}
+	},
+	LOGGING_LINKEDDATASET: func() Any {
+		return &logging.LinkedDataset{}
+	},
+	NOTEBOOKS_INSTANCE: func() Any {
+		return &notebooks.Instance{}
+	},
+	SERVICENETWORKING_PEEREDDNSDOMAIN: func() Any {
+		return &servicenetworking.PeeredDnsDomain{}
+	},
+	PROJECTS_IAMMEMBER: func() Any {
+		return &projects.IAMMember{}
+	},
+	VERTEX_AIDATASET: func() Any {
+		return &vertex.AiDataset{}
+	},
+	DATAFLOW_JOB: func() Any {
+		return &dataflow.Job{}
+	},
+	EVENTARC_GOOGLECHANNELCONFIG: func() Any {
+		return &eventarc.GoogleChannelConfig{}
+	},
+	IAM_WORKLOADIDENTITYPOOL: func() Any {
+		return &iam.WorkloadIdentityPool{}
+	},
+	ACCESSCONTEXTMANAGER_SERVICEPERIMETERS: func() Any {
+		return &accesscontextmanager.ServicePerimeters{}
+	},
+	HEALTHCARE_FHIRSTOREIAMBINDING: func() Any {
+		return &healthcare.FhirStoreIamBinding{}
+	},
+	HEALTHCARE_DATASETIAMMEMBER: func() Any {
+		return &healthcare.DatasetIamMember{}
+	},
+	SERVICEACCOUNT_IAMMEMBER: func() Any {
+		return &serviceaccount.IAMMember{}
+	},
+	SERVICEACCOUNT_IAMPOLICY: func() Any {
+		return &serviceaccount.IAMPolicy{}
+	},
+	SOURCEREPO_REPOSITORYIAMMEMBER: func() Any {
+		return &sourcerepo.RepositoryIamMember{}
+	},
+	APPENGINE_SERVICENETWORKSETTINGS: func() Any {
+		return &appengine.ServiceNetworkSettings{}
+	},
+	COMPUTE_NETWORKFIREWALLPOLICY: func() Any {
+		return &compute.NetworkFirewallPolicy{}
+	},
+	COMPUTE_SSLCERTIFICATE: func() Any {
+		return &compute.SSLCertificate{}
+	},
+	ENDPOINTS_SERVICE: func() Any {
+		return &endpoints.Service{}
+	},
+	CLOUDFUNCTIONSV2_FUNCTIONIAMMEMBER: func() Any {
+		return &cloudfunctionsv2.FunctionIamMember{}
+	},
+	GKEHUB_SCOPEIAMMEMBER: func() Any {
+		return &gkehub.ScopeIamMember{}
+	},
+	STORAGE_INSIGHTSREPORTCONFIG: func() Any {
+		return &storage.InsightsReportConfig{}
+	},
+	LOGGING_BILLINGACCOUNTBUCKETCONFIG: func() Any {
+		return &logging.BillingAccountBucketConfig{}
+	},
+	PUBSUB_TOPIC: func() Any {
+		return &pubsub.Topic{}
+	},
+	SPANNER_INSTANCEIAMMEMBER: func() Any {
+		return &spanner.InstanceIAMMember{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSPOLICYIAMBINDING: func() Any {
+		return &accesscontextmanager.AccessPolicyIamBinding{}
+	},
+	APPENGINE_APPLICATIONURLDISPATCHRULES: func() Any {
+		return &appengine.ApplicationUrlDispatchRules{}
+	},
+	DATAPLEX_ZONEIAMPOLICY: func() Any {
+		return &dataplex.ZoneIamPolicy{}
+	},
+	ESSENTIALCONTACTS_CONTACT: func() Any {
+		return &essentialcontacts.Contact{}
+	},
+	IAP_WEBREGIONBACKENDSERVICEIAMBINDING: func() Any {
+		return &iap.WebRegionBackendServiceIamBinding{}
+	},
+	IDENTITYPLATFORM_TENANT: func() Any {
+		return &identityplatform.Tenant{}
+	},
+	COMPUTE_ATTACHEDDISK: func() Any {
+		return &compute.AttachedDisk{}
+	},
+	DATACATALOG_ENTRYGROUP: func() Any {
+		return &datacatalog.EntryGroup{}
+	},
+	HEALTHCARE_DATASET: func() Any {
+		return &healthcare.Dataset{}
+	},
+	COMPUTE_PACKETMIRRORING: func() Any {
+		return &compute.PacketMirroring{}
+	},
+	EDGENETWORK_SUBNET: func() Any {
+		return &edgenetwork.Subnet{}
+	},
+	BIGTABLE_GCPOLICY: func() Any {
+		return &bigtable.GCPolicy{}
+	},
+	COMPOSER_ENVIRONMENT: func() Any {
+		return &composer.Environment{}
+	},
+	CERTIFICATEAUTHORITY_CERTIFICATE: func() Any {
+		return &certificateauthority.Certificate{}
+	},
+	COMPUTE_REGIONDISKIAMMEMBER: func() Any {
+		return &compute.RegionDiskIamMember{}
+	},
+	SERVICENETWORKING_CONNECTION: func() Any {
+		return &servicenetworking.Connection{}
+	},
+	APPENGINE_APPLICATION: func() Any {
+		return &appengine.Application{}
+	},
+	COMPUTE_INSTANCEIAMMEMBER: func() Any {
+		return &compute.InstanceIAMMember{}
+	},
+	VERTEX_AIINDEX: func() Any {
+		return &vertex.AiIndex{}
+	},
+	FIREBASERULES_RELEASE: func() Any {
+		return &firebaserules.Release{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSLEVELS: func() Any {
+		return &accesscontextmanager.AccessLevels{}
+	},
+	CONTAINER_ATTACHEDCLUSTER: func() Any {
+		return &container.AttachedCluster{}
+	},
+	DATAFLOW_FLEXTEMPLATEJOB: func() Any {
+		return &dataflow.FlexTemplateJob{}
+	},
+	MONITORING_METRICDESCRIPTOR: func() Any {
+		return &monitoring.MetricDescriptor{}
+	},
+	NETWORKSERVICES_GATEWAY: func() Any {
+		return &networkservices.Gateway{}
+	},
+	ORGANIZATIONS_IAMPOLICY: func() Any {
+		return &organizations.IAMPolicy{}
+	},
+	NOTEBOOKS_RUNTIMEIAMMEMBER: func() Any {
+		return &notebooks.RuntimeIamMember{}
+	},
+	COMPUTE_REGIONNETWORKFIREWALLPOLICYASSOCIATION: func() Any {
+		return &compute.RegionNetworkFirewallPolicyAssociation{}
+	},
+	GKEBACKUP_BACKUPPLANIAMPOLICY: func() Any {
+		return &gkebackup.BackupPlanIamPolicy{}
+	},
+	GKEONPREM_VMWARECLUSTER: func() Any {
+		return &gkeonprem.VMwareCluster{}
+	},
+	LOGGING_FOLDEREXCLUSION: func() Any {
+		return &logging.FolderExclusion{}
+	},
+	NETAPP_ACTIVEDIRECTORY: func() Any {
+		return &netapp.ActiveDirectory{}
+	},
+	CERTIFICATEAUTHORITY_CAPOOLIAMBINDING: func() Any {
+		return &certificateauthority.CaPoolIamBinding{}
+	},
+	DATAPROC_CLUSTER: func() Any {
+		return &dataproc.Cluster{}
+	},
+	ENDPOINTS_SERVICEIAMPOLICY: func() Any {
+		return &endpoints.ServiceIamPolicy{}
+	},
+	DATAPROC_JOB: func() Any {
+		return &dataproc.Job{}
+	},
+	DIAGFLOW_CXENVIRONMENT: func() Any {
+		return &diagflow.CxEnvironment{}
+	},
+	ORGANIZATIONS_IAMBINDING: func() Any {
+		return &organizations.IAMBinding{}
+	},
+	COMPUTE_TARGETHTTPPROXY: func() Any {
+		return &compute.TargetHttpProxy{}
+	},
+	CLOUDFUNCTIONS_FUNCTIONIAMPOLICY: func() Any {
+		return &cloudfunctions.FunctionIamPolicy{}
+	},
+	HEALTHCARE_DICOMSTOREIAMBINDING: func() Any {
+		return &healthcare.DicomStoreIamBinding{}
+	},
+	KMS_SECRETCIPHERTEXT: func() Any {
+		return &kms.SecretCiphertext{}
+	},
+	NETWORKSECURITY_TLSINSPECTIONPOLICY: func() Any {
+		return &networksecurity.TlsInspectionPolicy{}
+	},
+	IAM_WORKFORCEPOOLPROVIDER: func() Any {
+		return &iam.WorkforcePoolProvider{}
+	},
+	OSCONFIG_PATCHDEPLOYMENT: func() Any {
+		return &osconfig.PatchDeployment{}
+	},
+	CLOUDDEPLOY_DELIVERYPIPELINEIAMMEMBER: func() Any {
+		return &clouddeploy.DeliveryPipelineIamMember{}
+	},
+	COMPUTE_BACKENDSERVICEIAMMEMBER: func() Any {
+		return &compute.BackendServiceIamMember{}
+	},
+	COMPUTE_GLOBALADDRESS: func() Any {
+		return &compute.GlobalAddress{}
+	},
+	ACCESSCONTEXTMANAGER_EGRESSPOLICY: func() Any {
+		return &accesscontextmanager.EgressPolicy{}
+	},
+	APPENGINE_FIREWALLRULE: func() Any {
+		return &appengine.FirewallRule{}
+	},
+	FIREBASE_APPCHECKSERVICECONFIG: func() Any {
+		return &firebase.AppCheckServiceConfig{}
+	},
+	HEALTHCARE_CONSENTSTOREIAMPOLICY: func() Any {
+		return &healthcare.ConsentStoreIamPolicy{}
+	},
+	ORGANIZATIONS_ACCESSAPPROVALSETTINGS: func() Any {
+		return &organizations.AccessApprovalSettings{}
+	},
+	COMPUTE_TARGETPOOL: func() Any {
+		return &compute.TargetPool{}
+	},
+	COMPUTE_NETWORKATTACHMENT: func() Any {
+		return &compute.NetworkAttachment{}
+	},
+	EDGECONTAINER_VPNCONNECTION: func() Any {
+		return &edgecontainer.VpnConnection{}
+	},
+	BINARYAUTHORIZATION_ATTESTOR: func() Any {
+		return &binaryauthorization.Attestor{}
+	},
+	IAP_WEBBACKENDSERVICEIAMBINDING: func() Any {
+		return &iap.WebBackendServiceIamBinding{}
+	},
+	PUBSUB_LITERESERVATION: func() Any {
+		return &pubsub.LiteReservation{}
+	},
+	STORAGE_OBJECTACCESSCONTROL: func() Any {
+		return &storage.ObjectAccessControl{}
+	},
+	NOTEBOOKS_INSTANCEIAMBINDING: func() Any {
+		return &notebooks.InstanceIamBinding{}
+	},
+	WORKSTATIONS_WORKSTATIONIAMMEMBER: func() Any {
+		return &workstations.WorkstationIamMember{}
+	},
+	ACTIVEDIRECTORY_PEERING: func() Any {
+		return &activedirectory.Peering{}
+	},
+	DATAPLEX_DATASCANIAMBINDING: func() Any {
+		return &dataplex.DatascanIamBinding{}
+	},
+	DATAPROC_AUTOSCALINGPOLICY: func() Any {
+		return &dataproc.AutoscalingPolicy{}
+	},
+	DNS_RESPONSEPOLICYRULE: func() Any {
+		return &dns.ResponsePolicyRule{}
+	},
+	CERTIFICATEAUTHORITY_CERTIFICATETEMPLATE: func() Any {
+		return &certificateauthority.CertificateTemplate{}
+	},
+	COMPUTE_NETWORK: func() Any {
+		return &compute.Network{}
+	},
+	VERTEX_AIENDPOINT: func() Any {
+		return &vertex.AiEndpoint{}
+	},
+	SECURITYPOSTURE_POSTUREDEPLOYMENT: func() Any {
+		return &securityposture.PostureDeployment{}
+	},
+	COMPUTE_PERINSTANCECONFIG: func() Any {
+		return &compute.PerInstanceConfig{}
+	},
+	IAP_WEBBACKENDSERVICEIAMMEMBER: func() Any {
+		return &iap.WebBackendServiceIamMember{}
+	},
+	BIGQUERYANALYTICSHUB_DATAEXCHANGE: func() Any {
+		return &bigqueryanalyticshub.DataExchange{}
+	},
+	COMPUTE_PROJECTMETADATA: func() Any {
+		return &compute.ProjectMetadata{}
+	},
+	COMPUTE_SNAPSHOTIAMPOLICY: func() Any {
+		return &compute.SnapshotIamPolicy{}
+	},
+	PROJECTS_IAMPOLICY: func() Any {
+		return &projects.IAMPolicy{}
+	},
+	PUBSUB_SUBSCRIPTIONIAMMEMBER: func() Any {
+		return &pubsub.SubscriptionIAMMember{}
+	},
+	DATABASEMIGRATIONSERVICE_PRIVATECONNECTION: func() Any {
+		return &databasemigrationservice.PrivateConnection{}
+	},
+	GKEHUB_SCOPE: func() Any {
+		return &gkehub.Scope{}
+	},
+	ORGANIZATIONS_PROJECT: func() Any {
+		return &organizations.Project{}
+	},
+	CONTAINERANALYSIS_NOTEIAMBINDING: func() Any {
+		return &containeranalysis.NoteIamBinding{}
+	},
+	HEALTHCARE_DATASETIAMBINDING: func() Any {
+		return &healthcare.DatasetIamBinding{}
+	},
+	ACTIVEDIRECTORY_DOMAINTRUST: func() Any {
+		return &activedirectory.DomainTrust{}
+	},
+	ARTIFACTREGISTRY_REPOSITORYIAMMEMBER: func() Any {
+		return &artifactregistry.RepositoryIamMember{}
+	},
+	BIGTABLE_TABLEIAMMEMBER: func() Any {
+		return &bigtable.TableIamMember{}
+	},
+	PUBSUB_SCHEMAIAMPOLICY: func() Any {
+		return &pubsub.SchemaIamPolicy{}
+	},
+	APIGEE_KEYSTORESALIASESKEYCERTFILE: func() Any {
+		return &apigee.KeystoresAliasesKeyCertFile{}
+	},
+	ENDPOINTS_CONSUMERSIAMMEMBER: func() Any {
+		return &endpoints.ConsumersIamMember{}
+	},
+	GKEHUB_FEATUREIAMBINDING: func() Any {
+		return &gkehub.FeatureIamBinding{}
+	},
+	GKEHUB_SCOPEIAMPOLICY: func() Any {
+		return &gkehub.ScopeIamPolicy{}
+	},
+	RUNTIMECONFIG_VARIABLE: func() Any {
+		return &runtimeconfig.Variable{}
+	},
+	CLOUDFUNCTIONSV2_FUNCTIONIAMPOLICY: func() Any {
+		return &cloudfunctionsv2.FunctionIamPolicy{}
+	},
+	CERTIFICATEAUTHORITY_CAPOOLIAMMEMBER: func() Any {
+		return &certificateauthority.CaPoolIamMember{}
+	},
+	CLOUDTASKS_QUEUEIAMMEMBER: func() Any {
+		return &cloudtasks.QueueIamMember{}
+	},
+	COMPUTE_GLOBALFORWARDINGRULE: func() Any {
+		return &compute.GlobalForwardingRule{}
+	},
+	DIAGFLOW_CXVERSION: func() Any {
+		return &diagflow.CxVersion{}
+	},
+	COMPUTE_BACKENDSERVICESIGNEDURLKEY: func() Any {
+		return &compute.BackendServiceSignedUrlKey{}
+	},
+	COMPUTE_INSTANCEGROUPNAMEDPORT: func() Any {
+		return &compute.InstanceGroupNamedPort{}
+	},
+	MONITORING_DASHBOARD: func() Any {
+		return &monitoring.Dashboard{}
+	},
+	ALLOYDB_CLUSTER: func() Any {
+		return &alloydb.Cluster{}
+	},
+	MONITORING_ALERTPOLICY: func() Any {
+		return &monitoring.AlertPolicy{}
+	},
+	ACCESSCONTEXTMANAGER_ACCESSLEVELCONDITION: func() Any {
+		return &accesscontextmanager.AccessLevelCondition{}
+	},
+	ARTIFACTREGISTRY_REPOSITORYIAMBINDING: func() Any {
+		return &artifactregistry.RepositoryIamBinding{}
+	},
+	BIGQUERY_IAMPOLICY: func() Any {
+		return &bigquery.IamPolicy{}
+	},
+	IAP_APPENGINESERVICEIAMBINDING: func() Any {
+		return &iap.AppEngineServiceIamBinding{}
+	},
+	APIGEE_ENVGROUP: func() Any {
+		return &apigee.EnvGroup{}
+	},
+	COMPUTE_INSTANCEIAMPOLICY: func() Any {
+		return &compute.InstanceIAMPolicy{}
+	},
+	HEALTHCARE_DICOMSTORE: func() Any {
+		return &healthcare.DicomStore{}
+	},
+	INTEGRATIONCONNECTORS_ENDPOINTATTACHMENT: func() Any {
+		return &integrationconnectors.EndpointAttachment{}
+	},
+	BIGQUERY_CONNECTION: func() Any {
+		return &bigquery.Connection{}
+	},
+	COMPUTE_SUBNETWORK: func() Any {
+		return &compute.Subnetwork{}
+	},
+	DATACATALOG_POLICYTAGIAMBINDING: func() Any {
+		return &datacatalog.PolicyTagIamBinding{}
+	},
+	GKEHUB_FEATUREIAMPOLICY: func() Any {
+		return &gkehub.FeatureIamPolicy{}
+	},
+	ORGANIZATIONS_IAMMEMBER: func() Any {
+		return &organizations.IAMMember{}
+	},
+	STORAGE_BUCKETOBJECT: func() Any {
+		return &storage.BucketObject{}
+	},
+	NETAPP_VOLUME: func() Any {
+		return &netapp.Volume{}
+	},
+	ORGANIZATIONS_FOLDER: func() Any {
+		return &organizations.Folder{}
+	},
+	BEYONDCORP_APPGATEWAY: func() Any {
+		return &beyondcorp.AppGateway{}
+	},
+	COMPUTE_HAVPNGATEWAY: func() Any {
+		return &compute.HaVpnGateway{}
+	},
+	APIGEE_INSTANCEATTACHMENT: func() Any {
+		return &apigee.InstanceAttachment{}
+	},
+	TAGS_TAGVALUE: func() Any {
+		return &tags.TagValue{}
+	},
+	COMPUTE_PUBLICDELEGATEDPREFIX: func() Any {
+		return &compute.PublicDelegatedPrefix{}
+	},
+	NETAPP_BACKUPPOLICY: func() Any {
+		return &netapp.BackupPolicy{}
+	},
+	NOTEBOOKS_RUNTIMEIAMPOLICY: func() Any {
+		return &notebooks.RuntimeIamPolicy{}
+	},
+	BIGQUERY_BIRESERVATION: func() Any {
+		return &bigquery.BiReservation{}
+	},
+	COMPUTE_DISKRESOURCEPOLICYATTACHMENT: func() Any {
+		return &compute.DiskResourcePolicyAttachment{}
+	},
+	COMPUTE_IMAGEIAMPOLICY: func() Any {
+		return &compute.ImageIamPolicy{}
+	},
+	GKEONPREM_VMWARENODEPOOL: func() Any {
+		return &gkeonprem.VMwareNodePool{}
+	},
+	APIGATEWAY_GATEWAYIAMMEMBER: func() Any {
+		return &apigateway.GatewayIamMember{}
+	},
+	BIGQUERYDATAPOLICY_DATAPOLICY: func() Any {
+		return &bigquerydatapolicy.DataPolicy{}
+	},
+	BIGQUERYDATAPOLICY_DATAPOLICYIAMPOLICY: func() Any {
+		return &bigquerydatapolicy.DataPolicyIamPolicy{}
+	},
+	BIGTABLE_INSTANCEIAMPOLICY: func() Any {
+		return &bigtable.InstanceIamPolicy{}
+	},
+	NETWORKSERVICES_MESH: func() Any {
+		return &networkservices.Mesh{}
+	},
+	CLOUDRUNV2_JOBIAMPOLICY: func() Any {
+		return &cloudrunv2.JobIamPolicy{}
+	},
+	GKEHUB_FLEET: func() Any {
+		return &gkehub.Fleet{}
+	},
+	IAP_TUNNELIAMBINDING: func() Any {
+		return &iap.TunnelIamBinding{}
+	},
+	NOTEBOOKS_INSTANCEIAMMEMBER: func() Any {
+		return &notebooks.InstanceIamMember{}
+	},
+	VPCACCESS_CONNECTOR: func() Any {
+		return &vpcaccess.Connector{}
+	},
+	CLOUDASSET_ORGANIZATIONFEED: func() Any {
+		return &cloudasset.OrganizationFeed{}
+	},
+	CLOUDFUNCTIONS_FUNCTION: func() Any {
+		return &cloudfunctions.Function{}
+	},
+	COMPUTE_SHAREDVPCHOSTPROJECT: func() Any {
+		return &compute.SharedVPCHostProject{}
+	},
+	DATAPROC_AUTOSCALINGPOLICYIAMMEMBER: func() Any {
+		return &dataproc.AutoscalingPolicyIamMember{}
+	},
+	CLOUDFUNCTIONSV2_FUNCTION: func() Any {
+		return &cloudfunctionsv2.Function{}
+	},
+	COMPUTE_REGIONDISKIAMBINDING: func() Any {
+		return &compute.RegionDiskIamBinding{}
+	},
+	DATASTORE_DATASTOREINDEX: func() Any {
+		return &datastore.DataStoreIndex{}
+	},
+	FILESTORE_SNAPSHOT: func() Any {
+		return &filestore.Snapshot{}
+	},
+	CLOUDDEPLOY_TARGETIAMMEMBER: func() Any {
+		return &clouddeploy.TargetIamMember{}
+	},
+	COMPUTE_NETWORKENDPOINT: func() Any {
+		return &compute.NetworkEndpoint{}
+	},
+	CONTAINERANALYSIS_NOTEIAMMEMBER: func() Any {
+		return &containeranalysis.NoteIamMember{}
+	},
+	KMS_CRYPTOKEYIAMPOLICY: func() Any {
+		return &kms.CryptoKeyIAMPolicy{}
+	},
+	CLOUDRUNV2_SERVICE: func() Any {
+		return &cloudrunv2.Service{}
+	},
+	DATAPROC_METASTORESERVICE: func() Any {
+		return &dataproc.MetastoreService{}
+	},
+	ALLOYDB_BACKUP: func() Any {
+		return &alloydb.Backup{}
+	},
+	DIAGFLOW_ENTITYTYPE: func() Any {
+		return &diagflow.EntityType{}
+	},
+	VERTEX_AIENDPOINTIAMPOLICY: func() Any {
+		return &vertex.AiEndpointIamPolicy{}
+	},
+	DATAFORM_REPOSITORYWORKFLOWCONFIG: func() Any {
+		return &dataform.RepositoryWorkflowConfig{}
+	},
+	NETWORKCONNECTIVITY_SERVICECONNECTIONPOLICY: func() Any {
+		return &networkconnectivity.ServiceConnectionPolicy{}
+	},
+	PUBSUB_SCHEMA: func() Any {
+		return &pubsub.Schema{}
+	},
+	TAGS_TAGKEY: func() Any {
+		return &tags.TagKey{}
+	},
+	ALLOYDB_INSTANCE: func() Any {
+		return &alloydb.Instance{}
+	},
+	APIGEE_SYNCAUTHORIZATION: func() Any {
+		return &apigee.SyncAuthorization{}
+	},
+	COMPUTE_MACHINEIMAGEIAMMEMBER: func() Any {
+		return &compute.MachineImageIamMember{}
+	},
+	COMPUTE_REGIONSECURITYPOLICY: func() Any {
+		return &compute.RegionSecurityPolicy{}
+	},
+	VMWAREENGINE_SUBNET: func() Any {
+		return &vmwareengine.Subnet{}
+	},
+	BIGQUERY_DATASETIAMPOLICY: func() Any {
+		return &bigquery.DatasetIamPolicy{}
+	},
+	DATAPLEX_LAKEIAMPOLICY: func() Any {
+		return &dataplex.LakeIamPolicy{}
+	},
+	ORGPOLICY_CUSTOMCONSTRAINT: func() Any {
+		return &orgpolicy.CustomConstraint{}
+	},
+	SECURESOURCEMANAGER_INSTANCE: func() Any {
+		return &securesourcemanager.Instance{}
+	},
+	COMPUTE_NETWORKENDPOINTLIST: func() Any {
+		return &compute.NetworkEndpointList{}
+	},
+	COMPUTE_REGIONDISK: func() Any {
+		return &compute.RegionDisk{}
+	},
+	DATALOSS_PREVENTIONDEIDENTIFYTEMPLATE: func() Any {
+		return &dataloss.PreventionDeidentifyTemplate{}
+	},
+	FIREBASE_APPCHECKPLAYINTEGRITYCONFIG: func() Any {
+		return &firebase.AppCheckPlayIntegrityConfig{}
+	},
+	APIGATEWAY_APICONFIGIAMMEMBER: func() Any {
+		return &apigateway.ApiConfigIamMember{}
+	},
+	BIGQUERYANALYTICSHUB_LISTINGIAMPOLICY: func() Any {
+		return &bigqueryanalyticshub.ListingIamPolicy{}
+	},
+	CLOUDTASKS_QUEUEIAMPOLICY: func() Any {
+		return &cloudtasks.QueueIamPolicy{}
+	},
+	COMPUTE_FORWARDINGRULE: func() Any {
+		return &compute.ForwardingRule{}
+	},
+	WORKSTATIONS_WORKSTATION: func() Any {
+		return &workstations.Workstation{}
+	},
+	IAP_APPENGINEVERSIONIAMBINDING: func() Any {
+		return &iap.AppEngineVersionIamBinding{}
+	},
+	SECURITYCENTER_PROJECTCUSTOMMODULE: func() Any {
+		return &securitycenter.ProjectCustomModule{}
+	},
+	SERVICEDIRECTORY_NAMESPACEIAMMEMBER: func() Any {
+		return &servicedirectory.NamespaceIamMember{}
+	},
+	GKEHUB_MEMBERSHIP: func() Any {
+		return &gkehub.Membership{}
+	},
+	FIREBASE_HOSTINGVERSION: func() Any {
+		return &firebase.HostingVersion{}
+	},
+	DATAPLEX_ASSET: func() Any {
+		return &dataplex.Asset{}
+	},
+	COMPUTE_URLMAP: func() Any {
+		return &compute.URLMap{}
+	},
+	DIAGFLOW_CXPAGE: func() Any {
+		return &diagflow.CxPage{}
+	},
+	FOLDER_IAMPOLICY: func() Any {
+		return &folder.IAMPolicy{}
+	},
+	SECRETMANAGER_SECRET: func() Any {
+		return &secretmanager.Secret{}
+	},
+	REDIS_CLUSTER: func() Any {
+		return &redis.Cluster{}
+	},
+	APIGEE_KEYSTORESALIASESSELFSIGNEDCERT: func() Any {
+		return &apigee.KeystoresAliasesSelfSignedCert{}
+	},
+	ASSUREDWORKLOADS_WORKLOAD: func() Any {
+		return &assuredworkloads.Workload{}
+	},
+	CLOUDDEPLOY_TARGETIAMPOLICY: func() Any {
+		return &clouddeploy.TargetIamPolicy{}
+	},
+	COMPUTE_SERVICEATTACHMENT: func() Any {
+		return &compute.ServiceAttachment{}
+	},
+	VERTEX_AIFEATURESTOREENTITYTYPE: func() Any {
+		return &vertex.AiFeatureStoreEntityType{}
+	},
+	WORKBENCH_INSTANCEIAMPOLICY: func() Any {
+		return &workbench.InstanceIamPolicy{}
+	},
+	APIGEE_ENVIRONMENTIAMPOLICY: func() Any {
+		return &apigee.EnvironmentIamPolicy{}
+	},
+	BIGQUERY_TABLE: func() Any {
+		return &bigquery.Table{}
+	},
+	CLOUDBUILDV2_CONNECTIONIAMPOLICY: func() Any {
+		return &cloudbuildv2.ConnectionIAMPolicy{}
+	},
+	GKEHUB_MEMBERSHIPBINDING: func() Any {
+		return &gkehub.MembershipBinding{}
+	},
+	ACCESSCONTEXTMANAGER_INGRESSPOLICY: func() Any {
+		return &accesscontextmanager.IngressPolicy{}
+	},
+	COMPUTE_REGIONDISKIAMPOLICY: func() Any {
+		return &compute.RegionDiskIamPolicy{}
+	},
+	DATAPLEX_DATASCANIAMMEMBER: func() Any {
+		return &dataplex.DatascanIamMember{}
+	},
+	BIGQUERY_IAMMEMBER: func() Any {
+		return &bigquery.IamMember{}
+	},
+	COMPUTE_BACKENDBUCKETIAMMEMBER: func() Any {
+		return &compute.BackendBucketIamMember{}
+	},
+	COMPUTE_BACKENDSERVICE: func() Any {
+		return &compute.BackendService{}
+	},
+	SECURITYCENTER_EVENTTHREATDETECTIONCUSTOMMODULE: func() Any {
+		return &securitycenter.EventThreatDetectionCustomModule{}
+	},
+	HEALTHCARE_DICOMSTOREIAMPOLICY: func() Any {
+		return &healthcare.DicomStoreIamPolicy{}
+	},
+	HEALTHCARE_FHIRSTOREIAMMEMBER: func() Any {
+		return &healthcare.FhirStoreIamMember{}
+	},
+	MONITORING_UPTIMECHECKCONFIG: func() Any {
+		return &monitoring.UptimeCheckConfig{}
+	},
+	APIGATEWAY_APICONFIGIAMPOLICY: func() Any {
+		return &apigateway.ApiConfigIamPolicy{}
+	},
+	COMPUTE_SHAREDVPCSERVICEPROJECT: func() Any {
+		return &compute.SharedVPCServiceProject{}
+	},
+	DATAPLEX_TASKIAMPOLICY: func() Any {
+		return &dataplex.TaskIamPolicy{}
+	},
+	VERTEX_AIFEATURESTOREENTITYTYPEIAMMEMBER: func() Any {
+		return &vertex.AiFeatureStoreEntityTypeIamMember{}
+	},
+	CLOUDTASKS_QUEUE: func() Any {
+		return &cloudtasks.Queue{}
+	},
+	COMPUTE_INSTANCEIAMBINDING: func() Any {
+		return &compute.InstanceIAMBinding{}
+	},
+	DATACATALOG_ENTRYGROUPIAMPOLICY: func() Any {
+		return &datacatalog.EntryGroupIamPolicy{}
+	},
+	APIGEE_ADDONSCONFIG: func() Any {
+		return &apigee.AddonsConfig{}
+	},
+	COMPUTE_REGIONPERINSTANCECONFIG: func() Any {
+		return &compute.RegionPerInstanceConfig{}
+	},
+	DNS_MANAGEDZONE: func() Any {
+		return &dns.ManagedZone{}
+	},
+	VERTEX_AIFEATUREONLINESTORE: func() Any {
+		return &vertex.AiFeatureOnlineStore{}
+	},
+	VERTEX_AITENSORBOARD: func() Any {
+		return &vertex.AiTensorboard{}
+	},
+	APIGATEWAY_APIIAMBINDING: func() Any {
+		return &apigateway.ApiIamBinding{}
+	},
+	BIGQUERY_DATASETIAMMEMBER: func() Any {
+		return &bigquery.DatasetIamMember{}
+	},
+	COMPUTE_ROUTE: func() Any {
+		return &compute.Route{}
+	},
+	DATAPLEX_DATASCAN: func() Any {
+		return &dataplex.Datascan{}
+	},
+	DATACATALOG_ENTRY: func() Any {
+		return &datacatalog.Entry{}
+	},
+	HEALTHCARE_FHIRSTOREIAMPOLICY: func() Any {
+		return &healthcare.FhirStoreIamPolicy{}
+	},
+	IDENTITYPLATFORM_DEFAULTSUPPORTEDIDPCONFIG: func() Any {
+		return &identityplatform.DefaultSupportedIdpConfig{}
+	},
+	CLOUDASSET_FOLDERFEED: func() Any {
+		return &cloudasset.FolderFeed{}
+	},
+	EDGECONTAINER_NODEPOOL: func() Any {
+		return &edgecontainer.NodePool{}
+	},
+	APIGEE_ENVGROUPATTACHMENT: func() Any {
+		return &apigee.EnvGroupAttachment{}
+	},
+	DATABASEMIGRATIONSERVICE_CONNECTIONPROFILE: func() Any {
+		return &databasemigrationservice.ConnectionProfile{}
+	},
+	FIREBASE_APPLEAPP: func() Any {
+		return &firebase.AppleApp{}
+	},
+	SERVICEDIRECTORY_ENDPOINT: func() Any {
+		return &servicedirectory.Endpoint{}
+	},
+	BEYONDCORP_APPCONNECTION: func() Any {
+		return &beyondcorp.AppConnection{}
+	},
+	COMPUTE_SUBNETWORKIAMBINDING: func() Any {
+		return &compute.SubnetworkIAMBinding{}
+	},
+	VERTEX_AIENDPOINTIAMMEMBER: func() Any {
+		return &vertex.AiEndpointIamMember{}
+	},
+	GKEHUB_FEATUREMEMBERSHIP: func() Any {
+		return &gkehub.FeatureMembership{}
+	},
+	LOOKER_INSTANCE: func() Any {
+		return &looker.Instance{}
+	},
+	MEMCACHE_INSTANCE: func() Any {
+		return &memcache.Instance{}
+	},
+	PROJECTS_IAMCUSTOMROLE: func() Any {
+		return &projects.IAMCustomRole{}
+	},
+	ACCESSCONTEXTMANAGER_SERVICEPERIMETEREGRESSPOLICY: func() Any {
+		return &accesscontextmanager.ServicePerimeterEgressPolicy{}
+	},
+	COMPUTE_IMAGE: func() Any {
+		return &compute.Image{}
+	},
+	COMPUTE_PUBLICADVERTISEDPREFIX: func() Any {
+		return &compute.PublicAdvertisedPrefix{}
+	},
+	SERVICEDIRECTORY_SERVICEIAMPOLICY: func() Any {
+		return &servicedirectory.ServiceIamPolicy{}
+	},
+	CLOUDDEPLOY_DELIVERYPIPELINEIAMPOLICY: func() Any {
+		return &clouddeploy.DeliveryPipelineIamPolicy{}
+	},
+	COMPUTE_REGIONBACKENDSERVICEIAMBINDING: func() Any {
+		return &compute.RegionBackendServiceIamBinding{}
+	},
+	IAP_WEBTYPECOMPUTEIAMPOLICY: func() Any {
+		return &iap.WebTypeComputeIamPolicy{}
+	},
+	SQL_USER: func() Any {
+		return &sql.User{}
+	},
+	CERTIFICATEMANAGER_TRUSTCONFIG: func() Any {
+		return &certificatemanager.TrustConfig{}
+	},
+	WORKBENCH_INSTANCEIAMMEMBER: func() Any {
+		return &workbench.InstanceIamMember{}
+	},
+	COMPUTE_INSTANCEGROUPMEMBERSHIP: func() Any {
+		return &compute.InstanceGroupMembership{}
+	},
+	IAP_WEBTYPEAPPENGINGIAMMEMBER: func() Any {
+		return &iap.WebTypeAppEngingIamMember{}
+	},
+	BIGTABLE_INSTANCEIAMBINDING: func() Any {
+		return &bigtable.InstanceIamBinding{}
+	},
+	CLOUDBUILD_TRIGGER: func() Any {
+		return &cloudbuild.Trigger{}
+	},
+	BIGQUERY_DATATRANSFERCONFIG: func() Any {
+		return &bigquery.DataTransferConfig{}
+	},
+	COMPUTE_REGIONSSLPOLICY: func() Any {
+		return &compute.RegionSslPolicy{}
+	},
+	DATAPROC_METASTORESERVICEIAMMEMBER: func() Any {
+		return &dataproc.MetastoreServiceIamMember{}
+	},
+	DIAGFLOW_CXWEBHOOK: func() Any {
+		return &diagflow.CxWebhook{}
+	},
+	VMWAREENGINE_CLUSTER: func() Any {
+		return &vmwareengine.Cluster{}
+	},
+	CLOUDRUNV2_JOB: func() Any {
+		return &cloudrunv2.Job{}
+	},
+	COMPUTE_HTTPSHEALTHCHECK: func() Any {
+		return &compute.HttpsHealthCheck{}
+	},
+	COMPUTE_SECURITYPOLICY: func() Any {
+		return &compute.SecurityPolicy{}
+	},
+	DATAPROC_METASTOREFEDERATIONIAMBINDING: func() Any {
+		return &dataproc.MetastoreFederationIamBinding{}
+	},
+	DIAGFLOW_CXFLOW: func() Any {
+		return &diagflow.CxFlow{}
+	},
+	SECURITYCENTER_SOURCEIAMMEMBER: func() Any {
+		return &securitycenter.SourceIamMember{}
+	},
+	SERVICEDIRECTORY_NAMESPACEIAMPOLICY: func() Any {
+		return &servicedirectory.NamespaceIamPolicy{}
+	},
+	TPU_NODE: func() Any {
+		return &tpu.Node{}
+	},
+	NETAPP_BACKUPVAULT: func() Any {
+		return &netapp.BackupVault{}
+	},
+	NETWORKSERVICES_EDGECACHEORIGIN: func() Any {
+		return &networkservices.EdgeCacheOrigin{}
+	},
+	WORKSTATIONS_WORKSTATIONCONFIG: func() Any {
+		return &workstations.WorkstationConfig{}
+	},
+	BIGLAKE_CATALOG: func() Any {
+		return &biglake.Catalog{}
+	},
+	CLOUDBUILD_WORKERPOOL: func() Any {
+		return &cloudbuild.WorkerPool{}
+	},
+	CLOUDBUILDV2_CONNECTION: func() Any {
+		return &cloudbuildv2.Connection{}
+	},
+	IAP_APPENGINEVERSIONIAMPOLICY: func() Any {
+		return &iap.AppEngineVersionIamPolicy{}
+	},
+	APIGEE_ENVIRONMENTIAMMEMBER: func() Any {
+		return &apigee.EnvironmentIamMember{}
+	},
+	BIGTABLE_INSTANCE: func() Any {
+		return &bigtable.Instance{}
+	},
+	DEPLOYMENTMANAGER_DEPLOYMENT: func() Any {
+		return &deploymentmanager.Deployment{}
+	},
+	DATAPLEX_DATASCANIAMPOLICY: func() Any {
+		return &dataplex.DatascanIamPolicy{}
+	},
+	LOGGING_LOGVIEW: func() Any {
+		return &logging.LogView{}
+	},
+	SERVICEDIRECTORY_NAMESPACEIAMBINDING: func() Any {
+		return &servicedirectory.NamespaceIamBinding{}
+	},
+	DATAFORM_REPOSITORYIAMMEMBER: func() Any {
+		return &dataform.RepositoryIamMember{}
+	},
+	IDENTITYPLATFORM_INBOUNDSAMLCONFIG: func() Any {
+		return &identityplatform.InboundSamlConfig{}
+	},
+	TAGS_TAGKEYIAMBINDING: func() Any {
+		return &tags.TagKeyIamBinding{}
+	},
+	DIAGFLOW_CXENTITYTYPE: func() Any {
+		return &diagflow.CxEntityType{}
+	},
+	CONTAINERANALYSIS_NOTE: func() Any {
+		return &containeranalysis.Note{}
+	},
+	GKEHUB_SCOPERBACROLEBINDING: func() Any {
+		return &gkehub.ScopeRbacRoleBinding{}
+	},
+	LOGGING_FOLDERSETTINGS: func() Any {
+		return &logging.FolderSettings{}
+	},
+	CLOUDIDS_ENDPOINT: func() Any {
+		return &cloudids.Endpoint{}
+	},
+	COMPUTE_BACKENDBUCKETIAMBINDING: func() Any {
+		return &compute.BackendBucketIamBinding{}
+	},
+	TAGS_TAGVALUEIAMBINDING: func() Any {
+		return &tags.TagValueIamBinding{}
+	},
+	NETWORKSERVICES_TLSROUTE: func() Any {
+		return &networkservices.TlsRoute{}
+	},
+	CLOUDDEPLOY_TARGET: func() Any {
+		return &clouddeploy.Target{}
+	},
+	COMPUTE_INSTANCEFROMTEMPLATE: func() Any {
+		return &compute.InstanceFromTemplate{}
+	},
+	IAP_APPENGINESERVICEIAMMEMBER: func() Any {
+		return &iap.AppEngineServiceIamMember{}
+	},
+	INTEGRATIONCONNECTORS_CONNECTION: func() Any {
+		return &integrationconnectors.Connection{}
+	},
+	COMPUTE_SNAPSHOT: func() Any {
+		return &compute.Snapshot{}
+	},
+	NETWORKSECURITY_AUTHORIZATIONPOLICY: func() Any {
+		return &networksecurity.AuthorizationPolicy{}
+	},
+	NOTEBOOKS_RUNTIMEIAMBINDING: func() Any {
+		return &notebooks.RuntimeIamBinding{}
+	},
+	PROJECTS_DEFAULTSERVICEACCOUNTS: func() Any {
+		return &projects.DefaultServiceAccounts{}
+	},
+	VMWAREENGINE_EXTERNALADDRESS: func() Any {
+		return &vmwareengine.ExternalAddress{}
+	},
+	ORGANIZATIONS_IAMAUDITCONFIG: func() Any {
+		return &organizations.IamAuditConfig{}
+	},
+	BIGQUERY_JOB: func() Any {
+		return &bigquery.Job{}
+	},
+	CLOUDRUN_DOMAINMAPPING: func() Any {
+		return &cloudrun.DomainMapping{}
+	},
+	DNS_DNSMANAGEDZONEIAMMEMBER: func() Any {
+		return &dns.DnsManagedZoneIamMember{}
+	},
+	GKEBACKUP_RESTOREPLANIAMPOLICY: func() Any {
+		return &gkebackup.RestorePlanIamPolicy{}
+	},
+	DATAFLOW_PIPELINE: func() Any {
+		return &dataflow.Pipeline{}
+	},
+	REDIS_INSTANCE: func() Any {
+		return &redis.Instance{}
+	},
+	DATAPROC_METASTOREFEDERATIONIAMMEMBER: func() Any {
+		return &dataproc.MetastoreFederationIamMember{}
+	},
+	FIREBASE_HOSTINGCUSTOMDOMAIN: func() Any {
+		return &firebase.HostingCustomDomain{}
+	},
+	IAM_DENYPOLICY: func() Any {
+		return &iam.DenyPolicy{}
+	},
+	CLOUDRUN_IAMBINDING: func() Any {
+		return &cloudrun.IamBinding{}
+	},
+	HEALTHCARE_HL7STOREIAMBINDING: func() Any {
+		return &healthcare.Hl7StoreIamBinding{}
+	},
+	NETWORKSECURITY_SERVERTLSPOLICY: func() Any {
+		return &networksecurity.ServerTlsPolicy{}
+	},
+	VERTEX_AIENDPOINTIAMBINDING: func() Any {
+		return &vertex.AiEndpointIamBinding{}
+	},
+	IDENTITYPLATFORM_OAUTHIDPCONFIG: func() Any {
+		return &identityplatform.OauthIdpConfig{}
+	},
+	NOTEBOOKS_INSTANCEIAMPOLICY: func() Any {
+		return &notebooks.InstanceIamPolicy{}
+	},
+	RECAPTCHA_ENTERPRISEKEY: func() Any {
+		return &recaptcha.EnterpriseKey{}
+	},
+	APPENGINE_STANDARDAPPVERSION: func() Any {
+		return &appengine.StandardAppVersion{}
+	},
+	FIREBASE_STORAGEBUCKET: func() Any {
+		return &firebase.StorageBucket{}
+	},
+	LOGGING_PROJECTSINK: func() Any {
+		return &logging.ProjectSink{}
+	},
+	NOTEBOOKS_RUNTIME: func() Any {
+		return &notebooks.Runtime{}
+	},
+	SERVICEDIRECTORY_SERVICE: func() Any {
+		return &servicedirectory.Service{}
+	},
+	COMPUTE_SECURITYSCANCONFIG: func() Any {
+		return &compute.SecurityScanConfig{}
+	},
+	DATAPROC_WORKFLOWTEMPLATE: func() Any {
+		return &dataproc.WorkflowTemplate{}
+	},
+	DIAGFLOW_CXTESTCASE: func() Any {
+		return &diagflow.CxTestCase{}
+	},
+	SERVICEDIRECTORY_NAMESPACE: func() Any {
+		return &servicedirectory.Namespace{}
+	},
+	COMPUTE_DISKASYNCREPLICATION: func() Any {
+		return &compute.DiskAsyncReplication{}
+	},
+	COMPUTE_NETWORKENDPOINTGROUP: func() Any {
+		return &compute.NetworkEndpointGroup{}
+	},
+	COMPUTE_RESOURCEPOLICY: func() Any {
+		return &compute.ResourcePolicy{}
+	},
+	EVENTARC_CHANNEL: func() Any {
+		return &eventarc.Channel{}
+	},
+	HEALTHCARE_CONSENTSTOREIAMMEMBER: func() Any {
+		return &healthcare.ConsentStoreIamMember{}
+	},
+	KMS_KEYRINGIMPORTJOB: func() Any {
+		return &kms.KeyRingImportJob{}
+	},
+	IAP_APPENGINESERVICEIAMPOLICY: func() Any {
+		return &iap.AppEngineServiceIamPolicy{}
+	},
+	VERTEX_AIFEATURESTORE: func() Any {
+		return &vertex.AiFeatureStore{}
+	},
+	SERVICEACCOUNT_IAMBINDING: func() Any {
+		return &serviceaccount.IAMBinding{}
+	},
+	PROJECTS_ORGANIZATIONPOLICY: func() Any {
+		return &projects.OrganizationPolicy{}
+	},
+	VMWAREENGINE_PRIVATECLOUD: func() Any {
+		return &vmwareengine.PrivateCloud{}
+	},
+	APIGATEWAY_APICONFIGIAMBINDING: func() Any {
+		return &apigateway.ApiConfigIamBinding{}
+	},
+	BIGTABLE_INSTANCEIAMMEMBER: func() Any {
+		return &bigtable.InstanceIamMember{}
+	},
+	DISCOVERYENGINE_DATASTORE: func() Any {
+		return &discoveryengine.DataStore{}
+	},
+	ENDPOINTS_SERVICEIAMMEMBER: func() Any {
+		return &endpoints.ServiceIamMember{}
+	},
+	BIGQUERY_CONNECTIONIAMPOLICY: func() Any {
+		return &bigquery.ConnectionIamPolicy{}
+	},
+	COMPUTE_NODEGROUP: func() Any {
+		return &compute.NodeGroup{}
+	},
+	COMPUTE_REGIONNETWORKENDPOINTGROUP: func() Any {
+		return &compute.RegionNetworkEndpointGroup{}
+	},
+	NETWORKSERVICES_EDGECACHESERVICE: func() Any {
+		return &networkservices.EdgeCacheService{}
+	},
+	BINARYAUTHORIZATION_POLICY: func() Any {
+		return &binaryauthorization.Policy{}
+	},
+	NETWORKSERVICES_HTTPROUTE: func() Any {
+		return &networkservices.HttpRoute{}
+	},
+	STORAGE_BUCKET: func() Any {
+		return &storage.Bucket{}
+	},
+	BIGLAKE_DATABASE: func() Any {
+		return &biglake.Database{}
+	},
+	NETAPP_KMSCONFIG: func() Any {
+		return &netapp.Kmsconfig{}
+	},
+	SPANNER_DATABASEIAMMEMBER: func() Any {
+		return &spanner.DatabaseIAMMember{}
+	},
+	FOLDER_IAMAUDITCONFIG: func() Any {
+		return &folder.IamAuditConfig{}
+	},
+	SPANNER_INSTANCEIAMBINDING: func() Any {
+		return &spanner.InstanceIAMBinding{}
+	},
+	APIGATEWAY_GATEWAYIAMPOLICY: func() Any {
+		return &apigateway.GatewayIamPolicy{}
+	},
+	APIGEE_INSTANCE: func() Any {
+		return &apigee.Instance{}
+	},
+	BIGQUERY_DATASETACCESS: func() Any {
+		return &bigquery.DatasetAccess{}
+	},
+	FOLDER_IAMMEMBER: func() Any {
+		return &folder.IAMMember{}
+	},
+	DIAGFLOW_CXAGENT: func() Any {
+		return &diagflow.CxAgent{}
+	},
+	COMPUTE_AUTOSCALER: func() Any {
+		return &compute.Autoscaler{}
+	},
+	CONTAINERANALYSIS_NOTEIAMPOLICY: func() Any {
+		return &containeranalysis.NoteIamPolicy{}
+	},
+	DATAPLEX_TASK: func() Any {
+		return &dataplex.Task{}
+	},
+	DATAPROC_CLUSTERIAMBINDING: func() Any {
+		return &dataproc.ClusterIAMBinding{}
+	},
+	CERTIFICATEMANAGER_CERTIFICATE: func() Any {
+		return &certificatemanager.Certificate{}
+	},
+	LOGGING_BILLINGACCOUNTEXCLUSION: func() Any {
+		return &logging.BillingAccountExclusion{}
+	},
+	SQL_DATABASEINSTANCE: func() Any {
+		return &sql.DatabaseInstance{}
+	},
+	LOGGING_METRIC: func() Any {
+		return &logging.Metric{}
+	},
+	WORKSTATIONS_WORKSTATIONIAMPOLICY: func() Any {
+		return &workstations.WorkstationIamPolicy{}
+	},
+	NETAPP_VOLUMEREPLICATION: func() Any {
+		return &netapp.VolumeReplication{}
+	},
+	SECURITYCENTER_INSTANCEIAMMEMBER: func() Any {
+		return &securitycenter.InstanceIamMember{}
+	},
+	COMPUTE_EXTERNALVPNGATEWAY: func() Any {
+		return &compute.ExternalVpnGateway{}
+	},
+	COMPUTE_RESERVATION: func() Any {
+		return &compute.Reservation{}
+	},
+	DATAPLEX_ZONE: func() Any {
+		return &dataplex.Zone{}
+	},
+	GKEBACKUP_BACKUPPLAN: func() Any {
+		return &gkebackup.BackupPlan{}
+	},
+	COMPUTE_NETWORKFIREWALLPOLICYASSOCIATION: func() Any {
+		return &compute.NetworkFirewallPolicyAssociation{}
+	},
+	COMPUTE_VPNGATEWAY: func() Any {
+		return &compute.VPNGateway{}
+	},
+	MONITORING_GENERICSERVICE: func() Any {
+		return &monitoring.GenericService{}
+	},
+	RUNTIMECONFIG_CONFIG: func() Any {
+		return &runtimeconfig.Config{}
+	},
+	COMPUTE_REGIONTARGETHTTPSPROXY: func() Any {
+		return &compute.RegionTargetHttpsProxy{}
+	},
+	STORAGE_BUCKETIAMBINDING: func() Any {
+		return &storage.BucketIAMBinding{}
+	},
+	SERVICEDIRECTORY_SERVICEIAMMEMBER: func() Any {
+		return &servicedirectory.ServiceIamMember{}
+	},
+	CERTIFICATEAUTHORITY_CERTIFICATETEMPLATEIAMMEMBER: func() Any {
+		return &certificateauthority.CertificateTemplateIamMember{}
+	},
+	DATAPLEX_ASSETIAMBINDING: func() Any {
+		return &dataplex.AssetIamBinding{}
+	},
+	GKEBACKUP_RESTOREPLAN: func() Any {
+		return &gkebackup.RestorePlan{}
+	},
+	NETWORKSECURITY_ADDRESSGROUPIAMBINDING: func() Any {
+		return &networksecurity.AddressGroupIamBinding{}
+	},
+	BIGQUERY_RESERVATION: func() Any {
+		return &bigquery.Reservation{}
+	},
+	CLOUDASSET_PROJECTFEED: func() Any {
+		return &cloudasset.ProjectFeed{}
+	},
+	COMPUTE_DISKIAMMEMBER: func() Any {
+		return &compute.DiskIamMember{}
+	},
+	MONITORING_CUSTOMSERVICE: func() Any {
+		return &monitoring.CustomService{}
+	},
+	NETWORKSECURITY_SECURITYPROFILEGROUP: func() Any {
+		return &networksecurity.SecurityProfileGroup{}
+	},
+	WORKSTATIONS_WORKSTATIONCONFIGIAMBINDING: func() Any {
+		return &workstations.WorkstationConfigIamBinding{}
+	},
+	IAP_APPENGINEVERSIONIAMMEMBER: func() Any {
+		return &iap.AppEngineVersionIamMember{}
+	},
+	PROJECTS_IAMBINDING: func() Any {
+		return &projects.IAMBinding{}
+	},
+	NETWORKCONNECTIVITY_SPOKE: func() Any {
+		return &networkconnectivity.Spoke{}
+	},
+	APIGATEWAY_APICONFIG: func() Any {
+		return &apigateway.ApiConfig{}
+	},
+	GKEHUB_MEMBERSHIPIAMBINDING: func() Any {
+		return &gkehub.MembershipIamBinding{}
+	},
+	SERVICEDIRECTORY_SERVICEIAMBINDING: func() Any {
+		return &servicedirectory.ServiceIamBinding{}
+	},
+	ARTIFACTREGISTRY_VPCSCCONFIG: func() Any {
+		return &artifactregistry.VpcscConfig{}
+	},
+	TPU_V2VM: func() Any {
+		return &tpu.V2Vm{}
+	},
+	CLOUDBUILDV2_CONNECTIONIAMBINDING: func() Any {
+		return &cloudbuildv2.ConnectionIAMBinding{}
+	},
+	NETWORKSERVICES_GRPCROUTE: func() Any {
+		return &networkservices.GrpcRoute{}
+	},
+	COMPUTE_REGIONBACKENDSERVICE: func() Any {
+		return &compute.RegionBackendService{}
+	},
+	COMPUTE_REGIONBACKENDSERVICEIAMMEMBER: func() Any {
+		return &compute.RegionBackendServiceIamMember{}
+	},
+	CONTAINER_AWSNODEPOOL: func() Any {
+		return &container.AwsNodePool{}
+	},
+	DATACATALOG_ENTRYGROUPIAMBINDING: func() Any {
+		return &datacatalog.EntryGroupIamBinding{}
+	},
+	APPENGINE_ENGINESPLITTRAFFIC: func() Any {
+		return &appengine.EngineSplitTraffic{}
+	},
+	APPENGINE_FLEXIBLEAPPVERSION: func() Any {
+		return &appengine.FlexibleAppVersion{}
+	},
+	BIGQUERY_ROUTINE: func() Any {
+		return &bigquery.Routine{}
+	},
+	COMPUTE_ORGANIZATIONSECURITYPOLICY: func() Any {
+		return &compute.OrganizationSecurityPolicy{}
+	},
+	FIREBASE_HOSTINGRELEASE: func() Any {
+		return &firebase.HostingRelease{}
+	},
+	HEALTHCARE_FHIRSTORE: func() Any {
+		return &healthcare.FhirStore{}
+	},
+	IAP_WEBIAMBINDING: func() Any {
+		return &iap.WebIamBinding{}
+	},
+	COMPUTE_REGIONNETWORKFIREWALLPOLICYRULE: func() Any {
+		return &compute.RegionNetworkFirewallPolicyRule{}
+	},
+	SPANNER_DATABASEIAMPOLICY: func() Any {
+		return &spanner.DatabaseIAMPolicy{}
+	},
+	CERTIFICATEMANAGER_CERTIFICATEMAPENTRY: func() Any {
+		return &certificatemanager.CertificateMapEntry{}
+	},
+	LOGGING_FOLDERBUCKETCONFIG: func() Any {
+		return &logging.FolderBucketConfig{}
+	},
+}

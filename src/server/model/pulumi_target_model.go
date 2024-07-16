@@ -1,5 +1,10 @@
 package model
 
+import (
+	"reflect"
+	"strings"
+)
+
 type Yaml_Resource struct {
 	Type       string `yaml:"type"`
 	Properties any    `yaml:"properties"`
@@ -18,10 +23,7 @@ func CreateResourceModel(project_name string, description string, resource_type 
 		Name:        project_name,
 		Runtime:     "yaml",
 		Description: description,
-		// Outputs: map[string]string{
-		// 	"InstanceId":  "${ComputeInstanceResource" + instanceName + ".instanceId}",
-		// 	"cpuPlatform": "${ComputeInstanceResource" + instanceName + ".cpuPlatform}",
-		// },
+		Outputs:     getOutputMap(resource_instance_name, resource_instance),
 		Resources: map[string]Yaml_Resource{
 			resource_instance_name: {
 				Type:       resource_type.GetURI(),
@@ -31,4 +33,27 @@ func CreateResourceModel(project_name string, description string, resource_type 
 	}
 
 	return resourceConfigModel
+}
+
+func getOutputMap(resource_instance_name string, resource interface{}) map[string]string {
+	t := reflect.TypeOf(resource)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
+	outputMap := make(map[string]string, 0)
+
+	for i := 0; i < t.NumField(); i++ {
+		name := t.Field(i).Name
+		fieldName := getFormattedFieldName(name)
+		outputMap[name] = "${" + resource_instance_name + "." + fieldName + "}"
+	}
+
+	return outputMap
+}
+
+func getFormattedFieldName(name string) string {
+	charArray := []rune(name)
+	fieldName := strings.ToLower(string(charArray[0])) + string(charArray[1:])
+	return fieldName
 }
