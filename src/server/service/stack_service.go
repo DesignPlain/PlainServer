@@ -380,6 +380,7 @@ func (stack_service *StackService) DeployResources() error {
 						}
 
 						resourceOutputs, err = stack_service.PulumiStackUp(GCP, data.Id.String(), string(serializedResourceConfigYaml))
+						data.YamlContent = string(serializedResourceConfigYaml)
 
 						if err == nil {
 							data.Status = Deployed
@@ -389,8 +390,13 @@ func (stack_service *StackService) DeployResources() error {
 
 						} else {
 							data.Status = Errored
-							err_msg := strings.Split(err.Error(), "Diagnostics:\n")
-							data.LastError = strings.Split(err_msg[len(err_msg)-1], "Resources:\n")[0]
+
+							err_msg := strings.Split(err.Error(), "Cannot assign")
+							data.LastError = strings.Split("Cannot assign"+err_msg[len(err_msg)-1], "Resources:\n")[0]
+							data.LastError = strings.ReplaceAll(data.LastError, "\u001b[31m", "")
+							data.LastError = strings.ReplaceAll(data.LastError, "\u001b[0m", "")
+							err_msg = strings.Split(data.LastError, "error: update failed")
+							data.LastError = err_msg[len(err_msg)-1]
 
 							utils.Log(utils.ERROR, "Stack Up failed with error: "+err.Error())
 						}
@@ -417,6 +423,7 @@ func (stack_service *StackService) DeployResources() error {
 						}
 
 						resourceOutputs, err = stack_service.PulumiStackUp(AWS, data.Id.String(), string(serializedResourceConfigYaml))
+						data.YamlContent = string(serializedResourceConfigYaml)
 
 						if err == nil {
 							data.Status = Deployed
@@ -425,8 +432,13 @@ func (stack_service *StackService) DeployResources() error {
 							utils.Log(utils.DEBUG, "Adding new data to stack "+strings.Join(stackDeploymentOrder, " "))
 						} else {
 							data.Status = Errored
-							err_msg := strings.Split(err.Error(), "Diagnostics:\n")
-							data.LastError = strings.Split(err_msg[len(err_msg)-1], "Resources:\n")[0]
+
+							err_msg := strings.Split(err.Error(), "Cannot assign")
+							data.LastError = strings.Split("Cannot assign"+err_msg[len(err_msg)-1], "Resources:\n")[0]
+							data.LastError = strings.ReplaceAll(data.LastError, "\u001b[31m", "")
+							data.LastError = strings.ReplaceAll(data.LastError, "\u001b[0m", "")
+							err_msg = strings.Split(data.LastError, "error: update failed")
+							data.LastError = err_msg[len(err_msg)-1]
 
 							utils.Log(utils.ERROR, "Stack Up failed with error: "+err.Error())
 						}
