@@ -14,7 +14,7 @@ type Bucket struct {
 	ForceDestroy bool `json:"forceDestroy,omitempty" yaml:"forceDestroy,omitempty"`
 
 	// The recovery point objective for cross-region replication of the bucket. Applicable only for dual and multi-region buckets. `"DEFAULT"` sets default replication. `"ASYNC_TURBO"` value enables turbo replication, valid for dual-region buckets only. See [Turbo Replication](https://cloud.google.com/storage/docs/managing-turbo-replication) for more information. If rpo is not specified at bucket creation, it defaults to `"DEFAULT"` for dual and multi-region buckets. --NOTE-- If used with single-region bucket, It will throw an error.
-	Rpo string `json:"rpo,omitempty" yaml:"rpo,omitempty"`
+	//Rpo string `json:"rpo,omitempty" yaml:"rpo,omitempty"`
 
 	// Configuration if the bucket acts as a website. Structure is documented below.
 	Website types.Storage_BucketWebsite `json:"website,omitempty" yaml:"website,omitempty"`
@@ -50,7 +50,7 @@ type Bucket struct {
 	DefaultEventBasedHold bool `json:"defaultEventBasedHold,omitempty" yaml:"defaultEventBasedHold,omitempty"`
 
 	// Enables [object retention](https://cloud.google.com/storage/docs/object-lock) on a storage bucket.
-	EnableObjectRetention bool `json:"enableObjectRetention,omitempty" yaml:"enableObjectRetention,omitempty"`
+	//EnableObjectRetention bool `json:"enableObjectRetention,omitempty" yaml:"enableObjectRetention,omitempty"`
 
 	// The [Storage Class](https://cloud.google.com/storage/docs/storage-classes) of the new bucket. Supported values include: `STANDARD`, `MULTI_REGIONAL`, `REGIONAL`, `NEARLINE`, `COLDLINE`, `ARCHIVE`.
 	StorageClass string `json:"storageClass,omitempty" yaml:"storageClass,omitempty"`

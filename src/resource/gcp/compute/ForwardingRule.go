@@ -113,7 +113,7 @@ type ForwardingRule struct {
 	ServiceLabel string `json:"serviceLabel,omitempty" yaml:"serviceLabel,omitempty"`
 
 	// This is used in PSC consumer ForwardingRule to make terraform recreate the ForwardingRule when the status is closed
-	RecreateClosedPsc bool `json:"recreateClosedPsc,omitempty" yaml:"recreateClosedPsc,omitempty"`
+	//RecreateClosedPsc bool `json:"recreateClosedPsc,omitempty" yaml:"recreateClosedPsc,omitempty"`
 
 	/*
 	   A reference to the region where the regional forwarding rule resides.

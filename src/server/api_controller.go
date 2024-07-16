@@ -205,8 +205,13 @@ func (_controllerStatus *APIController) GetState(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	if resources == nil {
+		c.JSON(200, make([]interface{}, 0))
+		return
+	}
+
 	var resString, _ = json.Marshal(resources)
-	utils.Log(utils.DEBUG, "Getting state"+string(resString))
+	utils.Log(utils.DEBUG, "Getting state ->"+string(resString))
 
 	c.JSON(200, resources)
 }

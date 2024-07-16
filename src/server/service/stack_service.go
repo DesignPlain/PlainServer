@@ -104,13 +104,16 @@ func (stack_service *StackService) PulumiStackUp(provider ProviderType, stackId 
 
 	// utils.Log(utils.DEBUG, aa)
 
-	// previewResult, err := stack.Preview(ctx)
-	// if err != nil {
-	// 	utils.Log(utils.ERROR, err)
-	// 	// 	return
-	// }
+	previewResult, err := stack.Preview(ctx)
+	if err != nil {
+		rmErr := os.Remove(stackDirectory + "/Pulumi.yaml")
+		if rmErr != nil {
+			utils.Log(utils.ERROR, rmErr.Error())
+		}
 
-	//utils.Log(utils.DEBUG, previewResult)
+		utils.Log(utils.DEBUG, previewResult)
+		return nil, err
+	}
 
 	stackUpResult, err := stack.Up(ctx)
 	if err != nil {
@@ -118,10 +121,14 @@ func (stack_service *StackService) PulumiStackUp(provider ProviderType, stackId 
 		if rmErr != nil {
 			utils.Log(utils.ERROR, rmErr.Error())
 		}
+
 		return nil, err
 	}
 
-	utils.Log(utils.DEBUG, "Creating Stack "+stackName)
+	// stack.Refresh(ctx)
+	// outs, _ := stack.Outputs(ctx)
+	// fmt.Printf("%#v", outs)
+	utils.Log(utils.DEBUG, "Creating Stack -> "+stackName)
 	utils.Log(utils.DEBUG, stackUpResult)
 
 	var resOuts []ResourceOutput
@@ -263,7 +270,7 @@ func (stack_service *StackService) GetState() ([]DeploymentResource, error) {
 		return nil, err
 	}
 
-	var resources []DeploymentResource
+	resources := make([]DeploymentResource, 0)
 	for _, resId := range resourceIdArray {
 		res, err := stack_service.getResourceById(resId)
 		if err != nil {
@@ -376,11 +383,15 @@ func (stack_service *StackService) DeployResources() error {
 
 						if err == nil {
 							data.Status = Deployed
+							data.LastError = ""
 							stackDeploymentOrder = append(stackDeploymentOrder, data.Id.String())
 							utils.Log(utils.DEBUG, "Adding new data to stack "+strings.Join(stackDeploymentOrder, " "))
 
 						} else {
 							data.Status = Errored
+							err_msg := strings.Split(err.Error(), "Diagnostics:\n")
+							data.LastError = strings.Split(err_msg[len(err_msg)-1], "Resources:\n")[0]
+
 							utils.Log(utils.ERROR, "Stack Up failed with error: "+err.Error())
 						}
 
@@ -409,10 +420,14 @@ func (stack_service *StackService) DeployResources() error {
 
 						if err == nil {
 							data.Status = Deployed
+							data.LastError = ""
 							stackDeploymentOrder = append(stackDeploymentOrder, data.Id.String())
 							utils.Log(utils.DEBUG, "Adding new data to stack "+strings.Join(stackDeploymentOrder, " "))
 						} else {
 							data.Status = Errored
+							err_msg := strings.Split(err.Error(), "Diagnostics:\n")
+							data.LastError = strings.Split(err_msg[len(err_msg)-1], "Resources:\n")[0]
+
 							utils.Log(utils.ERROR, "Stack Up failed with error: "+err.Error())
 						}
 
@@ -481,6 +496,8 @@ func (stack_service *StackService) DestroyResources() error {
 		}
 
 		resource.Status = Draft
+		resource.LastError = ""
+		resource.Outputs = nil
 
 		if err = stack_service.saveResource(resource); err != nil {
 			utils.Log(utils.ERROR, "Saving resource return error:  "+err.Error())
