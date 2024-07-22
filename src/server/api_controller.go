@@ -60,12 +60,26 @@ func StartServer() {
 
 		rG.POST("/uploadProjectConfig", apiController.UploadProjectConfig)
 		rG.GET("/getProjectConfig", apiController.GetProjectConfig)
+		rG.POST("/uploadResourceFile", apiController.UploadFile)
 	}
 
-	r.Static("/app", "./UI")
-	r.Static("/assets", "./UI/assets")
+	r.Static("/app", "./ui")
+	r.Static("/assets", "./ui/assets")
 
 	r.Run()
+}
+
+func (_controllerStatus *APIController) UploadFile(c *gin.Context) {
+	file, _ := c.FormFile("file")
+
+	if file != nil {
+		filename := file.Filename
+		if filename != "" {
+			c.SaveUploadedFile(file, ROOTDIR+"ResourceRelatedFile_"+filename)
+		}
+	}
+
+	c.Status(http.StatusOK)
 }
 
 func (_controllerStatus *APIController) UploadProjectConfig(c *gin.Context) {
