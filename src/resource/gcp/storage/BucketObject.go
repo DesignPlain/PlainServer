@@ -2,6 +2,10 @@ package storage
 
 import types "DesignSphere_Server/src/resource/gcp/types"
 
+// type FileAsset struct {
+// 	FileAssetName string `json:"fn::FileAsset,omitempty" yaml:"fn::FileAsset,omitempty"`
+// }
+
 type BucketObject struct {
 	/*
 	   Enables object encryption with Customer-Supplied Encryption Key (CSEK). Google [documentation about CSEK.](https://cloud.google.com/storage/docs/encryption/customer-supplied-keys)
@@ -61,7 +65,7 @@ type BucketObject struct {
 	ContentType string `json:"contentType,omitempty" yaml:"contentType,omitempty"`
 
 	// The [object retention](http://cloud.google.com/storage/docs/object-lock) settings for the object. The retention settings allow an object to be retained until a provided date. Structure is documented below.
-	Retention types.Storage_BucketObjectRetention `json:"retention,omitempty" yaml:"retention,omitempty"`
+	// Retention types.Storage_BucketObjectRetention `json:"retention,omitempty" yaml:"retention,omitempty"`
 
 	/*
 	   The [StorageClass](https://cloud.google.com/storage/docs/storage-classes) of the new bucket object.

@@ -31,9 +31,10 @@ type DeploymentResource struct {
 	/*
 	   Icon source location for the UI component icon
 	*/
-	IconSrc   string         `json:"iconSrc"`
-	Status    ResourceStatus `json:"status"`
-	LastError string         `json:"lastError"`
+	IconSrc     string         `json:"iconSrc"`
+	Status      ResourceStatus `json:"status"`
+	LastError   string         `json:"lastError"`
+	YamlContent string         `json:"yamlContent"`
 
 	Position  UIPosition `json:"position"`
 	Inlets    []string   `json:"inlets"`
