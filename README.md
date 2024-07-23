@@ -9,4 +9,4 @@ Run the following script to build the project.
 ./build.sh
 ```
 
-The server binary can be found at ``./bin/server``
+The server binary can be found at ``./bin/server`` run it using ``./run.sh``
