@@ -1,10 +1,9 @@
 package storage
 
-import types "DesignSphere_Server/src/resource/gcp/types"
-
-// type FileAsset struct {
-// 	FileAssetName string `json:"fn::FileAsset,omitempty" yaml:"fn::FileAsset,omitempty"`
-// }
+import (
+	asset "DesignSphere_Server/src/resource"
+	types "DesignSphere_Server/src/resource/gcp/types"
+)
 
 type BucketObject struct {
 	/*
@@ -59,7 +58,7 @@ type BucketObject struct {
 
 	   - - -
 	*/
-	Source string `json:"source,omitempty" yaml:"source,omitempty"`
+	Source asset.FileAsset `json:"source,omitempty" yaml:"source,omitempty"`
 
 	// [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5) of the object data. Defaults to "application/octet-stream" or "text/plain; charset=utf-8".
 	ContentType string `json:"contentType,omitempty" yaml:"contentType,omitempty"`

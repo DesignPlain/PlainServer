@@ -71,11 +71,20 @@ func StartServer() {
 
 func (_controllerStatus *APIController) UploadFile(c *gin.Context) {
 	file, _ := c.FormFile("file")
+	resId := c.Request.Form.Get("resId")
 
 	if file != nil {
 		filename := file.Filename
 		if filename != "" {
-			c.SaveUploadedFile(file, ROOTDIR+"ResourceRelatedFile_"+filename)
+			file_dest := ROOTDIR + "ResourceRelatedFile_" + filename
+			c.SaveUploadedFile(file, file_dest)
+			err := _controllerStatus.StackService.SaveResoureFile(resId, file_dest)
+
+			if err != nil {
+				utils.Log(utils.ERROR, err)
+				c.Status(http.StatusInternalServerError)
+				return
+			}
 		}
 	}
 

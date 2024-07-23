@@ -1,7 +1,6 @@
 package model
 
 import (
-	"DesignSphere_Server/src/utils"
 	"encoding/json"
 
 	"github.com/google/uuid"
@@ -45,7 +44,8 @@ type DeploymentResource struct {
 	/*
 	   The configuration representing a cloud resource
 	*/
-	ResourceConfig Any              `json:"resourceConfig"`
+	ResourceConfig Any `json:"resourceConfig"`
+	ConfigHash     []byte
 	Outputs        []ResourceOutput `json:"resOutputs"`
 }
 
@@ -68,7 +68,7 @@ func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &tmpResource); err != nil {
 		return err
 	}
-	utils.Log(utils.DEBUG, string(rawResConfig))
+	//utils.Log(utils.DEBUG, string(rawResConfig))
 	resConfig, err := GetResourceConfigInstance(c.ProviderType, c.ResourceType, rawResConfig)
 	if err != nil {
 		return err

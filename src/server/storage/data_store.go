@@ -51,7 +51,7 @@ func (store *Store) Close() error {
 
 func (store *Store) Set(key []byte, value []byte) error {
 	if store.db_Handler != nil {
-		utils.Log(utils.DEBUG, string(value))
+		//utils.Log(utils.DEBUG, string(value))
 		err := store.db_Handler.Set(key, value, pebble.Sync)
 		if err != nil {
 			utils.Log(utils.ERROR, DBWriteFailed.Error()+", error: "+err.Error())
@@ -69,7 +69,7 @@ func (store *Store) Get(key []byte) ([]byte, error) {
 	if store.db_Handler != nil {
 		value, closer, err := store.db_Handler.Get([]byte(key))
 
-		utils.Log(utils.DEBUG, string(value))
+		//utils.Log(utils.DEBUG, string(value))
 		if err != nil {
 			if err == pebble.ErrNotFound {
 				return nil, DBKeyNotFound
