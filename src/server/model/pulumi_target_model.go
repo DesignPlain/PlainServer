@@ -23,13 +23,13 @@ func CreateResourceModel(project_name string, description string, resource_type 
 		Name:        project_name,
 		Runtime:     "yaml",
 		Description: description,
-		Outputs:     getOutputMap(resource_instance_name, resource_instance),
 		Resources: map[string]Yaml_Resource{
 			resource_instance_name: {
 				Type:       resource_type.GetURI(),
 				Properties: resource_instance,
 			},
 		},
+		Outputs: getOutputMap(resource_instance_name, resource_instance),
 	}
 
 	return resourceConfigModel

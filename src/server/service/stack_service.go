@@ -4,8 +4,10 @@ import (
 	. "DesignSphere_Server/src/server/model"
 	"DesignSphere_Server/src/server/storage"
 	"DesignSphere_Server/src/utils"
+	"bytes"
 	"container/list"
 	"context"
+	"crypto/sha256"
 	"encoding/json"
 	"log"
 	"os"
@@ -80,19 +82,25 @@ func (stack_service *StackService) PulumiStackUp(provider ProviderType, stackId 
 					}
 				}
 			}
-
-			os.WriteFile(stackDirectory+"/Pulumi.yaml", []byte(yamlConfigModel), 0644)
 		} else {
 			return nil, err
 		}
 	}
 
+	os.WriteFile(stackDirectory+"/Pulumi.yaml", []byte(yamlConfigModel), 0644)
+
 	stackName := auto.FullyQualifiedStackName("organization", PULUMI_PROJECT_NAME, stackId)
 	stack, err := auto.UpsertStackLocalSource(ctx, stackName, stackDirectory, envvars)
-	stack.SetAllConfig(ctx, cfg)
-
 	if err != nil {
 		utils.Log(utils.ERROR, err)
+		return nil, err
+	}
+
+	stack.SetAllConfig(ctx, cfg)
+	err = stack_service.CopyResoureFilesToStack(stackId, stackDirectory)
+
+	if err != nil {
+		utils.Log(utils.ERROR, "CopyResoureFilesToStack failed with error: "+err.Error())
 		return nil, err
 	}
 
@@ -104,14 +112,14 @@ func (stack_service *StackService) PulumiStackUp(provider ProviderType, stackId 
 
 	// utils.Log(utils.DEBUG, aa)
 
-	previewResult, err := stack.Preview(ctx)
+	_, err = stack.Preview(ctx)
 	if err != nil {
 		rmErr := os.Remove(stackDirectory + "/Pulumi.yaml")
 		if rmErr != nil {
 			utils.Log(utils.ERROR, rmErr.Error())
 		}
 
-		utils.Log(utils.DEBUG, previewResult)
+		//utils.Log(utils.DEBUG, previewResult)
 		return nil, err
 	}
 
@@ -141,7 +149,8 @@ func (stack_service *StackService) PulumiStackUp(provider ProviderType, stackId 
 		resOuts = append(resOuts, a)
 	}
 
-	utils.Log(utils.DEBUG, resOuts)
+	//utils.Log(utils.DEBUG, resOuts)
+
 	return resOuts, nil
 }
 
@@ -230,6 +239,98 @@ func (stack_service *StackService) SetProjectConfig(project_config ProjectConfig
 	err = stack_service.DataStore.Set([]byte("ProjectConfig"), jsonValue)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (stack_service *StackService) SaveResoureConfigHistory(resId string, config interface{}) error {
+	key := "ResoureConfigHistory_" + resId
+	value, err := stack_service.DataStore.Get([]byte(key))
+
+	var files []interface{}
+	if err == nil {
+		if err := json.Unmarshal(value, &files); err != nil {
+			return err
+		}
+	}
+
+	files = append(files, config)
+
+	jsonValue, err := json.Marshal(files)
+	if err != nil {
+		return err
+	}
+
+	err = stack_service.DataStore.Set([]byte(key), jsonValue)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (stack_service *StackService) SaveResoureFile(resId string, file_location string) error {
+	key := "ResourceFiles_" + resId
+	value, err := stack_service.DataStore.Get([]byte(key))
+
+	var files []string
+	if err == nil {
+		if err := json.Unmarshal(value, &files); err != nil {
+			return err
+		}
+	}
+
+	files = append(files, file_location)
+
+	jsonValue, err := json.Marshal(files)
+	if err != nil {
+		return err
+	}
+
+	utils.Log(utils.INFO, "setting list for key"+string(key)+" to "+string(jsonValue))
+	err = stack_service.DataStore.Set([]byte(key), jsonValue)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (stack_service *StackService) CopyResoureFilesToStack(resId string, stackDir string) error {
+	key := "ResourceFiles_" + resId
+	value, err := stack_service.DataStore.Get([]byte(key))
+
+	utils.Log(utils.INFO, "list for key"+string(key)+" is "+string(value))
+	var files []string
+	if err == nil {
+		if err := json.Unmarshal(value, &files); err != nil {
+			return err
+		}
+
+		utils.Log(utils.INFO, files)
+
+		for _, file_location := range files {
+			utils.Log(utils.INFO, "Copying file"+file_location+"to stackDir")
+
+			data, err := os.ReadFile(file_location)
+			if err != nil {
+				return err
+			}
+
+			filename := strings.Split(file_location, "ResourceRelatedFile_")[1]
+
+			// Write data to dst
+			err = os.WriteFile(stackDir+"/"+filename, data, 0644)
+
+			if err != nil {
+				return err
+			}
+
+			utils.Log(utils.INFO, "Wrote file to "+stackDir+"/"+filename)
+
+		}
+
 	}
 
 	return nil
@@ -364,7 +465,7 @@ func (stack_service *StackService) DeployResources() error {
 			case GCP:
 				{
 					var resourceConfigModel ResourceModel
-					if !slices.Contains(stackDeploymentOrder, data.Id.String()) {
+					if !slices.Contains(stackDeploymentOrder, data.Id.String()) || !bytes.Equal(getHashSum(data.ResourceConfig), data.ConfigHash) {
 						resourceConfigModel = CreateResourceModel(PULUMI_PROJECT_NAME, data.ResourceType.String(), data.ResourceType, data.Name, data.ResourceConfig)
 
 					} else {
@@ -373,7 +474,7 @@ func (stack_service *StackService) DeployResources() error {
 
 					if resourceConfigModel.Name != "" {
 						serializedResourceConfigYaml, err := yaml.Marshal(resourceConfigModel)
-						utils.Log(utils.DEBUG, string(serializedResourceConfigYaml))
+						//utils.Log(utils.DEBUG, string(serializedResourceConfigYaml))
 						if err != nil {
 							log.Fatal(err)
 							continue
@@ -383,6 +484,13 @@ func (stack_service *StackService) DeployResources() error {
 						data.YamlContent = string(serializedResourceConfigYaml)
 
 						if err == nil {
+							data.ConfigHash = getHashSum(data.ResourceConfig)
+							err = stack_service.SaveResoureConfigHistory(data.Id.String(), data.ResourceConfig)
+							if err != nil {
+								utils.Log(utils.ERROR, "Saving stack config history failed "+err.Error())
+								// TODO: handle this
+							}
+
 							data.Status = Deployed
 							data.LastError = ""
 							stackDeploymentOrder = append(stackDeploymentOrder, data.Id.String())
@@ -408,7 +516,7 @@ func (stack_service *StackService) DeployResources() error {
 			case AWS:
 				{
 					var resourceConfigModel ResourceModel
-					if !slices.Contains(stackDeploymentOrder, data.Id.String()) {
+					if !slices.Contains(stackDeploymentOrder, data.Id.String()) || !bytes.Equal(getHashSum(data.ResourceConfig), data.ConfigHash) {
 						resourceConfigModel = CreateResourceModel(PULUMI_PROJECT_NAME, data.ResourceType.String(), data.ResourceType, data.Name, data.ResourceConfig)
 					} else {
 						utils.Log(utils.DEBUG, "Stack already contains the data")
@@ -416,7 +524,7 @@ func (stack_service *StackService) DeployResources() error {
 
 					if resourceConfigModel.Resources != nil {
 						serializedResourceConfigYaml, err := yaml.Marshal(resourceConfigModel)
-						utils.Log(utils.DEBUG, string(serializedResourceConfigYaml))
+						//utils.Log(utils.DEBUG, string(serializedResourceConfigYaml))
 						if err != nil {
 							log.Fatal(err)
 							continue
@@ -426,6 +534,13 @@ func (stack_service *StackService) DeployResources() error {
 						data.YamlContent = string(serializedResourceConfigYaml)
 
 						if err == nil {
+							data.ConfigHash = getHashSum(data.ResourceConfig)
+							err = stack_service.SaveResoureConfigHistory(data.Id.String(), data.ResourceConfig)
+							if err != nil {
+								utils.Log(utils.ERROR, "Saving stack config history failed "+err.Error())
+								// TODO: handle this
+							}
+
 							data.Status = Deployed
 							data.LastError = ""
 							stackDeploymentOrder = append(stackDeploymentOrder, data.Id.String())
@@ -464,9 +579,9 @@ func (stack_service *StackService) DeployResources() error {
 		return err
 	}
 
-	resources, _ = stack_service.GetState()
-	var resString, _ = json.Marshal(resources)
-	utils.Log(utils.DEBUG, "DeployedResources from store "+string(resString))
+	//resources, _ = stack_service.GetState()
+	//var resString, _ = json.Marshal(resources)
+	//utils.Log(utils.DEBUG, "DeployedResources from store "+string(resString))
 
 	return nil
 }
@@ -578,4 +693,11 @@ func (stack_service *StackService) saveStackDeploymentOrder(current_stack_order 
 	}
 
 	return nil
+}
+
+func getHashSum(config interface{}) []byte {
+	configBytes, _ := json.Marshal(config)
+	hash := sha256.New()
+	hash.Write(configBytes)
+	return hash.Sum(nil)
 }
