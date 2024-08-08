@@ -10,9 +10,6 @@ WORKDIR /app
 
 COPY . .
 
-# Fix packages 
-RUN go mod tidy
-
 # Build
 RUN CGO_ENABLED=0 GOOS=linux ./app_build.sh
 

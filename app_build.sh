@@ -2,4 +2,6 @@
 
 bash app_setup.sh
 
-go build -o bin/server ./src
+go mod tidy -v
+
+go build -v -o bin/server ./src
