@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-bash setup.sh
+bash app_setup.sh
 
 go build -o bin/server ./src
