@@ -54,8 +54,13 @@ func StartServer() {
 	rG := r.Group("/api")
 	{
 		rG.POST("/deploy", apiController.DeployStack)
+
 		rG.POST("/state", apiController.SaveState)
 		rG.GET("/state", apiController.GetState)
+
+		rG.POST("/templates", apiController.SaveTemplates)
+		rG.GET("/templates", apiController.GetTemplates)
+
 		rG.GET("/stack", apiController.DestroyStack)
 
 		rG.POST("/uploadProjectConfig", apiController.UploadProjectConfig)
@@ -167,7 +172,7 @@ func (_controllerStatus *APIController) GetProjectConfig(c *gin.Context) {
 // Deploy and cloud resource stack
 //
 // TODO: Currently we deploy all the resources togther, we will still need this feature
-// but will also require API to deploy the resources separatly.
+// but will also require API to deploy the resources separately.
 // TODO: Fix deployment order related bugs
 func (_controllerStatus *APIController) DeployStack(c *gin.Context) {
 
@@ -237,4 +242,43 @@ func (_controllerStatus *APIController) GetState(c *gin.Context) {
 	utils.Log(utils.DEBUG, "Getting state ->"+string(resString))
 
 	c.JSON(200, resources)
+}
+
+// Save Template
+func (_controllerStatus *APIController) SaveTemplates(c *gin.Context) {
+	var templates []Template
+	var jsonData []byte
+
+	if c.Request.Body == nil {
+		c.Status(http.StatusBadRequest)
+	}
+
+	jsonData, _ = io.ReadAll(c.Request.Body)
+	if err := json.Unmarshal(jsonData, &templates); err != nil {
+		utils.Log(utils.ERROR, err)
+		return
+	}
+
+	if err := _controllerStatus.StackService.SaveTemplates(templates); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Status(200)
+}
+
+// Get Templates
+func (_controllerStatus *APIController) GetTemplates(c *gin.Context) {
+
+	templates, err := _controllerStatus.StackService.GetTemplates()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if templates == nil {
+		c.JSON(200, make([]interface{}, 0))
+		return
+	}
+
+	c.JSON(200, templates)
 }

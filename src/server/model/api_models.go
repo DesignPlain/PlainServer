@@ -9,6 +9,16 @@ import (
 type Any interface{}
 
 /*
+Template model for custom resource collection
+*/
+type Template struct {
+	Id          string `json:"id"`
+	Name        string `json:"template_name"`
+	Description string `json:"template_description"`
+	Details     string `json:"res_details"`
+}
+
+/*
 Deployment Resource model for cloud resource
 */
 type DeploymentResource struct {

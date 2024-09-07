@@ -384,6 +384,36 @@ func (stack_service *StackService) GetState() ([]DeploymentResource, error) {
 	return resources, nil
 }
 
+func (stack_service *StackService) SaveTemplates(templates []Template) error {
+
+	// TODO: Validate template data
+	jsonArrayValue, err := json.Marshal(templates)
+	if err != nil {
+		return err
+	}
+
+	if err := stack_service.DataStore.Set([]byte("Templates"), jsonArrayValue); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (stack_service *StackService) GetTemplates() ([]Template, error) {
+	var templates []Template
+
+	value, err := stack_service.DataStore.Get([]byte("Templates"))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(value, &templates); err != nil {
+		return nil, err
+	}
+
+	return templates, nil
+}
+
 func (stack_service *StackService) getResourceById(resId string) (*DeploymentResource, error) {
 	var resource DeploymentResource
 	value, err := stack_service.DataStore.Get([]byte(resId))
