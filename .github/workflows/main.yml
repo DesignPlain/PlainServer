@@ -46,9 +46,9 @@ jobs:
         if: env.MergeChanges == 'true'
         run: |
           cp -r $PATH_SOURCE_CHECKOUT/dist/design-sphere $PATH_TARGET_CHECKOUT
-          pwd;ls 
           cd $PATH_TARGET_CHECKOUT
-          rm -r ui
+          pwd;ls 
+          rm -r ui 2>&1
           mv design-sphere ui
           if [[ $(git diff --name-only|wc -l) -gt 0 ]]; then
             echo "We do have changes between the UI files, we are committing the changes."
