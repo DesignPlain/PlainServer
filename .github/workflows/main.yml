@@ -1,14 +1,58 @@
 name: My Target Workflow
 
-on:
+env:
+  SOURCE_REPO: DesignPlain/PlainDashboard
+  USERNAME: ${{ github.actor }}
+  
+  PATH_SOURCE_CHECKOUT: ui_code
+  PATH_TARGET_CHECKOUT: server_code
+  TARGET_FILE: "provider/cmd/pulumi-resource-aws/schema.json"
+
+on: 
+  workflow_dispatch:
   repository_dispatch:
     types: [trigger-workflow]
-    
+
+permissions: write-all
+
 jobs:
-  build:
+  pull-file:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout DesignPlain/PlainDashboard repo
         uses: actions/checkout@v4
+        with:
+          repository: ${{ env.SOURCE_REPO }}
+          path: ${{ env.PATH_SOURCE_CHECKOUT }}
 
+      - name: Install node and build project
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+          . ~/.nvm/nvm.sh 2>&1
+          nvm install node
+          . ~/.nvm/nvm.sh 2>&1
+          cd $PATH_SOURCE_CHECKOUT
+          npm install
+          npm run build
+          cd ..
+
+      - name: Checkout DesignPlain/PlainServer repo
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.PATH_TARGET_CHECKOUT }}
+          
+      - name: Update AWS schema file
+        if: env.MergeChanges == 'true'
+        run: |
+          cp $PATH_SOURCE_CHECKOUT/dist PATH_TARGET_CHECKOUT/
+          rm -r PATH_TARGET_CHECKOUT/ui
+          mv PATH_TARGET_CHECKOUT/dist PATH_TARGET_CHECKOUT/ui
+          
+          
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git commit -am "Updated UI files"
+          git push -f origin main
+          
+          cd ..
+          
