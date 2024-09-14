@@ -1,4 +1,4 @@
-name: My Target Workflow
+name: Update_UI_Files
 
 env:
   SOURCE_REPO: DesignPlain/PlainDashboard
@@ -11,7 +11,7 @@ env:
 on: 
   workflow_dispatch:
   repository_dispatch:
-    types: [trigger-workflow]
+    types: [trigger-ui-file-update-workflow]
 
 permissions: write-all
 
