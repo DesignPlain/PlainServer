@@ -45,10 +45,11 @@ jobs:
       - name: Copy UI files and commit changes
         if: env.MergeChanges == 'true'
         run: |
-          cp -r $PATH_SOURCE_CHECKOUT/dist $PATH_TARGET_CHECKOUT
-          rm -r $PATH_TARGET_CHECKOUT/ui
-          mv $PATH_TARGET_CHECKOUT/dist $PATH_TARGET_CHECKOUT/ui
+          cp -r $PATH_SOURCE_CHECKOUT/dist/design-sphere $PATH_TARGET_CHECKOUT
+          pwd;ls 
           cd $PATH_TARGET_CHECKOUT
+          rm -r ui
+          mv design-sphere ui
           if [[ $(git diff --name-only|wc -l) -gt 0 ]]; then
             echo "We do have changes between the UI files, we are committing the changes."
             git config user.name "${{ github.actor }}"
