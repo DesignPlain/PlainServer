@@ -48,8 +48,8 @@ jobs:
           cp -r $PATH_SOURCE_CHECKOUT/dist/design-sphere $PATH_TARGET_CHECKOUT
           cd $PATH_TARGET_CHECKOUT
           rm -rf ui
-          git add .
           mv design-sphere ui
+          git add .
           if [[ $(git diff --staged --name-only|wc -l) -gt 0 ]]; then
             echo "We do have changes between the UI files, we are committing the changes."
             git config user.name "${{ github.actor }}"
