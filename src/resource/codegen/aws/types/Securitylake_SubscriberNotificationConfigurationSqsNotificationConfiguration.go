@@ -1,0 +1,3 @@
+package types
+
+type Securitylake_SubscriberNotificationConfigurationSqsNotificationConfiguration struct{}

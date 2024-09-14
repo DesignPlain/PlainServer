@@ -1,0 +1,6 @@
+package types
+
+type Networkfirewall_TlsInspectionConfigurationTlsInspectionConfiguration struct {
+	// Server certificate configurations that are associated with the TLS configuration. Detailed below.
+	ServerCertificateConfiguration Networkfirewall_TlsInspectionConfigurationTlsInspectionConfigurationServerCertificateConfiguration `json:"serverCertificateConfiguration,omitempty" yaml:"serverCertificateConfiguration,omitempty"`
+}

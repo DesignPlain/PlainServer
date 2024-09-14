@@ -17,6 +17,9 @@ import (
 
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 	"gopkg.in/yaml.v2"
+
+	"libds/aws"
+	"libds/gcp"
 )
 
 const ROOTDIR = "/tmp/"
@@ -496,7 +499,7 @@ func (stack_service *StackService) DeployResources() error {
 				{
 					var resourceConfigModel ResourceModel
 					if !slices.Contains(stackDeploymentOrder, data.Id.String()) || !bytes.Equal(getHashSum(data.ResourceConfig), data.ConfigHash) {
-						resourceConfigModel = CreateResourceModel(PULUMI_PROJECT_NAME, data.ResourceType.String(), data.ResourceType, data.Name, data.ResourceConfig)
+						resourceConfigModel = CreateResourceModel(PULUMI_PROJECT_NAME, data.ResourceType, data.Name, data.ResourceConfig)
 
 					} else {
 						utils.Log(utils.DEBUG, "Stack already contains the data")
@@ -547,7 +550,7 @@ func (stack_service *StackService) DeployResources() error {
 				{
 					var resourceConfigModel ResourceModel
 					if !slices.Contains(stackDeploymentOrder, data.Id.String()) || !bytes.Equal(getHashSum(data.ResourceConfig), data.ConfigHash) {
-						resourceConfigModel = CreateResourceModel(PULUMI_PROJECT_NAME, data.ResourceType.String(), data.ResourceType, data.Name, data.ResourceConfig)
+						resourceConfigModel = CreateResourceModel(PULUMI_PROJECT_NAME, data.ResourceType, data.Name, data.ResourceConfig)
 					} else {
 						utils.Log(utils.DEBUG, "Stack already contains the data")
 					}
@@ -677,13 +680,13 @@ func getNextResourceIndexToDeploy(dataStore []DeploymentResource) *list.List {
 	var pendingIndexQueue *list.List = list.New()
 
 	for i := 0; i < len(dataStore); i++ {
-		if dataStore[i].ResourceType == COMPUTE_NETWORK || dataStore[i].ResourceType == EC2_VPC {
+		if dataStore[i].ResourceType == gcp.COMPUTE_NETWORK || dataStore[i].ResourceType == aws.EC2_VPC {
 			if first == nil {
 				first = pendingIndexQueue.PushFront(i)
 			} else {
 				pendingIndexQueue.PushFront(i)
 			}
-		} else if dataStore[i].ResourceType == COMPUTE_SUBNETWORK || dataStore[i].ResourceType == EC2_SUBNET {
+		} else if dataStore[i].ResourceType == gcp.COMPUTE_SUBNETWORK || dataStore[i].ResourceType == aws.EC2_SUBNET {
 			if first == nil {
 				pendingIndexQueue.PushBack(i)
 			} else {

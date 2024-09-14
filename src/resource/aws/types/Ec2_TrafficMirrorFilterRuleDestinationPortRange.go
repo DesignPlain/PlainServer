@@ -1,9 +1,0 @@
-package types
-
-type Ec2_TrafficMirrorFilterRuleDestinationPortRange struct {
-	// Ending port of the range
-	ToPort int `json:"toPort,omitempty" yaml:"toPort,omitempty"`
-
-	// Starting port of the range
-	FromPort int `json:"fromPort,omitempty" yaml:"fromPort,omitempty"`
-}

@@ -1,0 +1,9 @@
+package types
+
+type Appmesh_VirtualGatewaySpecListenerConnectionPoolHttp struct {
+	// Number of overflowing requests after `max_connections` Envoy will queue to upstream cluster. Minimum value of `1`.
+	MaxPendingRequests int `json:"maxPendingRequests,omitempty" yaml:"maxPendingRequests,omitempty"`
+
+	// Maximum number of outbound TCP connections Envoy can establish concurrently with all hosts in upstream cluster. Minimum value of `1`.
+	MaxConnections int `json:"maxConnections,omitempty" yaml:"maxConnections,omitempty"`
+}

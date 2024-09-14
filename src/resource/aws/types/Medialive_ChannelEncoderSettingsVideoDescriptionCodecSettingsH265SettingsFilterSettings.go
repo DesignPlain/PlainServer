@@ -1,6 +1,0 @@
-package types
-
-type Medialive_ChannelEncoderSettingsVideoDescriptionCodecSettingsH265SettingsFilterSettings struct {
-	// Temporal filter settings. See Temporal Filter Settings
-	TemporalFilterSettings Medialive_ChannelEncoderSettingsVideoDescriptionCodecSettingsH265SettingsFilterSettingsTemporalFilterSettings `json:"temporalFilterSettings,omitempty" yaml:"temporalFilterSettings,omitempty"`
-}

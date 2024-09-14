@@ -1,0 +1,9 @@
+package types
+
+type Lex_V2modelsSlotSubSlotSettingSlotSpecificationValueElicitationSettingWaitAndContinueSpecificationContinueResponseMessageGroup struct {
+	//
+	Message Lex_V2modelsSlotSubSlotSettingSlotSpecificationValueElicitationSettingWaitAndContinueSpecificationContinueResponseMessageGroupMessage `json:"message,omitempty" yaml:"message,omitempty"`
+
+	//
+	Variations []Lex_V2modelsSlotSubSlotSettingSlotSpecificationValueElicitationSettingWaitAndContinueSpecificationContinueResponseMessageGroupVariation `json:"variations,omitempty" yaml:"variations,omitempty"`
+}

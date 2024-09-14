@@ -3,10 +3,12 @@ package model
 import (
 	"encoding/json"
 
+	"libds/aws"
+	. "libds/ds_base"
+	"libds/gcp"
+
 	"github.com/google/uuid"
 )
-
-type Any interface{}
 
 /*
 Template model for custom resource collection
@@ -90,7 +92,14 @@ func (c *DeploymentResource) UnmarshalJSON(data []byte) error {
 }
 
 func GetResourceConfigInstance(provider_type ProviderType, resource_type ResourceType, rawResConfig json.RawMessage) (Any, error) {
-	initResourceConfigObject, ok := ResourceTypeMap[resource_type]
+	var initResourceConfigObject (func() Any)
+	var ok bool
+
+	if provider_type == GCP {
+		initResourceConfigObject, ok = gcp.ResourceTypeMap[resource_type]
+	} else if provider_type == AWS {
+		initResourceConfigObject, ok = aws.ResourceTypeMap[resource_type]
+	}
 
 	if !ok {
 		return nil, ResourceUnMarshalFailed

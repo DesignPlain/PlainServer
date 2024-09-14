@@ -1,0 +1,9 @@
+package types
+
+type Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsFrameCaptureGroupSettings struct {
+	//
+	Destination Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsFrameCaptureGroupSettingsDestination `json:"destination,omitempty" yaml:"destination,omitempty"`
+
+	//
+	FrameCaptureCdnSettings Medialive_ChannelEncoderSettingsOutputGroupOutputGroupSettingsFrameCaptureGroupSettingsFrameCaptureCdnSettings `json:"frameCaptureCdnSettings,omitempty" yaml:"frameCaptureCdnSettings,omitempty"`
+}
