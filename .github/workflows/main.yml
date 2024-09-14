@@ -16,7 +16,7 @@ on:
 permissions: write-all
 
 jobs:
-  pull-file:
+  UpdateFiles:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DesignPlain/PlainDashboard repo
@@ -48,6 +48,7 @@ jobs:
           cp -r $PATH_SOURCE_CHECKOUT/dist $PATH_TARGET_CHECKOUT
           rm -r $PATH_TARGET_CHECKOUT/ui
           mv $PATH_TARGET_CHECKOUT/dist $PATH_TARGET_CHECKOUT/ui
+          cd $PATH_TARGET_CHECKOUT
           if [[ $(git diff --name-only|wc -l) -gt 0 ]]; then
             echo "We do have changes between the UI files, we are committing the changes."
             git config user.name "${{ github.actor }}"
@@ -57,4 +58,5 @@ jobs:
           else
             echo "We have no changes between UI files, exiting."
           fi
+          cd ..
         
