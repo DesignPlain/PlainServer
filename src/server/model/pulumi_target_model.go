@@ -3,6 +3,8 @@ package model
 import (
 	"reflect"
 	"strings"
+
+	base "libds/ds_base"
 )
 
 type Yaml_Resource struct {
@@ -18,14 +20,14 @@ type ResourceModel struct {
 	Resources   map[string]Yaml_Resource `yaml:"resources"`
 }
 
-func CreateResourceModel(project_name string, description string, resource_type ResourceType, resource_instance_name string, resource_instance interface{}) ResourceModel {
+func CreateResourceModel(project_name string, resource_type base.ResourceType, resource_instance_name string, resource_instance interface{}) ResourceModel {
 	resourceConfigModel := ResourceModel{
 		Name:        project_name,
 		Runtime:     "yaml",
-		Description: description,
+		Description: GetString(resource_type),
 		Resources: map[string]Yaml_Resource{
 			resource_instance_name: {
-				Type:       resource_type.GetURI(),
+				Type:       GetURI(resource_type),
 				Properties: resource_instance,
 			},
 		},

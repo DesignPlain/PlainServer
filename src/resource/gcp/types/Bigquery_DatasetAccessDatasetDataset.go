@@ -1,9 +1,0 @@
-package types
-
-type Bigquery_DatasetAccessDatasetDataset struct {
-	// The ID of the dataset containing this table.
-	DatasetId string `json:"datasetId,omitempty" yaml:"datasetId,omitempty"`
-
-	// The ID of the project containing this table.
-	ProjectId string `json:"projectId,omitempty" yaml:"projectId,omitempty"`
-}

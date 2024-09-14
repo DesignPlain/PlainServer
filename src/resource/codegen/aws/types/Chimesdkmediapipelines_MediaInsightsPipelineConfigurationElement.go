@@ -1,0 +1,30 @@
+package types
+
+type Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElement struct {
+	// Element type.
+	Type string `json:"type,omitempty" yaml:"type,omitempty"`
+
+	// Configuration for Kinesis Data Stream sink.
+	KinesisDataStreamSinkConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementKinesisDataStreamSinkConfiguration `json:"kinesisDataStreamSinkConfiguration,omitempty" yaml:"kinesisDataStreamSinkConfiguration,omitempty"`
+
+	// Configuration for Amazon Transcribe processor.
+	AmazonTranscribeProcessorConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementAmazonTranscribeProcessorConfiguration `json:"amazonTranscribeProcessorConfiguration,omitempty" yaml:"amazonTranscribeProcessorConfiguration,omitempty"`
+
+	// Configuration for Lambda Function sink.
+	LambdaFunctionSinkConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementLambdaFunctionSinkConfiguration `json:"lambdaFunctionSinkConfiguration,omitempty" yaml:"lambdaFunctionSinkConfiguration,omitempty"`
+
+	// Configuration for S3 recording sink.
+	S3RecordingSinkConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementS3RecordingSinkConfiguration `json:"s3RecordingSinkConfiguration,omitempty" yaml:"s3RecordingSinkConfiguration,omitempty"`
+
+	// Configuration for SNS Topic sink.
+	SnsTopicSinkConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementSnsTopicSinkConfiguration `json:"snsTopicSinkConfiguration,omitempty" yaml:"snsTopicSinkConfiguration,omitempty"`
+
+	// Configuration for SQS Queue sink.
+	SqsQueueSinkConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementSqsQueueSinkConfiguration `json:"sqsQueueSinkConfiguration,omitempty" yaml:"sqsQueueSinkConfiguration,omitempty"`
+
+	// Configuration for Voice analytics processor.
+	VoiceAnalyticsProcessorConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementVoiceAnalyticsProcessorConfiguration `json:"voiceAnalyticsProcessorConfiguration,omitempty" yaml:"voiceAnalyticsProcessorConfiguration,omitempty"`
+
+	// Configuration for Amazon Transcribe Call Analytics processor.
+	AmazonTranscribeCallAnalyticsProcessorConfiguration Chimesdkmediapipelines_MediaInsightsPipelineConfigurationElementAmazonTranscribeCallAnalyticsProcessorConfiguration `json:"amazonTranscribeCallAnalyticsProcessorConfiguration,omitempty" yaml:"amazonTranscribeCallAnalyticsProcessorConfiguration,omitempty"`
+}

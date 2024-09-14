@@ -2,21 +2,31 @@ package asset
 
 import "encoding/json"
 
-type FileAsset struct {
-	FileAssetName string `yaml:"fn::FileAsset,omitempty"`
+type Asset struct {
+	FileAsset   string `yaml:"fn::fileAsset,omitempty"`
+	StringAsset string `yaml:"fn::stringAsset,omitempty"`
+	RemoteAsset string `yaml:"fn::remoteAsset,omitempty"`
 }
 
 /* Custom Marshaller for FileAsset */
-func (s FileAsset) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.FileAssetName)
+func (s Asset) MarshalJSON() ([]byte, error) {
+	if s.FileAsset != "" {
+		return json.Marshal(s.FileAsset)
+	} else if s.RemoteAsset != "" {
+		return json.Marshal(s.RemoteAsset)
+	} else {
+		return json.Marshal(s.StringAsset)
+	}
+
 }
 
 /* Custom Unmarshaller for FileAsset */
-func (s *FileAsset) UnmarshalJSON(data []byte) error {
+func (s *Asset) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
 		return err
 	}
-	s.FileAssetName = str
+
+	s.FileAsset = str
 	return nil
 }

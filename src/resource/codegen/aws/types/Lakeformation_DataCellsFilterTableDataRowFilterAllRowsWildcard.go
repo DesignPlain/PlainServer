@@ -1,0 +1,3 @@
+package types
+
+type Lakeformation_DataCellsFilterTableDataRowFilterAllRowsWildcard struct{}

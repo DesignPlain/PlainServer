@@ -1,0 +1,24 @@
+package types
+
+type Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecification struct {
+	// Target value for the metric.
+	TargetValue float64 `json:"targetValue,omitempty" yaml:"targetValue,omitempty"`
+
+	// Customized capacity metric specification. The field is only valid when you use `customized_load_metric_specification`
+	CustomizedCapacityMetricSpecification Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecificationCustomizedCapacityMetricSpecification `json:"customizedCapacityMetricSpecification,omitempty" yaml:"customizedCapacityMetricSpecification,omitempty"`
+
+	// Customized load metric specification.
+	CustomizedLoadMetricSpecification Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecificationCustomizedLoadMetricSpecification `json:"customizedLoadMetricSpecification,omitempty" yaml:"customizedLoadMetricSpecification,omitempty"`
+
+	// Customized scaling metric specification.
+	CustomizedScalingMetricSpecification Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecificationCustomizedScalingMetricSpecification `json:"customizedScalingMetricSpecification,omitempty" yaml:"customizedScalingMetricSpecification,omitempty"`
+
+	// Predefined load metric specification.
+	PredefinedLoadMetricSpecification Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecificationPredefinedLoadMetricSpecification `json:"predefinedLoadMetricSpecification,omitempty" yaml:"predefinedLoadMetricSpecification,omitempty"`
+
+	// Metric pair specification from which Amazon EC2 Auto Scaling determines the appropriate scaling metric and load metric to use.
+	PredefinedMetricPairSpecification Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecificationPredefinedMetricPairSpecification `json:"predefinedMetricPairSpecification,omitempty" yaml:"predefinedMetricPairSpecification,omitempty"`
+
+	// Predefined scaling metric specification.
+	PredefinedScalingMetricSpecification Autoscaling_PolicyPredictiveScalingConfigurationMetricSpecificationPredefinedScalingMetricSpecification `json:"predefinedScalingMetricSpecification,omitempty" yaml:"predefinedScalingMetricSpecification,omitempty"`
+}

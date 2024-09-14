@@ -1,0 +1,15 @@
+package types
+
+type Medialive_ChannelEncoderSettingsOutputGroupOutputOutputSettingsHlsOutputSettingsHlsSettings struct {
+	//
+	AudioOnlyHlsSettings Medialive_ChannelEncoderSettingsOutputGroupOutputOutputSettingsHlsOutputSettingsHlsSettingsAudioOnlyHlsSettings `json:"audioOnlyHlsSettings,omitempty" yaml:"audioOnlyHlsSettings,omitempty"`
+
+	//
+	Fmp4HlsSettings Medialive_ChannelEncoderSettingsOutputGroupOutputOutputSettingsHlsOutputSettingsHlsSettingsFmp4HlsSettings `json:"fmp4HlsSettings,omitempty" yaml:"fmp4HlsSettings,omitempty"`
+
+	//
+	FrameCaptureHlsSettings Medialive_ChannelEncoderSettingsOutputGroupOutputOutputSettingsHlsOutputSettingsHlsSettingsFrameCaptureHlsSettings `json:"frameCaptureHlsSettings,omitempty" yaml:"frameCaptureHlsSettings,omitempty"`
+
+	//
+	StandardHlsSettings Medialive_ChannelEncoderSettingsOutputGroupOutputOutputSettingsHlsOutputSettingsHlsSettingsStandardHlsSettings `json:"standardHlsSettings,omitempty" yaml:"standardHlsSettings,omitempty"`
+}

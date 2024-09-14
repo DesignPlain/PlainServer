@@ -1,9 +1,0 @@
-package types
-
-type Appflow_ConnectorProfileConnectorProfileConfigConnectorProfileCredentialsGoogleAnalyticsOauthRequest struct {
-	// The URL to which the authentication server redirects the browser after authorization has been granted.
-	RedirectUri string `json:"redirectUri,omitempty" yaml:"redirectUri,omitempty"`
-
-	// The code provided by the connector when it has been authenticated via the connected app.
-	AuthCode string `json:"authCode,omitempty" yaml:"authCode,omitempty"`
-}
